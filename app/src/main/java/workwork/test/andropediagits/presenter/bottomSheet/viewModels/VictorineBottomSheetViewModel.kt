@@ -13,7 +13,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.ThemeUseCase
 import javax.inject.Inject
 
 @HiltViewModel
-class VictorineBottomSheetViewModel @Inject constructor(private val courseRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val adsUseCase: AdsUseCase, private val andropointUseCase: AndropointUseCase): ViewModel() {
+class VictorineBottomSheetViewModel @Inject constructor( private val themeUseCase: ThemeUseCase, private val adsUseCase: AdsUseCase): ViewModel() {
 
     fun adsView(isSuccess: ((ErrorEnum) -> Unit), isVictorine:Boolean){
         viewModelScope.launch {
@@ -32,19 +32,4 @@ class VictorineBottomSheetViewModel @Inject constructor(private val courseRepo: 
             themeUseCase.watchAdsToDisableDelay(uniqueThemeId,isSuccess,remainingHours)
         }
     }
-
-
-
-//    fun howManyTerm(isSuccess:((ErrorEnum)->Unit),isTermEnding:((String)->Unit)){
-//        viewModelScope.launch {
-//            themeUseCase.howManyTerm(isSuccess,isTermEnding,)
-//        }
-//    }
-//
-//    fun checkCurrentThemeTerm(uniqueThemeId: Int, isSuccess: ((ErrorEnum) -> Unit), isNoTerm:((Boolean)->Unit)){
-//        viewModelScope.launch {
-//            themeUseCase.checkOneThemeTernAndNo(uniqueThemeId, isSuccess, isNoTerm)
-//        }
-//    }
-
 }

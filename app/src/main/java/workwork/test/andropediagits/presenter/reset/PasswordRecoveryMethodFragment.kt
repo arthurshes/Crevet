@@ -38,11 +38,7 @@ class PasswordRecoveryMethodFragment : Fragment() {
                 ShowDialogHelper.showDialogSelectDate(requireContext(),requireActivity(),viewLifecycleOwner,layoutInflater,{text->
                     val (textClue, textDate) = removeSpecialWord(text)
                     viewModel.getEmail { email ->
-                        val resetDateSendModel = ResetDateSendModel(
-                            email = email,
-                            questionAnswerReset = textClue,
-                            correctDate = textDate
-                        )
+                        val resetDateSendModel = ResetDateSendModel(email = email, questionAnswerReset = textClue, correctDate = textDate)
                         sendDateTreatmentResult(resetDateSendModel)
                     }
                 },{
@@ -51,18 +47,12 @@ class PasswordRecoveryMethodFragment : Fragment() {
             }
             btnSelectKeyword.setOnClickListener{
                 dimView.visibility = View.VISIBLE
-                ShowDialogHelper.showDialogSelectKeyword(requireContext(),layoutInflater,{text->
+                ShowDialogHelper.showDialogSelectKeyword(requireContext(),{text->
                     val (textClue, textKeyWord) = removeSpecialWord(text)
                     viewModel.getEmail { email->
-                        val resetTextSendModel= ResetTextSendModel(
-                            email = email,
-                            questionAnswerReset = textClue,
-                            correctText = textKeyWord
-                        )
+                        val resetTextSendModel= ResetTextSendModel(email = email, questionAnswerReset = textClue, correctText = textKeyWord)
                         sendKeywordTreatmentResult(resetTextSendModel)
-
                     }
-
                 },{
                     dimView.visibility = View.GONE
                 })
@@ -72,45 +62,15 @@ class PasswordRecoveryMethodFragment : Fragment() {
 
     private fun sendDateTreatmentResult(resetDateSendModel: ResetDateSendModel) {
         viewModel.sendDate(resetDateSendModel) {
-//            when(it){
-//                ErrorEnum.NOTNETWORK -> {
-//                    TODO()
-//                }
-//                ErrorEnum.ERROR -> {
-//                    TODO()
-//                }
-//                ErrorEnum.SUCCESS -> {
-//                    TODO()
-//                }
-//                ErrorEnum.UNKNOWNERROR -> {
-//                    TODO()
-//                }
-//                ErrorEnum.TIMEOUTERROR -> {
-//                    TODO()
-//                }
-//                ErrorEnum.NULLPOINTERROR -> {
-//                    TODO()
-//                }
-//                ErrorEnum.OFFLINEMODE -> {
-//                    TODO()
-//                }
-//                ErrorEnum.OFFLINETHEMEBUY -> {
-//                    TODO()
-//                }
-//            }
             when(it){
                 ErrorEnum.SUCCESS -> {
                     viewModel.deleteResetNext()
                     requireActivity().runOnUiThread {
-                        val action =
-                            PasswordRecoveryMethodFragmentDirections.actionPasswordRecoveryMethodFragmentToCoursesFragment(
-                                true
-                            )
+                        val action = PasswordRecoveryMethodFragmentDirections.actionPasswordRecoveryMethodFragmentToCoursesFragment(true)
                         binding?.root?.let { it1 ->
                             Navigation.findNavController(it1).navigate(action)
                         }
                     }
-
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -118,7 +78,6 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendDateTreatmentResult(resetDateSendModel)
                         }
                     }
-
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
@@ -126,7 +85,6 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendDateTreatmentResult(resetDateSendModel)
                         }
                     }
-
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
@@ -134,7 +92,6 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendDateTreatmentResult(resetDateSendModel)
                         }
                     }
-
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
@@ -142,7 +99,6 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendDateTreatmentResult(resetDateSendModel)
                         }
                     }
-
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
@@ -150,19 +106,16 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendDateTreatmentResult(resetDateSendModel)
                         }
                     }
-
                 }
-                ErrorEnum.OFFLINEMODE -> {
+                ErrorEnum.OFFLINEMODE ->{
                     requireActivity().runOnUiThread {
-
+                        ShowDialogHelper.showDialogOffline(requireContext())
                     }
-
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
-
+                        ShowDialogHelper.showDialogOffline(requireContext())
                     }
-
                 }
             }
         }
@@ -174,15 +127,9 @@ class PasswordRecoveryMethodFragment : Fragment() {
                 ErrorEnum.SUCCESS -> {
                     viewModel.deleteResetNext()
                     requireActivity().runOnUiThread {
-                        val action =
-                            PasswordRecoveryMethodFragmentDirections.actionPasswordRecoveryMethodFragmentToCoursesFragment(
-                                true
-                            )
-                        binding?.root?.let { it1 ->
-                            Navigation.findNavController(it1).navigate(action)
-                        }
+                        val action = PasswordRecoveryMethodFragmentDirections.actionPasswordRecoveryMethodFragmentToCoursesFragment(true)
+                        binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
                     }
-
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -190,7 +137,6 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendKeywordTreatmentResult(resetTextSendModel)
                         }
                     }
-
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
@@ -198,7 +144,6 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendKeywordTreatmentResult(resetTextSendModel)
                         }
                     }
-
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
@@ -206,7 +151,6 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendKeywordTreatmentResult(resetTextSendModel)
                         }
                     }
-
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
@@ -214,7 +158,6 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendKeywordTreatmentResult(resetTextSendModel)
                         }
                     }
-
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
@@ -222,16 +165,15 @@ class PasswordRecoveryMethodFragment : Fragment() {
                             sendKeywordTreatmentResult(resetTextSendModel)
                         }
                     }
-
                 }
-                ErrorEnum.OFFLINEMODE -> {
+                ErrorEnum.OFFLINEMODE ->{
                     requireActivity().runOnUiThread {
-
+                        ShowDialogHelper.showDialogOffline(requireContext())
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
-
+                        ShowDialogHelper.showDialogOffline(requireContext())
                     }
                 }
             }
@@ -249,6 +191,9 @@ class PasswordRecoveryMethodFragment : Fragment() {
         } else {
             Pair(text, "")
         }
-
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 }

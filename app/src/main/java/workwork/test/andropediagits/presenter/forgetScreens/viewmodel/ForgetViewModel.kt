@@ -25,7 +25,6 @@ class ForgetViewModel  @Inject constructor(private val resetPasswordUseCase: Res
         }
     }
 
-
     fun checkResetText(resetTextCheckSendModel: ResetTextCheckSendModel, isCorrect:((Boolean)->Unit)?=null, isSuccess:((ErrorEnum)->Unit)){
         viewModelScope.launch(Dispatchers.IO){
             resetPasswordUseCase.sendReset(resetSendState = ResetSendState.CHECKRESETTEXT,resetTextCheckSendModel=resetTextCheckSendModel, isCorrectDatas =isCorrect, isSuccess = isSuccess)

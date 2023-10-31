@@ -2,11 +2,13 @@ package workwork.test.andropediagits.presenter.lesson.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Typeface
 import android.text.Html
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
@@ -137,4 +139,5 @@ object OptimizationText {
      fun TextView.setTextSize(size:String?){
         if(size != null)  this.textSize=size.toFloat()
     }
+
 }

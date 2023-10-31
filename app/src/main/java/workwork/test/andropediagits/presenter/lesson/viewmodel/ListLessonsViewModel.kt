@@ -18,11 +18,13 @@ import workwork.test.andropediagits.domain.useCases.userLogic.state.SpendAndropo
 import javax.inject.Inject
 
 @HiltViewModel
-class ListLessonsViewModel @Inject constructor(val coursesRepo: CourseRepo, private val andropointUseCase: AndropointUseCase, private val themeUseCase: ThemeUseCase): ViewModel() {
+class ListLessonsViewModel @Inject constructor(private val coursesRepo: CourseRepo, private val andropointUseCase: AndropointUseCase, private val themeUseCase: ThemeUseCase): ViewModel() {
     var currentState: String = ""
-//    private var _allLevelsByTheme: MutableLiveData<List<LevelEntity>> = MutableLiveData()
-//    var allLevelsByTheme:LiveData<List<LevelEntity>> = _allLevelsByTheme
-
+    fun checkVictorineExistTheme(victorineExist:((Boolean)->Unit),uniqueThemeId: Int){
+        viewModelScope.launch {
+            themeUseCase.thisThemeVictorineYes(victorineExist,uniqueThemeId)
+        }
+    }
     fun checkCurrentThemeTerm(uniqueThemeId: Int, isSuccess: ((ErrorEnum) -> Unit), isNoTerm:((Boolean)->Unit)){
         viewModelScope.launch {
             themeUseCase.checkOneThemeTernAndNo(uniqueThemeId, isSuccess, isNoTerm)
@@ -43,17 +45,17 @@ class ListLessonsViewModel @Inject constructor(val coursesRepo: CourseRepo, priv
         }
     }
 
-     fun buyTheme(result: (ErrorEnum) -> Unit, isHaveMoney: (BuyForAndropointStates) -> Unit,andropointMinus:Int) {
+    fun buyTheme(result: (ErrorEnum) -> Unit, isHaveMoney: (BuyForAndropointStates) -> Unit,andropointMinus:Int) {
         viewModelScope.launch {
             andropointUseCase.spendAndropoints(SpendAndropointState.THEMEOPENING, { result(it) },{ isHaveMoney(it) }, andropointMinusCount = andropointMinus)
         }
 
     }
 
-     fun putUniqueThemeIdForGetLevels(uniqueThemeId: Int,allLessons:((List<LevelEntity>)->Unit)) {
-         viewModelScope.launch {
-             allLessons.invoke(coursesRepo.searchAllLevelsTheme(uniqueThemeId))
-         }
+    fun putUniqueThemeIdForGetLevels(uniqueThemeId: Int,allLessons:((List<LevelEntity>)->Unit)) {
+        viewModelScope.launch {
+            allLessons.invoke(coursesRepo.searchAllLevelsTheme(uniqueThemeId))
+        }
     }
 
     fun thisLessonFavorite(uniqueLessonId:Int){

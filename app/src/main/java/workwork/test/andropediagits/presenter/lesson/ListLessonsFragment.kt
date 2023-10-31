@@ -16,7 +16,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import dagger.hilt.android.AndroidEntryPoint
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -29,7 +28,6 @@ import workwork.test.andropediagits.presenter.lesson.viewmodel.ListLessonsViewMo
 
 @AndroidEntryPoint
 class ListLessonsFragment : Fragment() {
-//    private var listener: BottomSheetListener? = null
     private val args: ListLessonsFragmentArgs by navArgs()
     private var binding: FragmentListLessonsBinding? = null
     private val viewModel: ListLessonsViewModel by viewModels()
@@ -58,6 +56,15 @@ class ListLessonsFragment : Fragment() {
 
             }
         },args.ThemeId)
+        viewModel.checkVictorineExistTheme({
+            if(it){
+                binding?.btnInVictorine?.isClickable = true
+                binding?.btnInVictorine?.visibility = View.VISIBLE
+            }else{
+                binding?.btnInVictorine?.isClickable = false
+                binding?.btnInVictorine?.visibility = View.GONE
+            }
+        },args.ThemeId)
         return binding?.root
     }
 
@@ -66,13 +73,6 @@ class ListLessonsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("gtgtgtg",args.courseName)
         Log.d("gtgtgtg",args.ThemeId.toString())
-
-//        if (savedInstanceState != null) {
-//            viewModel.currentState = savedInstanceState.getString("state_key_lesson_list", "")
-//        }
-
-
-
         adapter = ListLessonsAdapter(args,requireContext())
         adapter?.buyThemeClick = {
             buyThemeTreatmentResult()
@@ -84,133 +84,185 @@ class ListLessonsFragment : Fragment() {
 
         adapter?.removeFavLevel = {uniqueLessonID->
             if(isFavoriteLessons){
-                viewModel.putUniqueThemeIdForGetLevels(args.ThemeId,{lessons->
+                viewModel.putUniqueThemeIdForGetLevels(args.ThemeId) { lessons ->
                     isFavoriteLessons = false
                     binding?.btnFavoritesLessons?.setImageResource(R.drawable.ic_bookmark_not_pressed_white)
                     adapter?.diffList?.submitList(lessons)
-                })
+                }
                 viewModel.thisLessonNotFavorite(uniqueLessonID)
             }else{
                 viewModel.thisLessonNotFavorite(uniqueLessonID)
             }
-
         }
 
         binding?.apply {
-//            textViewLessonListThemeName.text =
             tvNameTheme.text = args.courseName
             rcViewLesson.layoutManager = LinearLayoutManager(requireContext())
             rcViewLesson.adapter = adapter
 
-                viewModel.putUniqueThemeIdForGetLevels(args.ThemeId,{
-                    adapter?.diffList?.submitList(it)
-                })
-
-
-
-        }
-
-        binding?.btnFavoritesLessons?.setOnClickListener {
-            if(!isFavoriteLessons){
-                viewModel.getAllFavoriteLessons(args.ThemeId,{ favLessons->
-                    if(favLessons.isNullOrEmpty()){
-                        Toast.makeText(requireContext(),"у вас нет избранных уроков",Toast.LENGTH_SHORT).show()
-                    }else{
-                        isFavoriteLessons = true
-                        binding?.btnFavoritesLessons?.setImageResource(R.drawable.baseline_bookmark_24)
-                        adapter?.diffList?.submitList(favLessons)
-                    }
-                })
-            } else if(isFavoriteLessons){
-                viewModel.putUniqueThemeIdForGetLevels(args.ThemeId,{lessons->
-                    isFavoriteLessons = false
-                    binding?.btnFavoritesLessons?.setImageResource(R.drawable.ic_bookmark_not_pressed_white)
-                    adapter?.diffList?.submitList(lessons)
-                })
+            viewModel.putUniqueThemeIdForGetLevels(args.ThemeId) {
+                adapter?.diffList?.submitList(it)
             }
         }
 
-
-
-
+        binding?.btnFavoritesLessons?.setOnClickListener {
+            favoritesLessons()
+        }
 
         binding?.btnInVictorine?.setOnClickListener {
             binding?.btnInVictorine?.isClickable = false
             startTimerViewAdsFun()
-            viewModel.checkCurrentThemeTerm(args.ThemeId ?: 2,{state->
-                when(state){
-                    ErrorEnum.NOTNETWORK -> {
-                        TODO()
-                    }
-                    ErrorEnum.ERROR -> {
-                        TODO()
-                    }
-                    ErrorEnum.SUCCESS -> {
-                        Log.d("isTernVarStateVictorine",isTermVar.toString())
-
-                            viewModel.howManyTerm({stateHow->
-                                Log.d("isTernVarStateVictorine",state.toString())
-                                when(stateHow){
-                                    ErrorEnum.NOTNETWORK -> TODO()
-                                    ErrorEnum.ERROR -> TODO()
-                                    ErrorEnum.SUCCESS -> {
-//
-//                                            listener?.onBottomSheetOpened()
-                                            val data = Bundle()
-                                            data.putInt("uniqueThemeID",args.ThemeId)
-                                            data.putString("courseName",args.courseName)
-                                            data.putString("courseNameReal",args.courseNameReal)
-                                            data.putBoolean("isThemePassed",isThemePassed)
-                                            data.putInt("courseNumber",adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1)
-                                            data.putString("termDate",terString )
-                                            data.putBoolean("isTerm",isTermVar)
-                                            bs?.arguments = data
-                                            bs?.show(requireActivity().supportFragmentManager, "Tag2")
-
-
-                                    }
-                                    ErrorEnum.UNKNOWNERROR -> TODO()
-                                    ErrorEnum.TIMEOUTERROR -> TODO()
-                                    ErrorEnum.NULLPOINTERROR -> TODO()
-                                    ErrorEnum.OFFLINEMODE -> TODO()
-                                    ErrorEnum.OFFLINETHEMEBUY -> TODO()
-                                }
-                            },{termText->
-                                terString = termText
-                            }, adapter?.diffList?.currentList?.get(0)?.themeNumber ?: 1,adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1 )
-
-                    }
-                    ErrorEnum.UNKNOWNERROR -> {
-                        TODO()
-                    }
-                    ErrorEnum.TIMEOUTERROR -> {
-                        TODO()
-                    }
-                    ErrorEnum.NULLPOINTERROR -> {
-                        TODO()
-                    }
-                    ErrorEnum.OFFLINEMODE -> {
-                        TODO()
-                    }
-                    ErrorEnum.OFFLINETHEMEBUY -> {
-                        TODO()
-                    }
-                }
-            }, { isTerm ->
-                isTermVar = isTerm
-            })
-
+            checkCurrentThemeTermTreatmentResult()
         }
 
         binding?.btnBackFromLessons?.setOnClickListener {
-            val action = ListLessonsFragmentDirections.actionListLessonsFragmentToThemesFragment(
-                adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1,
-                args.courseNameReal
-            )
-            binding?.root?.let {
-                Navigation.findNavController(it).navigate(action)
+            val action = ListLessonsFragmentDirections.actionListLessonsFragmentToThemesFragment(adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1, args.courseNameReal)
+            binding?.root?.let { Navigation.findNavController(it).navigate(action) }
+        }
+    }
+
+    private fun favoritesLessons() {
+        if(!isFavoriteLessons){
+            viewModel.getAllFavoriteLessons(args.ThemeId) { favLessons ->
+                if (favLessons.isEmpty()) {
+                    Toast.makeText(requireContext(), getString(R.string.you_not_have_favorite_lessons), Toast.LENGTH_SHORT).show()
+                } else {
+                    isFavoriteLessons = true
+                    binding?.btnFavoritesLessons?.setImageResource(R.drawable.baseline_bookmark_24)
+                    adapter?.diffList?.submitList(favLessons)
+                }
+            }
+        } else{
+            viewModel.putUniqueThemeIdForGetLevels(args.ThemeId) { lessons ->
+                isFavoriteLessons = false
+                binding?.btnFavoritesLessons?.setImageResource(R.drawable.ic_bookmark_not_pressed_white)
+                adapter?.diffList?.submitList(lessons)
             }
         }
+    }
+
+    private fun checkCurrentThemeTermTreatmentResult() {
+        viewModel.checkCurrentThemeTerm(args.ThemeId,{ state->
+            when(state){
+                ErrorEnum.SUCCESS -> {
+                    Log.d("isTernVarStateVictorine",isTermVar.toString())
+                    howManyTermTreatmentResult()
+                }
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            checkCurrentThemeTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkCurrentThemeTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkCurrentThemeTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            checkCurrentThemeTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkCurrentThemeTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.OFFLINEMODE ->{
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+            }
+        }, { isTerm ->
+            isTermVar = isTerm
+        })
+    }
+
+    private fun howManyTermTreatmentResult() {
+        viewModel.howManyTerm({stateHow->
+            when(stateHow){
+                ErrorEnum.SUCCESS -> {
+                    val data = Bundle()
+                    data.putInt("uniqueThemeID",args.ThemeId)
+                    data.putString("courseName",args.courseName)
+                    data.putString("courseNameReal",args.courseNameReal)
+                    data.putBoolean("isThemePassed",isThemePassed)
+                    data.putInt("courseNumber",adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1)
+                    data.putString("termDate",terString )
+                    data.putBoolean("isTerm",isTermVar)
+                    bs?.arguments = data
+                    bs?.show(requireActivity().supportFragmentManager, "Tag2")
+                }
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            howManyTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            howManyTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            howManyTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            howManyTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            howManyTermTreatmentResult()
+                        }
+                    }
+                }
+                ErrorEnum.OFFLINEMODE ->{
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+            }
+        },{termText->
+            terString = termText
+        }, adapter?.diffList?.currentList?.get(0)?.themeNumber ?: 1,adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1 )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -218,83 +270,83 @@ class ListLessonsFragment : Fragment() {
         outState.putString("state_key_lesson_list", viewModel.currentState)
     }
 
-//    override fun onStart() {
-//        super.onStart()
-//        observer?.let { viewModel.allLevelsByTheme.observe(this, it) }
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        observer?.let { viewModel.allLevelsByTheme.removeObserver( it) }
-//    }
-
     override fun onDestroy() {
         super.onDestroy()
         binding = null
     }
     @SuppressLint("SuspiciousIndentation")
     private fun buyThemeTreatmentResult() {
-//        var resultCourseBuy: ErrorEnum?=null
-        var isHaveMoneyResult: BuyForAndropointStates?=null
 
-            viewModel.buyTheme({ resultCourseBuy->
-                when(resultCourseBuy){
-                    ErrorEnum.SUCCESS -> {
-                        if(isHaveMoneyResult== BuyForAndropointStates.YESMONEY){
-                            requireActivity().runOnUiThread {                             Toast.makeText(requireContext(),getString(R.string.theme_buy_success), Toast.LENGTH_SHORT).show() }
+        var isHaveMoneyResult: BuyForAndropointStates? = null
 
-                        }else{
-                            //показ окна покупки
+        viewModel.buyTheme({ resultCourseBuy ->
+            when (resultCourseBuy) {
+                ErrorEnum.SUCCESS -> {
+                    if (isHaveMoneyResult == BuyForAndropointStates.YESMONEY) {
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.theme_buy_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    }
-                    ErrorEnum.NOTNETWORK -> {
-                        requireActivity().runOnUiThread {          ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                            buyThemeTreatmentResult()
-                        } }
-
-                    }
-
-                    ErrorEnum.TIMEOUTERROR -> {
-                        requireActivity().runOnUiThread {         ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                            buyThemeTreatmentResult()
-                        } }
-
-                    }
-
-                    ErrorEnum.ERROR -> {
-
-                        requireActivity().runOnUiThread {          ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            buyThemeTreatmentResult()
-                        } }
-
-                    }
-
-                    ErrorEnum.NULLPOINTERROR -> {
-                        requireActivity().runOnUiThread {        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            buyThemeTreatmentResult()
-                        } }
-
-                    }
-
-                    ErrorEnum.UNKNOWNERROR -> {
-                        requireActivity().runOnUiThread {       ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            buyThemeTreatmentResult()
-                        }  }
-
-                    }
-
-                    else -> {
-                        requireActivity().runOnUiThread {      ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            buyThemeTreatmentResult()
-                        } }
-
+                    } else {
+                        //показ окна покупки
                     }
                 }
-            },{isHaveMoneyResult=it},9990)
 
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            buyThemeTreatmentResult()
+                        }
+                    }
+                }
 
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            buyThemeTreatmentResult()
+                        }
+                    }
+                }
 
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            buyThemeTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            buyThemeTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            buyThemeTreatmentResult()
+                        }
+                    }
+                }
+
+                else -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            buyThemeTreatmentResult()
+                        }
+                    }
+                }
+            }
+        }, { isHaveMoneyResult = it }, 9990)
     }
+
+
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -304,16 +356,16 @@ class ListLessonsFragment : Fragment() {
             if(nextNavData!=null){
                 val value = nextNavData.getString("HowNavNext")
                 if(value=="victorine"){
-                                    val action =
-                    ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(
-                        args.ThemeId,
-                        args.courseName,
-                        adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1,
-                        args.courseNameReal
-                    )
-                binding?.root?.let {
-                    Navigation.findNavController(it).navigate(action)
-                }
+                    val action =
+                        ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(
+                            args.ThemeId,
+                            args.courseName,
+                            adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1,
+                            args.courseNameReal
+                        )
+                    binding?.root?.let {
+                        Navigation.findNavController(it).navigate(action)
+                    }
                 }
             }
         }
@@ -323,23 +375,9 @@ class ListLessonsFragment : Fragment() {
         timer = object : CountDownTimer(2 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) { millisUntilFinished / 1000        }
             override fun onFinish() {
-//               binding?.btnInVictorine?.isEnabled = false
-              binding?.btnInVictorine?.isClickable = true
+                binding?.btnInVictorine?.isClickable = true
             }
         }
         timer?.start()
     }
-
-//    override fun onBottomSheetOpened() {
-//        binding?.btnInVictorine?.isEnabled = false
-//    }
-//
-//    override fun onBottomSheetClosed() {
-//        binding?.btnInVictorine?.isEnabled = true
-//    }
-
-
-
-
-
 }

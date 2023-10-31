@@ -26,6 +26,20 @@
     <string name="buy">Купить</string>
     <string name="skip_delay">Пропустить задержку</string>
     <string name="delaySH">Задержка до DATA</string>
+    <string name="course_was_successfully_purchased">Курс был успешно куплен!</string>
+    <string name="This_theme_is_closed_for_now">Данная тема пока закрыта</string>
+    <string name="success_award_credited">Награда успеша зачислено</string>
+    <string name="theme_was_successfully_purchased">Тема была успешно куплена!</string>
+    <string name="andropoints_were_successfully_purchased">Андропоинты были успешно куплены</string>
+    <string name="subscription_was_successfully_purchased">Подписка была успешно куплена!</string>
+    <string name="loading_is_complete">Загрузка завершена, приложение будет перезагружено через 5 секунд</string>
+    <string name="you_not_have_favorite_lessons">У вас нет избранных уроков</string>
+    <string name="you_not_have_favorite_theme">У вас нет избранных тем</string>
+    <string name="in_developing">В разработке</string>
+    <string name="advertising_is_only_available_when_there_delay">Реклама доступна только при задержке</string>
+    <string name="victorine_is_closed_for_delay_until">Викторина закрыта на задержку до:</string>
+    <string name="delay_was_successfully_reset">2 часа задержки было успешно сброшенно!</string>
+    <string name="delay_has_been_successfully_reset">Задержка была успешно сброшена!</string>
     <!--SignUp-->
     <string name="welcome">Добро пожаловать!</string>
     <string name="sign_in">Войти</string>
@@ -67,6 +81,11 @@
     <!--dialog--> <!--dialog--> <!--dialog--> <!--dialog-->
     <string name="try_again">Попробовать снова</string>
     <string name="unknown_error">Возникла неизвестная ошибка</string>
+    <string name="advertising_limit_has_been_reached">У вас исчерпан лимит рекламы на 2 часа</string>
+    <string name="advertising_will_be_available_through">Реклама будет доступна через 11 секунд</string>
+    <string name="application_works_offline">Приложение работает в оффлайн режиме!</string>
+    <string name="shock_mode_and_purchases_will_not_be_available">Ударный режим и покупки будут недоступны.</string>
+    <string name="delete_in_offline_mode_progress">При удалении приложения прогресс полученный в оффлайн режиме будет утерян.</string>
     <string name="unknown_error_description">Перезагрузите приложение или попробуйте снова</string>
     <string name="server_not_responding_error">Сервер не отвечает</string>
     <string name="server_not_responding_error_description">Время ожидания ответа истекло, попробуйте снова</string>

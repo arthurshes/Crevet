@@ -803,76 +803,6 @@ class ThemeUseCase @Inject constructor(
 
 
 
-    /// Проверка всех тем курса на наличие и актуальность задержки
-//    suspend fun checkTermAndNo(courseNumber:Int,isSuccess: ((ErrorEnum) -> Unit)){
-//        try {
-//            val userInfoLocal = userLogicRepo.getUserInfoLocal()
-//            userInfoLocal?.let { myInfo->
-//                val allThemesCourse = courseRepo.searchThemesWithCourseNumber(courseNumber)
-//                allThemesCourse?.let { allThemesNotnull ->
-//                    allThemesNotnull.forEach { theme ->
-//                        theme.termHourse?.let { termNotnull ->
-//                            val currentDateApi = courseRepo.getCurrentTime()
-//                            val termCheckModel = ThemeCheckTermModel(
-//                                token = myInfo.token ?: "",
-//                                termHourse = termNotnull,
-//                                currentDateApi =  currentDateApi.datetime,
-//                                uniqueThemeId = theme.uniqueThemeId,
-//                                themeNumber = theme.themeNumber,
-//                                courseNumber = theme.courseNumber,
-//                                terDateApi = theme.termDateApi ?: ""
-//                            )
-//                            val response = courseRepo.checkTermCurrentTheme(termCheckModel)
-//                            if (response.isEnding){
-//                                val updateThemeEntity = ThemeEntity(
-//                                    uniqueThemeId = theme.uniqueThemeId,
-//                                    themeNumber = theme.themeNumber,
-//                                    courseNumber = theme.courseNumber,
-//                                    termHourse = null,
-//                                    themeName = theme.themeName,
-//                                    vicotineTestId = theme.vicotineTestId,
-//                                    interactiveTestId = theme.interactiveTestId,
-//                                    interactiveQuestionCount = theme.interactiveQuestionCount,
-//                                    victorineQuestionCount = theme.victorineQuestionCount,
-//                                    interactiveCodeCorrect = theme.interactiveCodeCorrect,
-//                                    interactiveCodeMistakes = theme.interactiveCodeMistakes,
-//                                    victorineCorrectAnswer = theme.victorineCorrectAnswer,
-//                                    victorineDate = theme.victorineDate,
-//                                    victorineMistakeAnswer = theme.victorineMistakeAnswer,
-//                                    isVictorine = theme.isVictorine,
-//                                    isDuoInter = theme.isDuoInter,
-//                                    isOpen = true,
-//                                    lastUpdateDate = Date(),
-//                                    termDateApi = null,
-//                                    lessonsCount = theme.lessonsCount,
-//                                    imageTheme = theme.imageTheme,
-//                                    lastCourseTheme = theme.lastCourseTheme,
-//                                    isFav = theme.isFav,
-//                                    isThemePassed = theme.isThemePassed,
-//                                    possibleToOpenThemeFree = theme.possibleToOpenThemeFree
-//                                )
-//                                courseRepo.updateTheme(updateThemeEntity)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }catch (e:IOException){
-//            if(checkSubscibe()){
-//                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
-//            }
-//            if (checkBuyCourse()){
-//                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
-//            }
-//            isSuccess.invoke(ErrorEnum.NOTNETWORK)
-//        }catch (e:HttpException){
-//            isSuccess.invoke(ErrorEnum.ERROR)
-//        }catch (e: TimeoutException){
-//            isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
-//        }catch (e:Exception){
-//            isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
-//        }
-//    }
 
 
     ///Проверка закрыта ли определенная тема
@@ -1020,17 +950,6 @@ class ThemeUseCase @Inject constructor(
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
-
-
-////Если не вышло выложить из за какой либо ошибки
-    suspend fun tryAgainSendProgres(isSuccess: ((ErrorEnum) -> Unit),buyThemeId: ((List<Int>) -> Unit)?=null){
-        tryAgainUseCase.tryAgainSendProgres({errorState->
-            isSuccess.invoke(errorState)
-        },{ uniqueThemeIds->
-            buyThemeId?.invoke(uniqueThemeIds)
-        })
-    }
-
 
 ////Задержка
     private suspend fun termCloseTheme(uniqueThemeId: Int,isSuccess:((ErrorEnum)->Unit),termHourse:Int,dateUnlockTheme:((String)->Unit),buyThemeId:((List<Int>)->Unit)?=null) {

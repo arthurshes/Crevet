@@ -1,22 +1,8 @@
 package workwork.example.andropediagits.domain.useCases.userLogic
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.filters.SmallTest
-import com.example.andropediagits.core.exception.ErrorEnum
-import com.example.andropediagits.core.utils.CustomTimerUtil
-import com.example.andropediagits.data.local.MainDb
-import com.example.andropediagits.data.local.dao.theme.ThemeDao
-import com.example.andropediagits.data.local.dao.victorine.VictorineDao
-import com.example.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
-import com.example.andropediagits.data.local.entities.victorine.VictorineClueEntity
-import com.example.andropediagits.data.local.entities.victorine.VictorineEntity
-import com.example.andropediagits.data.remote.model.SendSubscribeCheckModel
-import com.example.andropediagits.domain.repo.CourseRepo
-import com.example.andropediagits.domain.repo.TransactionRepo
-import com.example.andropediagits.domain.repo.UserLogicRepo
-import com.example.andropediagits.domain.useCases.userLogic.privateUseCase.UpdateThemeUseCase
-import com.example.andropediagits.getOrAwaitValue
+
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -29,6 +15,19 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.*
+import workwork.test.andropediagits.core.exception.ErrorEnum
+import workwork.test.andropediagits.core.utils.CustomTimerUtil
+import workwork.test.andropediagits.data.local.MainDb
+import workwork.test.andropediagits.data.local.dao.victorine.VictorineDao
+import workwork.test.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
+import workwork.test.andropediagits.data.local.entities.victorine.VictorineClueEntity
+import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntity
+import workwork.test.andropediagits.data.remote.model.SendSubscribeCheckModel
+import workwork.test.andropediagits.domain.repo.CourseRepo
+import workwork.test.andropediagits.domain.repo.TransactionRepo
+import workwork.test.andropediagits.domain.repo.UserLogicRepo
+import workwork.test.andropediagits.domain.useCases.userLogic.VictorineUseCase
+import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.UpdateThemeUseCase
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,9 +66,7 @@ class VictorineUseCaseTest {
     @Named("test_updateThemeUseCase")
     lateinit var updateThemeUseCase: UpdateThemeUseCase
 
-    @Inject
-    @Named("test_customTimerUtil")
-    lateinit var CustomTimerUtil: CustomTimerUtil
+
 
     @Before
     fun setup() {
@@ -81,7 +78,6 @@ class VictorineUseCaseTest {
                 courseRepo,
                 transactionRepo,
                 userLogicRepo,
-                CustomTimerUtil
             )
     }
 

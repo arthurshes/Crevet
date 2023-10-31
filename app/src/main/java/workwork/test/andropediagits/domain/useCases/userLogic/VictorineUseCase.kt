@@ -45,61 +45,6 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
         updateThemeUseCase.updateTheme(uniqueThemeId, UpdateThemeState.RESETVICTORINEDATA)
     }
 
-//    suspend fun victorineStart(isSuccess:((ErrorEnum)->Unit),uniqueThemeId:Int,isSubscribe:((Boolean)->Unit),isEnding:((Boolean)->Unit),isTime:((LiveData<Long>)->Unit)){
-//        try{
-//            val userInfo = userLogicRepo.getUserInfoLocal()
-//            val currentTime = userLogicRepo.getCurrentTime()
-//            val checkSubscribeModel = SendSubscribeCheckModel(
-//                token = userInfo.token,
-//                currentDate = currentTime.datetime
-//            )
-//            val response = transactionRepo.checkMySubscribe(checkSubscribeModel)
-//            if(response.subscribeIsActual){
-//                isSubscribe.invoke(true)
-//            }else{
-//                isSubscribe.invoke(false)
-//                val currentVictorine = courseRepo.searchAllVictorinesWithUniqueThemeId(uniqueThemeId)[0]
-//                withContext(Dispatchers.Main){
-//                    customTimerUtil.startTimer(currentVictorine?.victorineTimeSec ?: 100) {
-//                        isEnding.invoke(it)
-//                    }
-//                    Log.d("timerTest22",customTimerUtil.timerValue.toString())
-//                    isTime.invoke(customTimerUtil.timerValue)
-//                }
-//            }
-//            isSuccess.invoke(ErrorEnum.SUCCESS)
-//        }catch (e:IOException){
-//            Log.d("victorineerirjirjgigjitjgt",e.toString())
-//            if(checkSubscibe()){
-//                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
-//            }
-//            if(checkBuyCourse()){
-//                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
-//            }
-//            Log.d("errorTimer",e.toString())
-//            isSuccess.invoke(ErrorEnum.NOTNETWORK)
-//
-//        }catch (e:HttpException){
-//            Log.d("victorineerirjirjgigjitjgt",e.toString())
-//            Log.d("errorTimer",e.toString())
-//            isSuccess.invoke(ErrorEnum.ERROR)
-//        }catch (e:NullPointerException){
-//            Log.d("victorineerirjirjgigjitjgt",e.toString())
-//            Log.d("errorTimer",e.toString())
-//            isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
-//        }catch (e:TimeoutException){
-//            Log.d("victorineerirjirjgigjitjgt",e.toString())
-//            Log.d("errorTimer",e.toString())
-//            isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
-//        }catch (e:Exception){
-//            Log.d("victorineerirjirjgigjitjgt",e.toString())
-//            Log.d("errorTimer",e.toString())
-//            isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
-//        }
-//    }
-
-
-
    suspend fun updateVictorineData(answer:VictorineAnswerVariantEntity, isSuccess:((ErrorEnum)->Unit), isClue:((String)->Unit)?=null){
        try {
            Log.d("victorineTestdfetd",answer.toString())
@@ -145,7 +90,6 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
                                    isClue?.invoke(victorinClue.clueText)
                                }
                            }
-
                        }
                    }
                    ///Проверка подписки промокода конец

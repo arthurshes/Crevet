@@ -34,7 +34,6 @@ class TestSplScrFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentTestSplScrBinding.inflate(inflater, container, false)
         splashScreenTreatmentResult()
         return binding?.root
@@ -46,19 +45,6 @@ class TestSplScrFragment : Fragment() {
          viewModel.checkCacheActual { checkResult->
              Log.d("sppspsp",checkResult.toString())
              when(checkResult){
-                 ErrorEnum.NOTNETWORK -> {
-                     ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                         splashScreenTreatmentResult()
-                     }
-                 }
-                 ErrorEnum.ERROR -> {
-                     requireActivity().runOnUiThread {
-                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                             splashScreenTreatmentResult()
-                         }
-
-                     }
-                 }
                  ErrorEnum.SUCCESS -> {
                      viewModel.checkSplashScreen { resultSplashScreen->
 
@@ -69,51 +55,29 @@ class TestSplScrFragment : Fragment() {
                                      binding?.root?.let { it1 ->
                                          Navigation.findNavController(it1).navigate(action)
                                      }
-
                                  }
-
                              }
 
                              SplashActionEnum.RESETDATASCREEN ->{
-                                 val action =
-                                     TestSplScrFragmentDirections.actionTestSplScrFragmentToPasswordRecoveryMethodFragment()
+                                 val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToPasswordRecoveryMethodFragment()
                                  binding?.root.let { it1 ->
                                      if (it1 != null) {
                                          Navigation.findNavController(it1).navigate(action)
                                      }
                                  }
-//                                 val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
-//                                 binding?.root?.let { it1 ->
-//                                     Navigation.findNavController(it1).navigate(action)
-//                                 }
-//                                 Toast.makeText(requireContext(), "ре2222г", Toast.LENGTH_LONG).show()
                              }
-
                              SplashActionEnum.HOMESCREEN -> {
                                  requireActivity().runOnUiThread {
                                      val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
-                                     binding?.root?.let { it1 ->
-                                         Navigation.findNavController(it1).navigate(action)
-                                     }
-
-//                            val fragment = CoursesFragment()
-//                            supportFragmentManager.beginTransaction()
-//                                .replace(R.id.fragmentCourses, fragment).commit()
-
+                                     binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
                                  }
-
-
                              }
-
                              SplashActionEnum.OFFLINEMODE -> {
                                  requireActivity().runOnUiThread {
-                                     Toast.makeText(requireContext(), "offline", Toast.LENGTH_LONG).show()
+                                     val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                                     binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
                                  }
-
-
-
                              }
-
                              SplashActionEnum.ERRORSCREEN -> {
                                  requireActivity().runOnUiThread {
                                      ShowDialogHelper.showDialogUnknownError(requireContext()) {
@@ -121,19 +85,13 @@ class TestSplScrFragment : Fragment() {
                                      }
 
                                  }
-
-
-
                              }
-
                              SplashActionEnum.LONGWAITSERVER -> {
                                  requireActivity().runOnUiThread {
                                      ShowDialogHelper.showDialogTimeOutError(requireContext()) {
                                          splashScreenTreatmentResult()
                                      }
-
                                  }
-
                              }
 
                              SplashActionEnum.TRYAGAINSNACk -> {
@@ -143,21 +101,26 @@ class TestSplScrFragment : Fragment() {
                                      }
 
                                  }
-
-
                              }
-
                              else -> {
                                  requireActivity().runOnUiThread {
                                      ShowDialogHelper.showDialogUnknownError(requireContext()) {
                                          splashScreenTreatmentResult()
                                      }
-
-
                                  }
-
-
                              }
+                         }
+                     }
+                 }
+                 ErrorEnum.NOTNETWORK -> {
+                     ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                         splashScreenTreatmentResult()
+                     }
+                 }
+                 ErrorEnum.ERROR -> {
+                     requireActivity().runOnUiThread {
+                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                             splashScreenTreatmentResult()
                          }
                      }
                  }
@@ -176,17 +139,22 @@ class TestSplScrFragment : Fragment() {
                          splashScreenTreatmentResult()
                      }
                  }
-                 ErrorEnum.OFFLINEMODE -> {
-                     Toast.makeText(requireContext(), "offline", Toast.LENGTH_LONG).show()
+                 ErrorEnum.OFFLINEMODE ->{
+                     requireActivity().runOnUiThread {
+                         ShowDialogHelper.showDialogOffline(requireContext())
+                     }
                  }
                  ErrorEnum.OFFLINETHEMEBUY -> {
-                     Toast.makeText(requireContext(), "offlinetheme", Toast.LENGTH_LONG).show()
+                     requireActivity().runOnUiThread {
+                         ShowDialogHelper.showDialogOffline(requireContext())
+                     }
                  }
              }
          }
 
     }
-
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
 }

@@ -1,13 +1,9 @@
 package workwork.test.andropediagits.presenter.bottomSheet
 
-import android.app.Activity
-import android.content.Intent
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.text.Spannable
-import android.text.SpannableString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -44,18 +39,19 @@ import java.util.concurrent.atomic.AtomicBoolean
 @AndroidEntryPoint
 class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
-    private var googleMobileAdsConsentManager: GoogleAdManager?=null
+    private var googleMobileAdsConsentManager: GoogleAdManager? = null
     private var rewardedAd: RewardedAd? = null
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
     private var isLoading = false
-    private var timer: CountDownTimer?=null
+    private var timer: CountDownTimer? = null
     private var terString = ""
     private var isTermVar = false
     private var startTimerViewAds = false
     protected val navController: NavController by lazy {
-        Navigation. findNavController(
-           requireActivity(),
-        R.id. fragmentContainerView)
+        Navigation.findNavController(
+            requireActivity(),
+            R.id.fragmentContainerView
+        )
     }
     private val viewModel: VictorineBottomSheetViewModel by viewModels()
     private var binding: FragmentVictorineBottomSheetBinding? = null
@@ -64,101 +60,49 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentVictorineBottomSheetBinding.inflate(inflater,container,false)
+        binding = FragmentVictorineBottomSheetBinding.inflate(inflater, container, false)
         googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
-        isTermVar = arguments?.getBoolean("isTerm",false) == true
-        terString = arguments?.getString("termDate","Invalid date").toString()
+        isTermVar = arguments?.getBoolean("isTerm", false) == true
+        terString = arguments?.getString("termDate", "Invalid date").toString()
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val colors = intArrayOf(    ContextCompat.getColor(requireContext(),R.color.color1), // Замените R.color.color1 на цвет
-            ContextCompat.getColor(requireContext(),R.color.color2), ContextCompat.getColor(requireContext(),R.color.color3)
+        val colors = intArrayOf(
+            ContextCompat.getColor(requireContext(), R.color.color1),
+            ContextCompat.getColor(requireContext(), R.color.color2),
+            ContextCompat.getColor(requireContext(), R.color.color3)
         )
-        val shader = binding?.tvGradient?.textSize?.let {
-            LinearGradient(0f, 0f, 0f,
-                it, colors, null, Shader.TileMode.CLAMP)
-        }
+        val shader = binding?.tvGradient?.textSize?.let { LinearGradient(0f, 0f, 0f, it, colors, null, Shader.TileMode.CLAMP) }
         binding?.tvGradient?.paint?.shader = shader
-
-
-
-//        val textView = binding?.textBuyPremium
-//
-//        val fullText = "Купить PREMIUM сегодня"
-//
-//        // Создаем SpannableString
-//        val spannableString = SpannableString(fullText)
-//
-//        // Создаем градиент с тремя цветами
-//        val gradientColors = intArrayOf(0xFF1290D9.toInt(), 0xFFCD5DA5.toInt(), 0xFFF6870C.toInt()) // Три цвета для градиента
-//        val positions = floatArrayOf(0.0f, 0.5f, 1.0f) // Положения цветов (0.0 - начало, 0.5 - середина, 1.0 - конец)
-//        val shader = LinearGradient(0f, 0f, 0f, textView?.textSize ?: 1.0f, gradientColors, positions, Shader.TileMode.CLAMP)
-//        val gradientSpan = ShaderSpan(shader)
-//
-//        // Находим индекс начала и конца слова "PREMIUM" в тексте
-//        val startIndex = fullText.indexOf("PREMIUM")
-//        val endIndex = startIndex + "PREMIUM".length
-//
-//        // Применяем градиент к слову "PREMIUM"
-//        spannableString.setSpan(gradientSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-//
-//        // Устанавливаем SpannableString в TextView
-//        textView?.text = spannableString
-
-
-        googleMobileAdsConsentManager?.gatherConsent { error ->
-            if (error != null) {
-                // Consent not obtained in current session.
-                Log.d("TAG33333", "${error.errorCode}: ${error.message}")
-            }
-
-            if (googleMobileAdsConsentManager?.canRequestAds == true) {
-                initializeMobileAdsSdk()
-            }
-
-            if (googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true) {
-                // Regenerate the options menu to include a privacy setting.
-                requireActivity().invalidateOptionsMenu()
-            }
-        }
+        googleMobileAdsConsentManager()
 
         if (googleMobileAdsConsentManager?.canRequestAds == true) {
             initializeMobileAdsSdk()
         }
 
 
-        val uniqueCurrentThemeId = arguments?.getInt("uniqueThemeID",2)
-        val courseNumber = arguments?.getInt("courseNumber",1)
-        val courseName = arguments?.getString("courseName","")
-         val isThemePassed = arguments?.getBoolean("isThemePassed") ?: false
-        val courseNameReal = arguments?.getString("courseNameReal","")
-//        viewModel.checkCurrentThemeTerm(uniqueCurrentThemeId ?: 2,{state->
-//            when(state){
-//                ErrorEnum.NOTNETWORK -> {
-//                    TODO()
-//                }
-//                ErrorEnum.ERROR -> {
-//                    TODO()
-//                }
-//                ErrorEnum.SUCCESS -> {
-//                    Log.d("isTernVarStateVictorine",isTermVar.toString())
-        if(isTermVar){
+        val uniqueCurrentThemeId = arguments?.getInt("uniqueThemeID", 2)
+        val courseNumber = arguments?.getInt("courseNumber", 1)
+        val courseName = arguments?.getString("courseName", "")
+        val isThemePassed = arguments?.getBoolean("isThemePassed") ?: false
+        val courseNameReal = arguments?.getString("courseNameReal", "")
+
+        if (isTermVar) {
             binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
             isTermVictorine = false
-        }else{
-            if(terString == ""){
+        } else {
+            if (terString == "") {
                 binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
                 isTermVictorine = false
 
-            } else if(terString == "Invalid date"){
+            } else if (terString == "Invalid date") {
                 binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
                 isTermVictorine = false
-            }else{
+            } else {
 
-                if(!isThemePassed){
+                if (!isThemePassed) {
                     isTermVictorine = true
                     binding?.linearTermVictorineSheet?.visibility = View.VISIBLE
 
@@ -167,163 +111,147 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
             }
         }
-//                        viewModel.howManyTerm({stateHow->
-//                            when(stateHow){
-//                                ErrorEnum.NOTNETWORK -> TODO()
-//                                ErrorEnum.ERROR -> TODO()
-//                                ErrorEnum.SUCCESS -> {
-//                                    Log.d("termVictoBottom",terString.toString())
-//                                    if(terString == "Invalid date"){
-//                                        binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
-//                                        isTermVictorine = false
-//                                    }else{
-//                                        isTermVictorine = true
-//                                        binding?.linearTermVictorineSheet?.visibility = View.VISIBLE
-//
-//                                        binding?.termTextViewVictorineBottom?.text = terString
-//                                    }
-//
-//
-//                                }
-//                                ErrorEnum.UNKNOWNERROR -> TODO()
-//                                ErrorEnum.TIMEOUTERROR -> TODO()
-//                                ErrorEnum.NULLPOINTERROR -> TODO()
-//                                ErrorEnum.OFFLINEMODE -> TODO()
-//                                ErrorEnum.OFFLINETHEMEBUY -> TODO()
-//                            }
-//                        },{termText->
-//                            terString = termText
-//                        })
-//                    }
-//                }
-//                ErrorEnum.UNKNOWNERROR -> {
-//                    TODO()
-//                }
-//                ErrorEnum.TIMEOUTERROR -> {
-//                    TODO()
-//                }
-//                ErrorEnum.NULLPOINTERROR -> {
-//                    TODO()
-//                }
-//                ErrorEnum.OFFLINEMODE -> {
-//                    TODO()
-//                }
-//                ErrorEnum.OFFLINETHEMEBUY -> {
-//                    TODO()
-//                }
-//            }
-//        }, { isTerm ->
-//            isTermVar = isTerm
-//        })
-
-
-
-
         binding?.btnWatchAdBS?.setOnClickListener {
-            if(!isTermVictorine){
-             Toast.makeText(requireContext(),"Реклама доступна только при задержке",Toast.LENGTH_SHORT).show()
-            }else{
-                var isActualNotTerm = false
-                viewModel.checkLimitActual({state->
-                    when(state){
-                        ErrorEnum.NOTNETWORK -> {
-                            TODO()
-                        }
-                        ErrorEnum.ERROR -> {
-                            TODO()
-                        }
-                        ErrorEnum.SUCCESS -> {
-                            Log.d("adsViewCount","isActualTerm:${isActualNotTerm}")
-                            Log.d("adsViewCount","isStartTimer:${startTimerViewAds}")
+            if (!isTermVictorine) {
+                Toast.makeText(requireContext(), getString(R.string.advertising_is_only_available_when_there_delay), Toast.LENGTH_SHORT).show()
+            } else {
+                checkLimitActualTreatmentResult()
 
-                            if(isActualNotTerm){
-                                if(startTimerViewAds){
-                                    Toast.makeText(requireContext(),"Реклама будет доступна через 11секунд",Toast.LENGTH_SHORT).show()
-                                }else{
-                                    showRewardedVideo()
-                                }
-                            }else{
-                                Toast.makeText(requireContext(),"У вас исчерпан лимит рекламы на 2часа",Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        ErrorEnum.UNKNOWNERROR -> {
-                            TODO()
-                        }
-                        ErrorEnum.TIMEOUTERROR -> {
-                            TODO()
-                        }
-                        ErrorEnum.NULLPOINTERROR -> {
-                            TODO()
-                        }
-                        ErrorEnum.OFFLINEMODE -> {
-
-                        }
-                        ErrorEnum.OFFLINETHEMEBUY -> {
-                            TODO()
-                        }
-                    }
-                },{
-                    isActualNotTerm = it
-                })
             }
         }
 
         binding?.btnVictorineBS?.setOnClickListener {
-            if(isTermVictorine){
-                if(!isThemePassed){
-                    Toast.makeText(requireContext(),"Викторина закрыта на задержку до:${terString}",Toast.LENGTH_LONG).show()
-                }else{
-                    ShowDialogHelper.showDialogAttention(requireContext()) {
-                        dismiss()
-                        val action =
-                            ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(
-                                uniqueCurrentThemeId ?: 2,
-                                courseName ?: "defaultTest",
-                                courseNumber ?: 1,
-                                courseNameReal ?: ""
-
-                            )
-                        navController.navigate(action)
-                    }
-                }
-
-            }else{
-//                val parentFragment = targetFragment as ListLessonsFragment
-//                val argument = Bundle()
-//                argument.putString("HowNavNext","victorine")
-//                parentFragment.onActivityResult(22234,Activity.RESULT_OK, Intent().putExtras(argument))
-//                dismiss()
-                ShowDialogHelper.showDialogAttention(requireContext()) {
-                    dismiss()
-                    val action =
-                        ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(
-                            uniqueCurrentThemeId ?: 2,
-                            courseName ?: "defaultTest",
-                            courseNumber ?: 1,
-                            courseNameReal ?: ""
-                        )
-                    navController.navigate(action)
-                    }
-                }
-
-//                binding?.root?.let {
-//                    Navigation.findNavController(it).navigate(action)
-//                }
-            }
+            inVictorine(uniqueCurrentThemeId,isThemePassed,courseName,courseNameReal,courseNumber)
+        }
 
         binding?.btnBuyPremiumBS?.setOnClickListener {
             dismiss()
             val action =
-                ListLessonsFragmentDirections.actionListLessonsFragmentToThemesFragment(
-                    courseNumber ?: 1,
-                    courseNameReal ?: "lvptgtv",
-                    true
-                )
+                ListLessonsFragmentDirections.actionListLessonsFragmentToThemesFragment(courseNumber ?: 1, courseNameReal ?: "lvptgtv", true)
             navController.navigate(action)
         }
 
 
+    }
+
+    private fun inVictorine(uniqueCurrentThemeId: Int?, isThemePassed: Boolean, courseName: String?, courseNameReal: String?, courseNumber: Int?) {
+        if (isTermVictorine) {
+            if (!isThemePassed) {
+                Toast.makeText(requireContext(), "${getString(R.string.victorine_is_closed_for_delay_until)}${terString}", Toast.LENGTH_LONG).show()
+            } else {
+                ShowDialogHelper.showDialogAttention(requireContext()) {
+                    dismiss()
+                    val action = ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(uniqueCurrentThemeId ?: 2, courseName ?: "defaultTest", courseNumber ?: 1, courseNameReal ?: "")
+                    navController.navigate(action)
+                }
+            }
+
+        } else {
+            ShowDialogHelper.showDialogAttention(requireContext()) {
+                dismiss()
+                val action = ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(uniqueCurrentThemeId ?: 2, courseName ?: "defaultTest", courseNumber ?: 1, courseNameReal ?: "")
+                navController.navigate(action)
+            }
         }
+    }
+
+    private fun googleMobileAdsConsentManager() {
+        googleMobileAdsConsentManager?.gatherConsent { error ->
+            if (error != null) {
+                Log.d("TAG33333", "${error.errorCode}: ${error.message}")
+            }
+
+            if (googleMobileAdsConsentManager?.canRequestAds == true) {
+                initializeMobileAdsSdk()
+            }
+
+            if (googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true) {
+                requireActivity().invalidateOptionsMenu()
+            }
+        }
+    }
+    private fun checkLimitActualTreatmentResult() {
+        var isActualNotTerm = false
+        viewModel.checkLimitActual({ state ->
+            when (state) {
+                ErrorEnum.SUCCESS -> {
+                    Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
+                    Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
+                    if (isActualNotTerm) {
+                        if (startTimerViewAds) {
+                            Toast.makeText(
+                                requireContext(),
+                               getString(R.string.advertising_will_be_available_through),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            showRewardedVideo()
+                        }
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.advertising_limit_has_been_reached),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            checkLimitActualTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkLimitActualTreatmentResult()
+                        }
+                    }
+                }
+
+
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkLimitActualTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            checkLimitActualTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkLimitActualTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.OFFLINEMODE -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+            }
+        }, {
+            isActualNotTerm = it
+        })
+    }
 
     private fun loadRewardedAd() {
         if (rewardedAd == null) {
@@ -358,8 +286,6 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                 object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
                         Log.d("TAG", "Ad was dismissed.")
-                        // Don't forget to set the ad reference to null so you
-                        // don't show the ad a second time.
                         rewardedAd = null
                         if (googleMobileAdsConsentManager?.canRequestAds == true) {
                             loadRewardedAd()
@@ -368,67 +294,163 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                         Log.d("TAG", "Ad failed to show.")
-                        // Don't forget to set the ad reference to null so you
-                        // don't show the ad a second time.
+
                         rewardedAd = null
                     }
 
                     override fun onAdShowedFullScreenContent() {
                         Log.d("TAG", "Ad showed fullscreen content.")
-                        // Called when ad is dismissed.
                     }
                 }
 
             rewardedAd?.show(
                 requireActivity(),
                 OnUserEarnedRewardListener { rewardItem ->
-                    // Handle the reward.
                     val rewardAmount = rewardItem.amount
                     val rewardType = rewardItem.type
                     minusTwoHoursTerm()
                     Log.d("TAG", "User earned the reward.")
                 }
             )
-            viewModel.adsView({ state->
-                when(state){
-                    ErrorEnum.NOTNETWORK -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                    ErrorEnum.ERROR -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                    ErrorEnum.SUCCESS -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                    ErrorEnum.UNKNOWNERROR -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                    ErrorEnum.TIMEOUTERROR -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                    ErrorEnum.NULLPOINTERROR -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                    ErrorEnum.OFFLINEMODE -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                    ErrorEnum.OFFLINETHEMEBUY -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                }
-            },true)
+            adsViewTreatmentResult()
         }
-
-//        binding.showVideoButton.visibility = View.INVISIBLE
-
     }
 
-    private fun minusTwoHoursTerm(){
-        viewModel.minus2HoursTermAds({state->
-            when(state){
-                ErrorEnum.NOTNETWORK -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                ErrorEnum.ERROR -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                ErrorEnum.SUCCESS -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                ErrorEnum.UNKNOWNERROR -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                ErrorEnum.TIMEOUTERROR -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                ErrorEnum.NULLPOINTERROR -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                ErrorEnum.OFFLINEMODE -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-                ErrorEnum.OFFLINETHEMEBUY -> Log.d("fprlfrpfl404r004t5t5","NOTNETWORK")
-            }
-        },arguments?.getInt("uniqueThemeID",2) ?: 0,{ remainingHours->
-           if(remainingHours=="0null"){
+    private fun adsViewTreatmentResult() {
+        viewModel.adsView({ state ->
+            when (state) {
+                ErrorEnum.SUCCESS -> {
 
-           }
+                }
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            adsViewTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            adsViewTreatmentResult()
+                        }
+                    }
+                }
+
+
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            adsViewTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            adsViewTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            adsViewTreatmentResult()
+                        }
+                    }
+                }
+
+                ErrorEnum.OFFLINEMODE -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+            }
+        }, true)
+    }
+
+    private fun minusTwoHoursTerm() {
+        viewModel.minus2HoursTermAds({ state ->
+            when (state) {
+                ErrorEnum.SUCCESS -> {
+                    Toast.makeText(requireContext(),getString(R.string.delay_was_successfully_reset), Toast.LENGTH_SHORT).show()
+                }
+
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            minusTwoHoursTerm()
+                        }
+                    }
+                }
+
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            minusTwoHoursTerm()
+                        }
+                    }
+                }
+
+
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            minusTwoHoursTerm()
+                        }
+                    }
+                }
+
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            minusTwoHoursTerm()
+                        }
+                    }
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            minusTwoHoursTerm()
+                        }
+                    }
+                }
+
+                ErrorEnum.OFFLINEMODE -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+            }
+        }, arguments?.getInt("uniqueThemeID", 2) ?: 0, { remainingHours ->
+            if (remainingHours == "0null") {
+                Toast.makeText(requireContext(),getString(R.string.delay_has_been_successfully_reset), Toast.LENGTH_SHORT).show()
+            }
         })
     }
 
-    private fun startTimerViewAdsFun(){
+    private fun startTimerViewAdsFun() {
         timer = object : CountDownTimer(11 * 1000, 1000) {
-            override fun onTick(millisUntilFinished: Long) { millisUntilFinished / 1000        }
+            override fun onTick(millisUntilFinished: Long) {
+                millisUntilFinished / 1000
+            }
+
             override fun onFinish() {
                 startTimerViewAds = false
             }
@@ -441,16 +463,12 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
             return
         }
-
-        // Initialize the Mobile Ads SDK.
         MobileAds.initialize(requireContext()) {}
-        // Load an ad.
         loadRewardedAd()
     }
-
-
-
-
-
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
+}
 

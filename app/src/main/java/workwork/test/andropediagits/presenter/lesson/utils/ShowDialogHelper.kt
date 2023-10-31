@@ -4,34 +4,30 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Handler
-import android.os.Looper
+import android.graphics.Typeface
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.Navigation
-import org.w3c.dom.Text
 
 import workwork.test.andropediagits.R
-import workwork.test.andropediagits.databinding.BuyAndropointsDialogBinding
-import workwork.test.andropediagits.databinding.SelectDateDialogBinding
-import workwork.test.andropediagits.databinding.SelectKeywordDialogBinding
 import workwork.test.andropediagits.databinding.StrikeModeDialogBinding
+import workwork.test.andropediagits.domain.googbilling.BillingManager
+import workwork.test.andropediagits.domain.googbilling.PayState
 import workwork.test.andropediagits.presenter.reset.DatePickerFragment
 
 object ShowDialogHelper {
@@ -85,6 +81,42 @@ object ShowDialogHelper {
             dialog?.dismiss()
             dialog = null
         }
+        dialog?.show()
+    }  fun showDialogOffline(
+        context: Context,
+    ) {
+        dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog?.setContentView(R.layout.offline_dialog)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        val tvNotAvailableSmAndPurchases = dialog?.findViewById<TextView>(R.id.tvNotAvailableSmAndPurchases)
+
+        val text = context.getString(R.string.shock_mode_and_purchases_will_not_be_available)
+
+
+        val keyword1 = "Ударный режим"
+        val keyword2 = "покупки"
+
+        val spannable = SpannableStringBuilder(text)
+
+        val colorSpan1 = ForegroundColorSpan(ContextCompat.getColor(context,R.color.error))
+        val styleSpanBold1 = StyleSpan(Typeface.BOLD)
+
+        val colorSpan2 = ForegroundColorSpan(ContextCompat.getColor(context,R.color.error))
+        val styleSpanBold2 = StyleSpan(Typeface.BOLD)
+
+        val start1 = text.indexOf(keyword1)
+        val start2 = text.indexOf(keyword2)
+
+        if (start1 != -1) {
+            spannable.setSpan(colorSpan1, start1, start1 + keyword1.length, 0)
+            spannable.setSpan(styleSpanBold1, start1, start1 + keyword1.length, 0)
+        }
+
+        if (start2 != -1) {
+            spannable.setSpan(colorSpan2, start2, start2 + keyword2.length, 0)
+            spannable.setSpan(styleSpanBold2, start2, start2 + keyword2.length, 0)
+        }
+        tvNotAvailableSmAndPurchases?.text = spannable
         dialog?.show()
     }
 
@@ -297,45 +329,14 @@ object ShowDialogHelper {
         val addTextAndropoints = dialog?.findViewById<TextView>(R.id.textViewAddAndropointsSuccess)
         dialogButton?.isClickable = false
         var buttonEnable = false
-//        val fadeIn = AlphaAnimation(0f, 1f)
-//        fadeIn.duration = 4000 // 4 секунды (в миллисекундах)
-//        fadeIn.fillAfter = true // Оставить элемент видимым после анимации
-//
-//        // Создаем AnimationSet для объединения анимаций
-//        val animationSet = AnimationSet(true)
-//        animationSet.addAnimation(fadeIn)
-//
-//        dialogButton?.startAnimation(animationSet)
-//
-//
-//        animationSet.setAnimationListener(object : Animation.AnimationListener {
-//            override fun onAnimationStart(animation: Animation) {
-//                // Анимация началась
-//            }
-//
-//            override fun onAnimationEnd(animation: Animation) {
-//                dialogButton?.isClickable = true
-//            }
-//
-//            override fun onAnimationRepeat(animation: Animation) {
-//                // Анимация повторяется (если применимо)
-//            }
-//        })
        dialogButton?.animate()
             ?.alpha(1f)
             ?.setDuration(3000)
             ?.withEndAction {
                 dialogButton?.isClickable = true
                 buttonEnable = true
-                // Анимация завершена, выполняйте здесь дополнительные действия, если нужно
+
             }
-
-
-
-
-
-
-
         dialogButton?.setOnClickListener {
             if(buttonEnable){
                 dialog?.dismiss()
@@ -358,13 +359,12 @@ object ShowDialogHelper {
             dialog = null
             isClose.invoke()
         }
-
         var misstakes = 0
-        if(isTimerOut){
-            var mistaketimer = size - (correctTest+mistakeTest)
-            misstakes = mistaketimer + mistakeTest
+        misstakes = if(isTimerOut){
+            val mistaketimer = size - (correctTest+mistakeTest)
+            mistaketimer + mistakeTest
         }else{
-            misstakes = mistakeTest
+            mistakeTest
         }
         Log.d("misstakeDialog","size:${size} mistakeTest:${misstakes} dateTerm:${dateTerm}")
         val replacementMap = mapOf(
@@ -409,7 +409,6 @@ object ShowDialogHelper {
         andropoints: (Int) -> Unit
     ) {
         dialog = Dialog(context)
-//        val binding = BuyAndropointsDialogBinding.inflate(LayoutInflater.from(context))
         dialog?.setContentView(R.layout.buy_andropoints_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         val btnPay = dialog?.findViewById<CardView>(R.id.btnPay)
@@ -417,7 +416,7 @@ object ShowDialogHelper {
         val cardBuyOneAndropoint = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneAndropoint)
         val cardBuyTenAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyTenAndropoints)
         val cardBuyOneHundredAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneHundredAndropoints)
-         val cardBuyInfinityAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyInfinityAndropoints)
+        val cardBuyInfinityAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyInfinityAndropoints)
         val tvLastCountAndropoint = dialog?.findViewById<TextView>(R.id.tvLastCountAndropoint)
         val tvCountAndropointsBuyOneAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyOneAndropoint)
         val tvCountMoneyBuyOneAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneAndropoint)
@@ -707,7 +706,6 @@ object ShowDialogHelper {
     @SuppressLint("ResourceAsColor")
     fun showDialogSelectKeyword(
         context: Context,
-        layoutInflater: LayoutInflater,
         isSelectKeywordAndClue: (String) -> Unit,
         dialogDissMiss:(()->Unit)
     ) {
@@ -722,9 +720,9 @@ object ShowDialogHelper {
         val tvErrorClueKeywordDialog = dialog?.findViewById<TextView>(R.id.tvErrorClueKeywordDialog)
         val currentTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val textColor: Int = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-            ContextCompat.getColor(context, R.color.white) // Замените R.color.white на ваш ресурс цвета для темной темы
+            ContextCompat.getColor(context, R.color.white)
         } else {
-            ContextCompat.getColor(context, R.color.black) // Замените R.color.black на ваш ресурс цвета для светлой темы
+            ContextCompat.getColor(context, R.color.black)
         }
         edKeywordDialog?.setTextColor(textColor)
         edClueDialogKeyword?.setTextColor(textColor)
@@ -765,6 +763,30 @@ object ShowDialogHelper {
         dialog?.setOnDismissListener {
             dialogDissMiss.invoke()
         }
+    }
+     fun showDialogBuyAndropointsImplementation(
+         context: Context,
+         billingManager: BillingManager?,
+         ads: () -> Unit
+     ) {
+        ShowDialogHelper.showDialogBuyAndropoints(context, {
+            ads.invoke()
+        }, {
+
+        }, {
+            Log.d("andropointsIeefffgbbCout", "moneyRub:${it}")
+        }, {
+            Log.d("andropointsIeefffgbbCout", "andropointsCount:${it}")
+            if (it == 1) {
+                billingManager?.billingSetup(PayState.ONEANDROPOINTBUY)
+            }
+            if (it == 10) {
+                billingManager?.billingSetup(PayState.TENANDROPOINTBUY)
+            }
+            if (it == 100) {
+                billingManager?.billingSetup(PayState.HUNDREDANDROPOINTBUY)
+            }
+        })
     }
 
 }

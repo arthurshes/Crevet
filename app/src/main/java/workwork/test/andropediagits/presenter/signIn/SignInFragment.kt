@@ -1,7 +1,6 @@
 package workwork.test.andropediagits.presenter.signIn
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
@@ -9,17 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.EmailErrorEnum
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -30,7 +24,6 @@ import workwork.test.andropediagits.databinding.FragmentSignInBinding
 import workwork.test.andropediagits.presenter.lesson.utils.ErrorHelper
 import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
 import workwork.test.andropediagits.presenter.signIn.viewModel.SignInViewModel
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
@@ -40,6 +33,8 @@ class SignInFragment : Fragment() {
     private var selectedImageBitmap: Bitmap? = null
     private val viewModel: SignInViewModel by viewModels()
     private var chooseLang:String = "rus"
+    private val russianText = "🇷🇺    Рус"
+    private val englishText = "🇺🇸    Eng"
 
     var lunchActGoogle =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -54,32 +49,11 @@ class SignInFragment : Fragment() {
                        token= account.idToken.toString()
                     )
                     viewModel.getCurrentTime {currentTime->
-                        val userLocal = UserInfoEntity(
-                            name="${account.displayName}",
-                            lastOnlineDate = currentTime,
-                            token = account.idToken.toString(),
-                            userLanguage = chooseLang
-                        )
-                        viewModel.saveUserInfo(userLocal) {itResult-> result = itResult }
+                        val userLocal = UserInfoEntity(name="${account.displayName}", lastOnlineDate = currentTime, token = account.idToken.toString(), userLanguage = chooseLang)
+                        saveUserInfoTreatmentResult(userLocal)
                     }
-
-
-
-//                    val wrokRequest = PeriodicWorkRequestBuilder<CheckCacheWorker>(
-//                          repeatInterval = 7,
-//                        repeatIntervalTimeUnit = TimeUnit.DAYS
-//                    ).setInitialDelay(duration = 7,
-//                    TimeUnit.DAYS)
-//                        .build()
-//                    WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-//                        "checkCacheWorkerManager",
-//                        ExistingPeriodicWorkPolicy.KEEP,
-//                        wrokRequest
-//                    )
                     ShowDialogHelper.showDialogLoadData(requireContext())
                     downloadlCourses(chooseLang)
-//                    Navigation.findNavController(binding?.root!!).navigate(R.id.action_signInFragment_to_coursesFragment)
-
                 }
             } catch (e: ApiException) {
                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
@@ -90,6 +64,34 @@ class SignInFragment : Fragment() {
 
             }
 
+    private fun saveUserInfoTreatmentResult(userLocal: UserInfoEntity) {
+        viewModel.saveUserInfo(userLocal) {
+            when(it){
+                ErrorEnum.SUCCESS -> {}
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogNotNetworkError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                }
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogUnknownError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogUnknownError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                }
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogTimeOutError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                }
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogUnknownError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                }
+                ErrorEnum.OFFLINEMODE ->{
+                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogOffline(requireContext()) }
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogOffline(requireContext()) }
+                }
+            }
+        }
+    }
 
 
     override fun onCreateView(
@@ -107,65 +109,15 @@ class SignInFragment : Fragment() {
         if (savedInstanceState != null) {
             viewModel.currentState = savedInstanceState.getString("state_key_signIn", "")
         }
-        var russianText = "🇷🇺    Рус"
-        var englishText = "🇺🇸    Eng"
 
             binding?.apply {
-                parentLayout?.setOnClickListener {
-                    if (listLayout?.visibility == View.VISIBLE) {
-                        arrowImageViewDown?.visibility = View.VISIBLE
-                        arrowImageViewUp?.visibility = View.GONE
-                        listLayout.visibility = View.GONE
-                    } else {
-                        listLayout?.visibility = View.VISIBLE
-                        arrowImageViewDown?.visibility = View.GONE
-                        arrowImageViewUp?.visibility = View.VISIBLE
-                    }
+                parentLayout.setOnClickListener {
+                    chooseLangParent(binding)
                 }
-                listLayout?.setOnClickListener {
-                    if(englishTextView.text==russianText){
-                        chooseLang = "rus"
-                        russianTextView.text = russianText
-                        englishTextView.text = englishText
-                    } else if(englishTextView.text==englishText){
-                        chooseLang = "eng"
-                        russianTextView.text = englishText
-                        englishTextView.text = russianText
-                    }
-                Log.d("chhofbtjbrjbijbt4t",chooseLang)
+                listLayout.setOnClickListener {
+                    chooseLangList(binding)
+                    Log.d("chhofbtjbrjbijbt4t", chooseLang)
                 }
-//            parentLayout?.setOnClickListener {
-//                if (listLayout?.visibility == View.VISIBLE) {
-//                    val imageResourceDarkTheme = R.drawable.ic_arrow_down_light
-//                    if(arrowImageView?.drawable == ContextCompat.getDrawable(requireContext(), imageResourceDarkTheme)){
-//                        arrowImageView?.setImageResource(R.drawable.ic_arrow_up_light)
-//                    }else{
-//                        arrowImageView?.setImageResource(R.drawable.baseline_keyboard_arrow_up_24)
-//                    }
-//                    listLayout.visibility = View.GONE
-//                } else {
-//                    val imageResourceDarkTheme = R.drawable.ic_arrow_up_light
-//                    listLayout?.visibility = View.VISIBLE
-//                    if(arrowImageView?.drawable == ContextCompat.getDrawable(requireContext(), imageResourceDarkTheme)){
-//                        arrowImageView?.setImageResource(R.drawable.ic_arrow_down_light)
-//                    }else{
-//                        arrowImageView?.setImageResource(R.drawable.baseline_keyboard_arrow_down_24)
-//                    }
-//
-//                }
-//            }
-//            listLayout?.setOnClickListener {
-//                if(russianTextView.text==russianText){
-//                    chooseLang = "rus"
-//                    russianTextView.text = englishText
-//                    englishTextView.text = russianText
-//                } else if(russianTextView.text==englishText){
-//                    chooseLang = "eng"
-//                    russianTextView.text = russianText
-//                    englishTextView.text = englishText
-//                }
-//
-//            }
             btnSignGoogle.setOnClickListener {
                 accountGoogleHelper.signIn()
             }
@@ -178,6 +130,34 @@ class SignInFragment : Fragment() {
                 binding?.root?.let { it1 ->
                     Navigation.findNavController(it1).navigate(action)
                 }
+            }
+        }
+    }
+
+    private fun chooseLangList(binding: FragmentSignInBinding?) {
+        binding?.apply {
+            if (englishTextView.text == russianText) {
+                chooseLang = "rus"
+                russianTextView.text = russianText
+                englishTextView.text = englishText
+            } else if (englishTextView.text == englishText) {
+                chooseLang = "eng"
+                russianTextView.text = englishText
+                englishTextView.text = russianText
+            }
+        }
+    }
+
+    private fun chooseLangParent(binding: FragmentSignInBinding?) {
+        binding?.apply {
+            if (listLayout?.visibility == View.VISIBLE) {
+                arrowImageViewDown?.visibility = View.VISIBLE
+                arrowImageViewUp?.visibility = View.GONE
+                listLayout.visibility = View.GONE
+            } else {
+                listLayout?.visibility = View.VISIBLE
+                arrowImageViewDown?.visibility = View.GONE
+                arrowImageViewUp?.visibility = View.VISIBLE
             }
         }
     }
@@ -283,14 +263,7 @@ class SignInFragment : Fragment() {
 
                         EmailErrorEnum.UNKNOWNERROR -> {
                             ShowDialogHelper.closeDialogLoadData()
-                            ShowDialogHelper.showDialogUnknownError(requireContext()){
-                                checkResultSignInUseCase()
-                            }
-                        }
-
-                        else -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                            ShowDialogHelper.showDialogUnknownError(requireContext()){
+                            ShowDialogHelper.showDialogUnknownError(requireContext()) {
                                 checkResultSignInUseCase()
                             }
                         }
@@ -301,17 +274,9 @@ class SignInFragment : Fragment() {
 
     private fun downloadlCourses(lang:String?=null){
             viewModel.loadData({loadState->
-                when(loadState){
-                    ErrorEnum.NOTNETWORK -> {
-                        Log.d("LoadFragmState","NOTNETWORK")
-                        ShowDialogHelper.closeDialogLoadData()
-                    }
-                    ErrorEnum.ERROR -> {
-                        Log.d("LoadFragmState","ERROR")
-                        ShowDialogHelper.closeDialogLoadData()
-                    }
-                    ErrorEnum.SUCCESS ->         {
-                        Log.d("LoadFragmState","SUCCESS")
+                when(loadState) {
+                    ErrorEnum.SUCCESS -> {
+                        Log.d("LoadFragmState", "SUCCESS")
                         ShowDialogHelper.closeDialogLoadData()
                         val action =
                             SignInFragmentDirections.actionSignInFragmentToPasswordRecoveryMethodFragment()
@@ -321,25 +286,57 @@ class SignInFragment : Fragment() {
                             }
                         }
                     }
-                    ErrorEnum.UNKNOWNERROR ->          {
-                        Log.d("LoadFragmState","UNKNOWNERROR")
-                        ShowDialogHelper.closeDialogLoadData()
+
+                    ErrorEnum.NOTNETWORK -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                                downloadlCourses(lang)
+                            }
+                        }
                     }
-                    ErrorEnum.TIMEOUTERROR ->         {
-                        Log.d("LoadFragmState","TIMEOUTERROR")
-                        ShowDialogHelper.closeDialogLoadData()
+
+                    ErrorEnum.ERROR -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                downloadlCourses(lang)
+                            }
+                        }
                     }
-                    ErrorEnum.NULLPOINTERROR ->          {
-                        Log.d("LoadFragmState","NULLPOINTERROR")
-                        ShowDialogHelper.closeDialogLoadData()
+
+                    ErrorEnum.UNKNOWNERROR -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                downloadlCourses(lang)
+                            }
+                        }
                     }
-                    ErrorEnum.OFFLINEMODE ->          {
-                        Log.d("LoadFragmState","OFFLINEMODE")
-                        ShowDialogHelper.closeDialogLoadData()
+
+                    ErrorEnum.TIMEOUTERROR -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                                downloadlCourses(lang)
+                            }
+                        }
                     }
-                    ErrorEnum.OFFLINETHEMEBUY ->         {
-                        Log.d("LoadFragmState","OFFLINETHEMEBUY")
-                        ShowDialogHelper.closeDialogLoadData()
+
+                    ErrorEnum.NULLPOINTERROR -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                downloadlCourses(lang)
+                            }
+                        }
+                    }
+
+                    ErrorEnum.OFFLINEMODE -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogOffline(requireContext())
+                        }
+                    }
+
+                    ErrorEnum.OFFLINETHEMEBUY -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogOffline(requireContext())
+                        }
                     }
                 }
             },lang)

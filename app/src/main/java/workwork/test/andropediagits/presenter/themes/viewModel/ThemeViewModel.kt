@@ -64,7 +64,7 @@ class ThemeViewModel @Inject constructor(
         }
     }
 
-    fun buyAndropoints(isSuccess: ((ErrorEnum) -> Unit),addAndropoints: AddAndropoints){
+    fun buyAndropoints(addAndropoints: AddAndropoints,isSuccess: ((ErrorEnum) -> Unit),){
         viewModelScope.launch {
             andropointUseCase.addAndropoint(isSuccess,addAndropoints)
         }
