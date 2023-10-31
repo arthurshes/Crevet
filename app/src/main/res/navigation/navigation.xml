@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/testSplScrFragment">
+
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="workwork.test.andropediagits.presenter.signIn.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_coursesFragment"
+            app:destination="@id/coursesFragment"
+           />
+        <action
+            android:id="@+id/action_signInFragment_to_forgetFragment"
+            app:destination="@id/forgetFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_passwordRecoveryMethodFragment"
+            app:destination="@id/passwordRecoveryMethodFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/coursesFragment"
+        android:name="workwork.test.andropediagits.presenter.courses.CoursesFragment"
+        android:label="fragment_courses"
+        tools:layout="@layout/fragment_courses" >
+        <action
+            android:id="@+id/action_coursesFragment_to_themesFragment"
+            app:destination="@id/themesFragment"
+     />
+        <argument
+            android:name="isShowPromoCode"
+            app:argType="boolean"
+            android:defaultValue="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/themesFragment"
+        android:name="workwork.test.andropediagits.presenter.themes.ThemesFragment"
+        android:label="fragment_themes"
+        tools:layout="@layout/fragment_themes" >
+        <action
+            android:id="@+id/action_themesFragment_to_coursesFragment"
+            app:destination="@id/coursesFragment"
+       >
+            <argument
+                android:name="isShowPromoCode"
+                android:defaultValue="false" />
+        </action>
+        <argument
+            android:name="course_number"
+            app:argType="integer" />
+
+        <action
+            android:id="@+id/action_themesFragment_to_listLessonsFragment"
+            app:destination="@id/listLessonsFragment"
+        />
+        <argument
+            android:name="course_name"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_themesFragment_to_settingActivity"
+            app:destination="@id/settingActivity"
+       />
+        <argument
+            android:name="premiumVisible"
+            app:argType="boolean"
+            android:defaultValue="false" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/lessonFragment"
+        android:name="workwork.test.andropediagits.presenter.lesson.LessonFragment"
+        android:label="fragment_lesson"
+        tools:layout="@layout/fragment_lesson" >
+
+        <action
+            android:id="@+id/action_lessonFragment_to_listLessonsFragment"
+            app:destination="@id/listLessonsFragment"
+          />
+        <argument
+            android:name="LessonId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_lessonFragment_to_victorineFragment"
+            app:destination="@id/victorineFragment"
+   />
+        <argument
+            android:name="uniqueThemeId"
+            app:argType="integer" />
+        <argument
+            android:name="course_name"
+            app:argType="string" />
+        <argument
+            android:name="isTerm"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="CourseNumber"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="ThemeNumber"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="LevelNumber"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_lessonFragment_to_themesFragment"
+            app:destination="@id/themesFragment" />
+        <argument
+            android:name="course_name_real"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/listLessonsFragment"
+        android:name="workwork.test.andropediagits.presenter.lesson.ListLessonsFragment"
+        android:label="fragment_list_lessons"
+        tools:layout="@layout/fragment_list_lessons" >
+        <action
+            android:id="@+id/action_listLessonsFragment_to_lessonFragment"
+            app:destination="@id/lessonFragment"
+          />
+        <argument
+            android:name="ThemeId"
+            app:argType="integer" />
+        <argument
+            android:name="course_name"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_listLessonsFragment_to_themesFragment"
+            app:destination="@id/themesFragment"
+            />
+        <action
+            android:id="@+id/action_listLessonsFragment_to_victorineFragment"
+            app:destination="@id/victorineFragment"
+        />
+        <argument
+            android:name="isTerm"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="isThemePassed"
+            app:argType="boolean" />
+        <argument android:name="course_name_real" />
+    </fragment>
+    <fragment
+        android:id="@+id/victorineFragment"
+        android:name="workwork.test.andropediagits.presenter.lesson.victorine.VictorineFragment"
+        android:label="fragment_victorine"
+        tools:layout="@layout/fragment_victorine" >
+        <argument
+            android:name="uniqueThemeId"
+            app:argType="integer" />
+        <argument
+            android:name="course_name"
+            app:argType="string" />
+        <argument
+            android:name="courseNumber"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_victorineFragment_to_themesFragment"
+            app:destination="@id/themesFragment" />
+        <argument
+            android:name="course_name_real"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgetFragment"
+        android:name="workwork.test.andropediagits.presenter.forgetScreens.ForgetFragment"
+        android:label="fragment_forget"
+        tools:layout="@layout/fragment_forget" >
+        <action
+            android:id="@+id/action_forgetFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/settingActivity"
+        android:name="workwork.test.andropediagits.presenter.setting.SettingActivity"
+        android:label="activity_setting"
+        tools:layout="@layout/activity_setting" />
+    <fragment
+        android:id="@+id/testSplScrFragment"
+        android:name="workwork.test.andropediagits.presenter.splashScreen.TestSplScrFragment"
+        android:label="fragment_test_spl_scr"
+        tools:layout="@layout/fragment_test_spl_scr" >
+        <action
+            android:id="@+id/action_testSplScrFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+         />
+        <action
+            android:id="@+id/action_testSplScrFragment_to_coursesFragment"
+            app:destination="@id/coursesFragment"
+            />
+        <action
+            android:id="@+id/action_testSplScrFragment_to_passwordRecoveryMethodFragment"
+            app:destination="@id/passwordRecoveryMethodFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/victorineBottomSheetFragment"
+        android:name="workwork.test.andropediagits.presenter.bottomSheet.VictorineBottomSheetFragment"
+        android:label="fragment_victorine_bottom_sheet"
+        tools:layout="@layout/fragment_victorine_bottom_sheet" >
+        <action
+            android:id="@+id/action_victorineBottomSheetFragment_to_victorineFragment"
+            app:destination="@id/victorineFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/passwordRecoveryMethodFragment"
+        android:name="workwork.test.andropediagits.presenter.reset.PasswordRecoveryMethodFragment"
+        android:label="fragment_password_recovery_method"
+        tools:layout="@layout/fragment_password_recovery_method" >
+        <action
+            android:id="@+id/action_passwordRecoveryMethodFragment_to_coursesFragment"
+            app:destination="@id/coursesFragment" />
+    </fragment>
+</navigation>

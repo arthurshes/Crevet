@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/id_favourite"
+            android:title="@string/favourite"
+            android:icon="@drawable/ic_bookmark"
+             />
+        <item
+            android:id="@+id/id_reminder_schedule"
+            android:title="@string/reminder_schedule"
+            android:icon="@drawable/ic_graph" />
+        <item
+            android:id="@+id/id_settings"
+            android:title="@string/settings"
+            android:icon="@drawable/ic_settings"/>
+        <item
+            android:id="@+id/id_about_Us"
+            android:title="@string/about_Us"
+            android:icon="@drawable/ic_info"
+        />
+    </group>
+
+ <!--   <item
+        android:id="@+id/acc_cat"
+        android:title="@string/a">
+        <menu>
+            <item
+                android:id="@+id/id_remove_ads"
+                android:title="@string/remove_ads" />
+            <item
+                android:id="@+id/id_my_sign_up"
+                android:title="@string/ad_sign_up" />
+            <item
+                android:id="@+id/id_sign_in"
+                android:title="@string/ad_sign_in" />
+            <item
+                android:id="@+id/id_sign_out"
+                android:title="@string/ad_sign_out" />
+
+        </menu>
+    </item>-->
+
+</menu>

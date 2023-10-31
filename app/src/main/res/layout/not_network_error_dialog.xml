@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="30dp"
+    android:layout_marginStart="30dp"
+    app:cardCornerRadius="20dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_dialog"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:theme="@style/ConstraintLightAndBlack"
+                app:cardCornerRadius="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_height="100dp"
+                        android:theme="@style/not_connect_internet_error_image"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:theme="@style/Text_black_white"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        android:gravity="center"
+                        android:text="@string/not_connected_internet" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:theme="@style/Text_black_white"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/not_connected_internet_description" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/btnTryAgainInternet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="100dp"
+                        android:layout_marginEnd="100dp"
+                        android:layout_gravity="center"
+                        app:cardBackgroundColor="#1F71D0">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="#1F71D0"
+                            android:padding="10dp"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:text="@string/try_again"
+                            android:textStyle="bold"
+                            android:textColor="#FFFFFF" />
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+</androidx.cardview.widget.CardView>

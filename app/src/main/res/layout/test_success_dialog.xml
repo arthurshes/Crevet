@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="30dp"
+    android:layout_marginStart="30dp"
+    android:layout_gravity="center"
+    app:cardCornerRadius="20dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_dialog"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:theme="@style/ConstraintLightAndBlack"
+            app:cardCornerRadius="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="5dp"
+                android:orientation="vertical">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginBottom="20dp"
+                    app:lottie_rawRes="@raw/anim_success_vic"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/end_theme"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:theme="@style/Text_black_white" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/end_theme_description"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:theme="@style/Text_black_white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewAddAndropointsSuccess"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="+25"
+                        android:textSize="30dp"
+                        android:textStyle="bold"
+                        android:theme="@style/Text_black_white" />
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                       android:src="@drawable/andropoint"
+                       />
+                </LinearLayout>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnContinue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="70dp"
+                    android:alpha="-1"
+                    android:padding="8dp"
+                    app:cardBackgroundColor="#1F71D0">
+
+
+                    <TextView
+                        android:id="@+id/tvVicSuccessNext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="#1F71D0"
+                        android:padding="8dp"
+                        android:text="@string/continue_"
+                        android:textColor="#FFFFFF"
+
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/forget_fragment_background"
+    tools:context=".presenter.forgetScreens.ForgetFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/newPasswordCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="26dp"
+        android:layout_marginEnd="26dp"
+        android:visibility="gone"
+        app:cardCornerRadius="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/text13"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/enter_your_password"
+                android:textStyle="bold"
+                android:theme="@style/Text_black_white" />
+
+            <EditText
+                android:id="@+id/edEnterNewPassword"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/edit_text_background"
+                android:ems="10"
+                android:hint="@string/enter_new_password"
+                android:paddingStart="5dp"
+                android:textSize="16sp"
+                android:theme="@style/editText_text" />
+
+            <EditText
+                android:id="@+id/edEnterNewPasswordAgain"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/edit_text_background"
+                android:ems="10"
+                android:hint="@string/enter_new_password_again"
+                android:paddingStart="5dp"
+                android:textSize="16sp"
+                android:theme="@style/editText_text" />
+
+            <TextView
+                android:id="@+id/tvErrorNewPasswordForget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:text="@string/password_mismatch"
+                android:textColor="@color/error"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnReadyNewPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="#1F71D0">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="#1F71D0"
+                    android:gravity="center|center_horizontal|center_vertical"
+                    android:padding="15dp"
+                    android:text="@string/ready"
+                    android:textColor="#FFFFFF" />
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/enterEmailCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="26dp"
+        android:layout_marginEnd="26dp"
+
+        android:visibility="visible"
+        app:cardCornerRadius="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="270dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/enter_your_password"
+                android:textStyle="bold"
+                android:theme="@style/Text_black_white" />
+
+            <EditText
+                android:id="@+id/edEmailForget"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/edit_text_background"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:paddingStart="5dp"
+                android:textSize="16sp"
+                android:theme="@style/editText_text" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnReady"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="#1F71D0">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="#1F71D0"
+                    android:gravity="center|center_horizontal|center_vertical"
+                    android:padding="15dp"
+                    android:text="@string/ready"
+                    android:textColor="#FFFFFF" />
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

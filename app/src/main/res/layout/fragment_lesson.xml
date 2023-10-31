@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/ConstraintLightAndBlack"
+    tools:context=".presenter.lesson.LessonFragment">
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imFirst"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/tvTitleLesson"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:theme="@style/Text_black_white" />
+
+            <include
+                android:id="@+id/includedFirst"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+
+            <include
+                android:id="@+id/includedSecond"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/includedThird"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+
+            <include
+                android:id="@+id/includedFourth"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/includedFifth"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+
+            <include
+                android:id="@+id/includedSixth"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/includedSeventh"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/includedEighth"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/includedNinth"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/includedTenth"
+                layout="@layout/one_slide_fragment_lesson"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/btnNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#1F71D0"
+        android:text="@string/next"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/btnPrevious"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#1F71D0"
+        android:text="@string/previous"
+        android:textColor="#FFFFFF" />
+</FrameLayout>

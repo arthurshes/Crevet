@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <PreferenceCategory android:title="@string/size_text">
+
+                <ListPreference
+                    android:id="@+id/text_size_pref_id"
+                    android:defaultValue="30"
+                    android:key="text_size_key"
+                    android:entries="@array/text_size_array"
+                    android:entryValues="@array/text_size_values"
+                    android:title="@string/set_size_text"
+                    app:useSimpleSummaryProvider="true" />
+                <ListPreference
+                    android:id="@+id/code_size_pref_id"
+                    android:defaultValue="30"
+                    android:entries="@array/text_size_array"
+                    android:entryValues="@array/text_size_values"
+                    android:key="code_size_key"
+                    android:title="@string/set_size_code"
+                    app:useSimpleSummaryProvider="true" />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory android:title="@string/clue"
+            >
+                <ListPreference
+                    android:id="@+id/victorine_clue_pref_id"
+                    android:defaultValue="true"
+                    android:icon="@drawable/ic_clue"
+                    android:key="victorine_clue_key"
+                    android:entries="@array/clueNeedArray"
+                    android:entryValues="@array/clueNeedValue"
+                    android:title="@string/needed_clue"
+                    app:useSimpleSummaryProvider="true" />
+
+        </PreferenceCategory>
+</PreferenceScreen>

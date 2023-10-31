@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="30dp"
+    android:layout_marginStart="30dp"
+    android:layout_gravity="center"
+    app:cardCornerRadius="20dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_dialog"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:theme="@style/ConstraintLightAndBlack"
+            app:cardCornerRadius="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="5dp"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/buttonLockFailDialog"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="127dp"
+                    android:layout_marginTop="15dp"
+                    android:theme="@style/dialogCloseCre"
+                    android:background="@null"/>
+
+                <ImageView
+
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="20dp"
+                   android:src="@drawable/test_fail" />
+
+                <TextView
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/fail_test"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:theme="@style/Text_black_white" />
+
+                <TextView
+                    android:id="@+id/tvCountMistake"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="@string/count_mistake"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:theme="@style/Text_black_white" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/advice"
+                    android:theme="@style/Text_black_white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/watch_add"
+                    android:theme="@style/Text_black_white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/or"
+                    android:theme="@style/Text_black_white" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/buy_premium_fail_test"
+                    android:theme="@style/Text_black_white" />
+                <TextView
+                    android:id="@+id/term_fail_test"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/term_before_fail_test"
+                    android:theme="@style/Text_black_white" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
