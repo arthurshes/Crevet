@@ -59,7 +59,7 @@ class ThemesAdapter(val args:ThemesFragmentArgs) : RecyclerView.Adapter<ThemesAd
             if(!currentTheme.isOpen&&currentTheme.themePrice==null){
                 btnFav.visibility = View.GONE
                 cardCloseTheme.visibility = View.VISIBLE
-            } else if(!currentTheme.isOpen&&currentTheme.themePrice!=null){
+            } else if(currentTheme.themePrice!=null){
                 btnFav.visibility = View.GONE
                 cardBuyAndropointsOrMoney.visibility = View.VISIBLE
             }
