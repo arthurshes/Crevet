@@ -58,9 +58,6 @@ class CourseAdapter(private val context: Context) :
                     isCourseOpen?.invoke(currentCourse.isOpen)
                 }
             }
-            if (!currentCourse.possibleToOpenCourseFree) {
-                tvPremium.visibility = View.VISIBLE
-            }
             if (!currentCourse.isOpen) {
                 btnLock.visibility = View.VISIBLE
                 cardCourse.background =
