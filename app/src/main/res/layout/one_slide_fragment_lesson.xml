@@ -4,14 +4,16 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
+
     <TextView
         android:id="@+id/tvTitleSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#FF0000"
-        android:visibility="gone"
         android:textStyle="bold"
-        android:theme="@style/Text_black_white" />
+        android:theme="@style/Text_black_white"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/tvText"
         android:layout_width="match_parent"

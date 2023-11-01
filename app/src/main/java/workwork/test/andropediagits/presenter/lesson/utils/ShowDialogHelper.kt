@@ -474,6 +474,7 @@ object ShowDialogHelper {
     fun showDialogClose(
         context: Context,
         buyCourse: (() -> Unit)? = null,
+        dialogDissMiss:(()->Unit),
         themeBuy: Boolean = false,
         themeClose:Boolean = false
     ) {
@@ -501,6 +502,9 @@ object ShowDialogHelper {
             dialog = null
             buyCourse?.invoke()
         }
+        dialog?.setOnDismissListener {
+            dialogDissMiss?.invoke()
+        }
         dialog?.show()
     }
 
@@ -510,7 +514,7 @@ object ShowDialogHelper {
         priceAndropoint:Int?=null,
         pressGoogle: () -> Unit,
         pressAndro: () -> Unit,
-
+        dialogDissMiss:(()->Unit)
     ) {
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.buy_dialog)
@@ -537,6 +541,9 @@ object ShowDialogHelper {
         btnAndroBuy?.setOnClickListener {
             pressAndro.invoke()
             dialog = null
+        }
+        dialog?.setOnDismissListener {
+            dialogDissMiss?.invoke()
         }
         dialog?.show()
     }

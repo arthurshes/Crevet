@@ -10,6 +10,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import workwork.test.andropediagits.R
 
 import workwork.test.andropediagits.data.local.entities.levels.LevelEntity
 import workwork.test.andropediagits.databinding.LessonItemBinding
@@ -49,7 +50,7 @@ class ListLessonsAdapter(
         val currentLesson = diffList.currentList[position]
         holder.binding.apply {
             tvTitleLessonItem.text = currentLesson.levelName
-            tvNumberLesson.text = currentLesson.levelNumber.toString()
+            tvNumberLesson.text = "${context.getString(R.string.lesson_number)} ${position+1}"
             tvTopicTitle.text = args.courseName
 
             if (currentLesson.isFav) {

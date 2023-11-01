@@ -7,7 +7,13 @@
     android:layout_height="match_parent"
     style="@style/courses_background"
     tools:context=".presenter.courses.CoursesFragment">
-
+    <View
+        android:id="@+id/dimViewCourse"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:elevation="20dp"
+        android:visibility="gone" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

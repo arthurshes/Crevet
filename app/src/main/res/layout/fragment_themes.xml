@@ -7,7 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".presenter.themes.ThemesFragment"
     tools:openDrawer="start">
-
+    <View
+        android:id="@+id/dimViewTheme"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:elevation="20dp"
+        android:visibility="gone" />
     <include
         android:id="@+id/included"
         layout="@layout/main_content_themes"

@@ -18,9 +18,10 @@ fun VictorineAnswerModel.toVictorineEntity(): VictorineEntity {
         uniqueThemeId = uniqueThemeId,
         vicotineTestId = vicotineTestId,
         lastUpdateDate = date,
-        victorineTimeSec = 150 ///Тестовое нужно убрать потом
+        victorineTimeSec = victorineTimeSec.toLong() ///Тестовое нужно убрать потом
     )
 }
+
 
 
 

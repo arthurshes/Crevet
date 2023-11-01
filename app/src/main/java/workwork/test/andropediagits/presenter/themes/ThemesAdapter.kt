@@ -1,5 +1,6 @@
 package workwork.test.andropediagits.presenter.themes
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +10,13 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-
+import workwork.test.andropediagits.R
 
 
 import workwork.test.andropediagits.data.local.entities.theme.ThemeEntity
 import workwork.test.andropediagits.databinding.ThemeItemBinding
 
-class ThemesAdapter(val args:ThemesFragmentArgs) : RecyclerView.Adapter<ThemesAdapter.ThemeHolder>() {
+class ThemesAdapter(val args:ThemesFragmentArgs,val context:Context) : RecyclerView.Adapter<ThemesAdapter.ThemeHolder>() {
 
     inner class ThemeHolder(val binding: ThemeItemBinding):RecyclerView.ViewHolder(binding.root)
 
@@ -56,10 +57,15 @@ class ThemesAdapter(val args:ThemesFragmentArgs) : RecyclerView.Adapter<ThemesAd
 //                       cardCloseTheme.visibility = View.VISIBLE
 //                   }
 
+            tvNumberTheme.text = "${context.getString(R.string.theme_number)} ${position+1}"
             if(!currentTheme.isOpen&&currentTheme.themePrice==null){
                 btnFav.visibility = View.GONE
                 cardCloseTheme.visibility = View.VISIBLE
-            } else if(currentTheme.themePrice!=null){
+            } else if(!currentTheme.isOpen&&currentTheme.themePrice==0){
+                btnFav.visibility = View.GONE
+                cardCloseTheme.visibility = View.VISIBLE
+            }
+            else if(!currentTheme.isOpen&&currentTheme.themePrice!=null&&currentTheme.themePrice!=0){
                 btnFav.visibility = View.GONE
                 cardBuyAndropointsOrMoney.visibility = View.VISIBLE
             }
@@ -92,7 +98,7 @@ class ThemesAdapter(val args:ThemesFragmentArgs) : RecyclerView.Adapter<ThemesAd
             }
             tvTitleTheme.text = currentTheme.themeName
             themeCard.setOnClickListener {
-                if(!currentTheme.isOpen&&currentTheme.themePrice!=null){
+                if(!currentTheme.isOpen&&currentTheme.themePrice!=null&&currentTheme.themePrice!=0){
                     buyThemeUniqueId?.invoke(currentTheme.uniqueThemeId)
                     buyThemePrice?.invoke(currentTheme.themePrice)
                     buyThemePossible?.invoke(currentTheme.possibleToOpenThemeFree)

@@ -103,22 +103,30 @@ class CoursesFragment (): Fragment(){
         adapter?.andropointPrice = {androPrice->
             adapter?.rubPrice = {rubPrice->
                 adapter?.buyCourseNumber = {buyCourseNumber->
+                    var isOpenDialogBuy = false
+                    binding?.dimViewCourse?.visibility = View.VISIBLE
                     ShowDialogHelper.showDialogClose(requireContext(),{
                         ShowDialogHelper.showDialogBuy(requireContext(),rubPrice,androPrice,{
                             if(rubPrice==150){
                               billingManager?.billingSetup(PayState.COURSEBUYADVANCED,buyCourseNumber)
                             }
-                            if(rubPrice==500){
+                            if(rubPrice==600){
                                 billingManager?.billingSetup(PayState.COURSEBUYINDEPTH,buyCourseNumber)
                             }
                         },{
                             if(rubPrice==150){
                                 buyCourseAndropointTreatmentResult(buyCourseNumber,300)
                             }
-                            if(rubPrice==500){
+                            if(rubPrice==600){
                                 buyCourseAndropointTreatmentResult(buyCourseNumber,600)
                             }
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
                         })
+                    },{
+                        if(!isOpenDialogBuy){
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        }
                     })
                 }
             }

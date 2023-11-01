@@ -191,20 +191,32 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         }
 
 
-        adapter = ThemesAdapter(args)
+        adapter = ThemesAdapter(args,requireContext())
         adapter?.buyThemeUniqueId = { buyUniqueId ->
             adapter?.buyThemePrice = { buuyThemePrice ->
                 adapter?.buyThemePossible = { possibleTheme ->
                     adapter?.buyThemeAndropointPrice = { andropointPrice ->
-                        ShowDialogHelper.showDialogClose(requireContext(), { ShowDialogHelper.showDialogBuy(requireContext(), buuyThemePrice, andropointPrice, {
+                        var isOpenDialogBuy = false
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogClose(requireContext(), {
+                            isOpenDialogBuy = true
+                            ShowDialogHelper.showDialogBuy(requireContext(), buuyThemePrice, andropointPrice, {
                                     when (buuyThemePrice) {
                                         50 -> billingManager?.billingSetup(PayState.THEMEBUYCALCUL, uniqueThemeID = buyUniqueId)
                                         120 -> billingManager?.billingSetup(PayState.THEMEBUYNOTES, uniqueThemeID = buyUniqueId)
                                         200 -> billingManager?.billingSetup(PayState.THEMEBUYNEWSLIST, uniqueThemeID = buyUniqueId)
                                     }
                                 },
-                                {})////покупка андропоинтами})
-                        }, true)
+                                {
+
+                                },{
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                })////покупка андропоинтами})
+                        }, {
+                            if(!isOpenDialogBuy) {
+                                binding?.dimViewTheme?.visibility = View.GONE
+                            }
+                        },true)
                     }
                 }
 
@@ -213,7 +225,10 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
         adapter?.themeCloseUniqueThemeId = { uniqueThemeID ->
             adapter?.themeClosePossible = { possibleTheme ->
-                ShowDialogHelper.showDialogClose(requireContext(), themeClose = true)
+                binding?.dimViewTheme?.visibility = View.VISIBLE
+                ShowDialogHelper.showDialogClose(requireContext(), dialogDissMiss = {
+                      binding?.dimViewTheme?.visibility = View.GONE
+                }, themeClose = true)
             }
         }
 
