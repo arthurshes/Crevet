@@ -44,6 +44,8 @@
     <string name="delay_has_been_successfully_reset">Задержка была успешно сброшена!</string>
     <!--SignUp-->
     <string name="welcome">Добро пожаловать!</string>
+
+
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>
     <string name="sign_in_existing_account">Войти в существуюший аккаунт</string>
@@ -171,6 +173,7 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
+    <string name="there_is_no_quiz_in_this_theme">В этой теме нет викторины</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -208,7 +211,6 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-
 
     <!--Forget--><!--Forget--><!--Forget-->
 
