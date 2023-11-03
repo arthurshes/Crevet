@@ -46,7 +46,7 @@ class SplashScreenUseCase @Inject constructor(private val userLogicRepo: UserLog
                       return
                   }
 
-
+///
                   isSuccess.invoke(SplashActionEnum.HOMESCREEN)
 
               }else{

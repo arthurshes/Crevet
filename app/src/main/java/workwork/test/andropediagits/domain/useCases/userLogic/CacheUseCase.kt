@@ -814,7 +814,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
         )
         courseRepo.updateTheme(updateTheme)
     }
-
+///
     private suspend fun openAllThemesBuyCourse(courseNumber:Int){
         val allThemes = courseRepo.searchThemesWithCourseNumber(courseNumber)
         allThemes.forEach { oneTheme->

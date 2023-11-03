@@ -472,7 +472,7 @@ class VictorineFragment : Fragment() {
 //                    val snackbar = Snackbar.make(rootView, "Snackbar с кнопкой", Snackbar.LENGTH_LONG)
 //                    snackbar.setAction("Нажми меня") {
 //                       showDialogClue(requireContext(), isClue!!)
-//                    }
+//                    }/
 //                    snackbar.show()
                     if (victorinesQuestions?.size != currentIndex) {
                         val snackbar = view?.let {
