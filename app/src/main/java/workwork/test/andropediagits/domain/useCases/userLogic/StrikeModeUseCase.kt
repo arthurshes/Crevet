@@ -11,6 +11,7 @@ import workwork.test.andropediagits.data.remote.model.UserSignInModel
 import workwork.test.andropediagits.data.remote.model.strike.StrikeModeSendModel
 import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
+import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
@@ -152,7 +153,12 @@ class StrikeModeUseCase @Inject constructor(private val repo: UserLogicRepo, pri
         val userSubscribes = transactionRepo.getSubscribe()
         userSubscribes?.let { sub->
             val currentDateLocal = Date()
-            if (sub.date.time>currentDateLocal.time){
+            Log.d("obkobkokoybybybhnb",currentDateLocal.toString())
+
+            val calendar = Calendar.getInstance()
+            calendar.time = sub.date
+            calendar.add(Calendar.DAY_OF_MONTH,31*sub.term)
+            if (calendar.time.time>currentDateLocal.time){
                 return true
             }
         }

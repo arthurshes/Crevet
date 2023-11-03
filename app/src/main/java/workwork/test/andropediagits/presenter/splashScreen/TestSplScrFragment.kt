@@ -186,12 +186,14 @@ class TestSplScrFragment : Fragment() {
                  }
                  ErrorEnum.OFFLINEMODE ->{
                      requireActivity().runOnUiThread {
-                         ShowDialogHelper.showDialogOffline(requireContext())
+                         val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                         binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
                      }
                  }
                  ErrorEnum.OFFLINETHEMEBUY -> {
                      requireActivity().runOnUiThread {
-                         ShowDialogHelper.showDialogOffline(requireContext())
+                         val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                         binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
                      }
                  }
              }

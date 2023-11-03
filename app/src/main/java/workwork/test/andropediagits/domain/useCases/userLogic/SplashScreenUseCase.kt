@@ -12,6 +12,7 @@ import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.TryAgainUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.UpdateUserInfoUseCase
+import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
@@ -82,7 +83,12 @@ class SplashScreenUseCase @Inject constructor(private val userLogicRepo: UserLog
         val sub = transactionRepo.getSubscribe()
         if(sub!=null){
             val currentDateLocal = Date()
-            if (sub.date.time+sub.term>currentDateLocal.time){
+            Log.d("obkobkokoybybybhnb",currentDateLocal.toString())
+
+            val calendar = Calendar.getInstance()
+            calendar.time = sub.date
+            calendar.add(Calendar.DAY_OF_MONTH,31*sub.term)
+            if (calendar.time.time>currentDateLocal.time){
                 return true
             }
         }

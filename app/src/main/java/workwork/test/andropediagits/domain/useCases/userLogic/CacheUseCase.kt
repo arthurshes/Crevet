@@ -26,6 +26,7 @@ import workwork.test.andropediagits.data.remote.model.UserProgressModel
 import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
+import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
@@ -855,7 +856,12 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
         Log.d("obkobkokoybybybhnb",sub.toString())
             if(sub!=null){
                 val currentDateLocal = Date()
-                if (sub.date.time+sub.term>currentDateLocal.time){
+                Log.d("obkobkokoybybybhnb",currentDateLocal.toString())
+
+                val calendar = Calendar.getInstance()
+                calendar.time = sub.date
+                calendar.add(Calendar.DAY_OF_MONTH,31*sub.term)
+                if (calendar.time.time>currentDateLocal.time){
                     Log.d("obkobkokoybybybhnb","pooknokn79u797jh975juh8957j")
                     return true
                 }
