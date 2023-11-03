@@ -6,6 +6,7 @@ import android.util.Log
 import okio.IOException
 import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
+import workwork.test.andropediagits.core.exception.SplashActionEnum
 import workwork.test.andropediagits.core.mappers.toCourseBuyEntity
 import workwork.test.andropediagits.core.mappers.toCourseEntity
 import workwork.test.andropediagits.core.mappers.toLevelEntity
@@ -285,12 +286,39 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
                     courseRepo.insertVictorineAnswerVariant(oneVictorineAnswerVatiant.toVictorineAnswerVariantEntity())
                 }
 //                updateUserProgress(cacheResponse.userProgress)
+                updateUserProgress(cacheResponse.userProgress)
+                val myBuyCourses = transactionRepo.checkMyBuyCourse(myInfo?.token ?: "")
+                if(!myBuyCourses.isNullOrEmpty()&&myBuyCourses[0].codeAnswer != 707){
+                    myBuyCourses.forEach { buyCourse->
+                        if (!buyCourse.andropointBuy){
+                            openAllThemesBuyCourse(buyCourse.courseNumber)
+                        }
+                    }
+                }
+                val buyThemes = transactionRepo.checkUserBuyTheme(myInfo?.token ?: "")
+                if(buyThemes[0].codeAnswer!=707&&!buyThemes.isNullOrEmpty()){
+                    buyThemes.forEach { oneBuyTheme ->
+                        openBuyThemes(oneBuyTheme.uniqueThemeId)
+                    }
+                }
                 isSuccess.invoke(ErrorEnum.SUCCESS)
+                return
         }
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
+            if(checkBuyCourse()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            if(checkSubscibe()){
+                Log.d("sppspsp","e.toString()")
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }else{
+                isSuccess.invoke(ErrorEnum.NOTNETWORK)
+            }
             Log.d("sppspsp",e.toString())
-            isSuccess.invoke(ErrorEnum.NOTNETWORK)
+
         }catch (e:HttpException){
             Log.d("sppspsp",e.toString())
             isSuccess.invoke(ErrorEnum.ERROR)
@@ -310,47 +338,66 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             val myCourseBuyLocal = transactionRepo.getAllMyCourseBuy()
             val myThemeBuyLocal = transactionRepo.getAllBuyThemes()
             val currentDate = transactionRepo.getCurrentTime()
-            if (mySubsLocal==null){
-                val mySubscribe = transactionRepo.getMySubscribe(userInfo?.token ?: "")
-                if (mySubscribe.codeAnswer!=707){
-                  transactionRepo.insertSubscribe(mySubscribe.toSubscribeEntity())
-                }
-            }else{
-                val sendSubscribeCheckModel = SendSubscribeCheckModel(
-                    token = userInfo?.token ?: "",
-                    currentDate = currentDate.datetime
-                )
-                val checkSubscribes = transactionRepo.checkMySubscribe(sendSubscribeCheckModel)
-                if (!checkSubscribes.subscribeIsActual){
-                    transactionRepo.deleteSubscribe(mySubsLocal)
-                }
-            }
-            if (myCourseBuyLocal.isNullOrEmpty()){
-                  val courseBuyMy = transactionRepo.checkMyBuyCourse(userInfo?.token ?: "")
-                  courseBuyMy.forEach { courseBuy->
-                      if (courseBuy.codeAnswer!=707){
-                          transactionRepo.insertCourseBuy(courseBuy.toCourseBuyEntity())
-                      }
-                  }
-            }
-            if(myThemeBuyLocal.isNullOrEmpty()){
-                val themeBuyMy = transactionRepo.checkUserBuyTheme(userInfo?.token ?: "")
-                themeBuyMy.forEach { themeBuyOne->
-                    if(themeBuyOne.codeAnswer!=707){
-                        transactionRepo.insertBuyTheme(themeBuyOne.toThemeBuyEntity())
+            if(userInfo!=null) {
+                if (mySubsLocal == null) {
+                    val mySubscribe = transactionRepo.getMySubscribe(userInfo?.token ?: "")
+                    if (mySubscribe.codeAnswer != 707) {
+                        transactionRepo.insertSubscribe(mySubscribe.toSubscribeEntity())
+                    }
+                } else {
+                    val sendSubscribeCheckModel = SendSubscribeCheckModel(
+                        token = userInfo?.token ?: "",
+                        currentDate = currentDate.datetime
+                    )
+                    val checkSubscribes = transactionRepo.checkMySubscribe(sendSubscribeCheckModel)
+                    if (!checkSubscribes.subscribeIsActual) {
+                        transactionRepo.deleteSubscribe(mySubsLocal)
                     }
                 }
+                if (myCourseBuyLocal.isNullOrEmpty()) {
+                    val courseBuyMy = transactionRepo.checkMyBuyCourse(userInfo?.token ?: "")
+                    courseBuyMy.forEach { courseBuy ->
+                        if (courseBuy.codeAnswer != 707) {
+                            transactionRepo.insertCourseBuy(courseBuy.toCourseBuyEntity())
+                        }
+                    }
+                }
+                if (myThemeBuyLocal.isNullOrEmpty()) {
+                    val themeBuyMy = transactionRepo.checkUserBuyTheme(userInfo?.token ?: "")
+                    themeBuyMy.forEach { themeBuyOne ->
+                        if (themeBuyOne.codeAnswer != 707) {
+                            transactionRepo.insertBuyTheme(themeBuyOne.toThemeBuyEntity())
+                        }
+                    }
+                }
+                isSuccess.invoke(ErrorEnum.SUCCESS)
+                return
             }
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
-            isSuccess.invoke(ErrorEnum.NOTNETWORK)
+            if(checkBuyCourse()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            if(checkSubscibe()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }else{
+                Log.d("Splashss",e.toString())
+                isSuccess.invoke(ErrorEnum.NOTNETWORK)
+            }
+
         }catch (e:HttpException){
+            Log.d("Splashss",e.toString())
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:NullPointerException){
+            Log.d("Splashss",e.toString())
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:TimeoutException){
+            Log.d("Splashss",e.toString())
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            Log.d("Splashss",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -803,6 +850,30 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
         }
     }
 
+    private suspend fun checkSubscibe():Boolean{
+        val sub = transactionRepo.getSubscribe()
+        Log.d("obkobkokoybybybhnb",sub.toString())
+            if(sub!=null){
+                val currentDateLocal = Date()
+                if (sub.date.time+sub.term>currentDateLocal.time){
+                    Log.d("obkobkokoybybybhnb","pooknokn79u797jh975juh8957j")
+                    return true
+                }
+            }
 
+        return false
+    }
+
+    private suspend fun checkBuyCourse():Boolean{
+        val buyCourses = transactionRepo.getAllMyCourseBuy()
+        buyCourses?.let { buyCoursesNotNull ->
+            buyCourses.forEach { oneBuyCourse ->
+                if (!oneBuyCourse.andropointBuy) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 
 }

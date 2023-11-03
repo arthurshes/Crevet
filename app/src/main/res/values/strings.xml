@@ -1,4 +1,8 @@
 <resources>
+    <string name="clue_snackbar">Появилась подсказка</string>
+    <string name="clue_snackbar_view">Посмотреть</string>
+    <string name="close_btn">Закрыть</string>
+    <string name="there_is_no_quiz_in_this_theme">У этой темы нет викторины</string>
     <string name="lesson_number">Урок</string>
     <string name="theme_number">Тема</string>
     <string name="node_money_andropoint">Не хватает андропоинтов</string>

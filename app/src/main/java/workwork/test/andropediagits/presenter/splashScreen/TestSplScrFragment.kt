@@ -46,67 +46,112 @@ class TestSplScrFragment : Fragment() {
              Log.d("sppspsp",checkResult.toString())
              when(checkResult){
                  ErrorEnum.SUCCESS -> {
-                     viewModel.checkSplashScreen { resultSplashScreen->
-
-                         when (resultSplashScreen) {
-                             SplashActionEnum.SIGNINSCREEN -> {
+                     viewModel.checkSubscribeActual{state->
+                         when(state){
+                             ErrorEnum.NOTNETWORK -> {
+                                 ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                                     splashScreenTreatmentResult()
+                                 }
+                             }
+                             ErrorEnum.ERROR -> {
                                  requireActivity().runOnUiThread {
-                                     val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToSignInFragment()
-                                     binding?.root?.let { it1 ->
-                                         Navigation.findNavController(it1).navigate(action)
+                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                         splashScreenTreatmentResult()
                                      }
                                  }
                              }
+                             ErrorEnum.SUCCESS -> {
+                                 viewModel.checkSplashScreen { resultSplashScreen->
 
-                             SplashActionEnum.RESETDATASCREEN ->{
-                                 val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToPasswordRecoveryMethodFragment()
-                                 binding?.root.let { it1 ->
-                                     if (it1 != null) {
-                                         Navigation.findNavController(it1).navigate(action)
+                                     when (resultSplashScreen) {
+                                         SplashActionEnum.SIGNINSCREEN -> {
+                                             requireActivity().runOnUiThread {
+                                                 val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToSignInFragment()
+                                                 binding?.root?.let { it1 ->
+                                                     Navigation.findNavController(it1).navigate(action)
+                                                 }
+                                             }
+                                         }
+
+                                         SplashActionEnum.RESETDATASCREEN ->{
+                                             val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToPasswordRecoveryMethodFragment()
+                                             binding?.root.let { it1 ->
+                                                 if (it1 != null) {
+                                                     Navigation.findNavController(it1).navigate(action)
+                                                 }
+                                             }
+                                         }
+                                         SplashActionEnum.HOMESCREEN -> {
+                                             requireActivity().runOnUiThread {
+                                                 val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                                                 binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+                                             }
+                                         }
+                                         SplashActionEnum.OFFLINEMODE -> {
+                                             requireActivity().runOnUiThread {
+                                                 val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                                                 binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+                                             }
+                                         }
+                                         SplashActionEnum.ERRORSCREEN -> {
+                                             requireActivity().runOnUiThread {
+                                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                                     splashScreenTreatmentResult()
+                                                 }
+
+                                             }
+                                         }
+                                         SplashActionEnum.LONGWAITSERVER -> {
+                                             requireActivity().runOnUiThread {
+                                                 ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                                                     splashScreenTreatmentResult()
+                                                 }
+                                             }
+                                         }
+
+                                         SplashActionEnum.TRYAGAINSNACk -> {
+                                             requireActivity().runOnUiThread {
+                                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                                     splashScreenTreatmentResult()
+                                                 }
+
+                                             }
+                                         }
+                                         else -> {
+                                             requireActivity().runOnUiThread {
+                                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                                     splashScreenTreatmentResult()
+                                                 }
+                                             }
+                                         }
                                      }
                                  }
                              }
-                             SplashActionEnum.HOMESCREEN -> {
+                             ErrorEnum.UNKNOWNERROR -> {
+                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                     splashScreenTreatmentResult()
+                                 }
+                             }
+                             ErrorEnum.TIMEOUTERROR -> {
+                                 ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                                     splashScreenTreatmentResult()
+                                 }
+                             }
+                             ErrorEnum.NULLPOINTERROR -> {
+                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                     splashScreenTreatmentResult()
+                                 }
+                             }
+                             ErrorEnum.OFFLINEMODE -> {
                                  requireActivity().runOnUiThread {
                                      val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
                                      binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
                                  }
                              }
-                             SplashActionEnum.OFFLINEMODE -> {
+                             ErrorEnum.OFFLINETHEMEBUY -> {
                                  requireActivity().runOnUiThread {
                                      val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
                                      binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
-                                 }
-                             }
-                             SplashActionEnum.ERRORSCREEN -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
-
-                                 }
-                             }
-                             SplashActionEnum.LONGWAITSERVER -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
-                                 }
-                             }
-
-                             SplashActionEnum.TRYAGAINSNACk -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
-
-                                 }
-                             }
-                             else -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
                                  }
                              }
                          }

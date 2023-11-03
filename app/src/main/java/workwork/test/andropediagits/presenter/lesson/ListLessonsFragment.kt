@@ -380,4 +380,10 @@ class ListLessonsFragment : Fragment() {
         }
         timer?.start()
     }
+
+
+    override fun onStop() {
+        super.onStop()
+        timer?.cancel()
+    }
 }

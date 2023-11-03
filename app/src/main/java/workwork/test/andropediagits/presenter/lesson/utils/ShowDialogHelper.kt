@@ -460,14 +460,21 @@ object ShowDialogHelper {
         dialog?.show()
     }
 
-    fun showDialogClue(context: Context, text: String) {
+    fun showDialogClue(context: Context, text: String,close:(()->Unit)) {
         val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.text_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val dialogTermDescription = dialog?.findViewById<TextView>(R.id.tvTermDescription)
-
+        val dialogTermDescription = dialog?.findViewById<TextView>(R.id.tvClueDescription)
+         val btnClose = dialog?.findViewById<CardView>(R.id.btnCloseClueDialog)
+        btnClose?.setOnClickListener {
+            dialog.dismiss()
+            close?.invoke()
+        }
         dialogTermDescription?.text = text
         dialog?.show()
+        dialog?.setOnDismissListener {
+            close?.invoke()
+        }
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -520,7 +527,7 @@ object ShowDialogHelper {
         dialog?.setContentView(R.layout.buy_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
 //        val btnTinkoffBuy = dialog?.findViewById<ImageView>(R.id.btnTinkoffBuy)
-        val btnGoogleBuy = dialog?.findViewById<ImageView>(R.id.btnGoogleBuy)
+        val btnGoogleBuy = dialog?.findViewById<LinearLayout>(R.id.btnGoogleBuy)
         val btnAndroBuy = dialog?.findViewById<TextView>(R.id.btnAndroBuy)
         val cardAndropointPossibly = dialog?.findViewById<LinearLayout>(R.id.cardAndropointPossibly)
          val tvPriceToRub = dialog?.findViewById<TextView>(R.id.tvPriceToRub)

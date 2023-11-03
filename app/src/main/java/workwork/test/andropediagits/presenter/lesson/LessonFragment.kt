@@ -31,7 +31,6 @@ class LessonFragment : Fragment() {
     private var binding: FragmentLessonBinding? = null
     private val viewModel: LessonViewModel by viewModels()
     private val args: LessonFragmentArgs by navArgs()
-//    private var tuhthughtu:String?=null
     private var next:Int = 0
     private var isTermExistButton = false
 
@@ -50,12 +49,10 @@ class LessonFragment : Fragment() {
     @SuppressLint("SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        if (savedInstanceState != null) {
-//            viewModel.currentState = savedInstanceState.getString("state_key_lesson", "")
-//        }
+
         binding?.apply {
             val includedArray = arrayOf(
-                includedFirst, includedSecond, includedThird, includedFourth, includedFifth,        includedSixth, includedSeventh, includedEighth, includedNinth, includedTenth
+                includedFirst, includedSecond, includedThird, includedFourth, includedFifth,includedSixth, includedSeventh, includedEighth, includedNinth, includedTenth
             )
             includedArray.forEach { includedItem ->
                 includedItem.included.btnCopyCode.setOnClickListener {
@@ -65,100 +62,47 @@ class LessonFragment : Fragment() {
         }
         next =  args.LevelNumber
 
-             lifecycleScope.launch {
-//                 viewModel.putUniqueLevelIdForGetContents(3)
-//                 viewModel.putUniqueThemeIdForGetLevels(2)
-                 viewModel.putUniqueThemeIdForGetLevels(args.uniqueThemeId)
+        lifecycleScope.launch {
+            viewModel.putUniqueThemeIdForGetLevels(args.uniqueThemeId)
 
-                  val tuhthughtu = viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,args.LevelNumber)?.textTitle ?: "gotkgotogktogktog"
-                 viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,args.LevelNumber, isText = {
-                     Log.d("firjfirjfirjfijrfjri","ttitleStart:${tuhthughtu}")
-                     binding!!.tvTitleLesson.text = tuhthughtu
-                 }, LastLesson = {
-                     var termVar = ""
-                     viewModel.howManyTerm({ state->
-                         when(state){
-                             ErrorEnum.NOTNETWORK -> {
-                                 TODO()
-                             }
-                             ErrorEnum.ERROR -> {
-                                 TODO()
-                             }
-                             ErrorEnum.SUCCESS -> {
-                                 if(termVar!=""){
-                                     isTermExistButton = true
-                                     val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_lock) // Замените R.drawable.my_drawable на свой ресурс
-                                     binding?.btnNext?.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-                                     binding?.btnNext?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error))
-                                     binding?.btnNext?.text = termVar
-                                     binding?.btnNext?.isEnabled = false
-                                 }
-                             }
-                             ErrorEnum.UNKNOWNERROR -> {
-                                 TODO()
-                             }
-                             ErrorEnum.TIMEOUTERROR -> {
-                                 TODO()
-                             }
-                             ErrorEnum.NULLPOINTERROR -> {
-                                 TODO()
-                             }
-                             ErrorEnum.OFFLINEMODE -> {
-                                 TODO()
-                             }
-                             ErrorEnum.OFFLINETHEMEBUY -> {
-                                 TODO()
-                             }
-                         }
-                     },{ term->
-                         if(term=="Invalid date"){
-
-                         }else{
-                             termVar = term
-                         }
-                     },args.ThemeNumber,args.CourseNumber)
-                 }, isVictorine = {
-                     viewModel.checkVictorineExistTheme({
-                         if(it){
-                             ShowDialogHelper.showDialogAttention(requireContext()) {
-                                 val action =
-                                     LessonFragmentDirections.actionLessonFragmentToVictorineFragment(
-                                         args.uniqueThemeId,
-                                         args.courseName,
-                                         args.CourseNumber,
-                                         args.courseNameReal
-                                     )
-                                 binding?.root?.let { it1 ->
-                                     Navigation.findNavController(it1).navigate(action)
-                                 }
-                             }
-                         }else{
-                             Toast.makeText(requireContext(),"В этой теме нет викторины",Toast.LENGTH_LONG).show()
-                             val action = LessonFragmentDirections.actionLessonFragmentToThemesFragment(args.CourseNumber, args.courseName)
-                             binding?.root?.let { it1 ->
-                                 Navigation.findNavController(it1).navigate(action)
-                             }
-                         }
-                     },args.uniqueThemeId)
-                 })?.let {  Initialization.initAllViews(it,binding,requireContext())
-                       Log.d("LessonContentLogger",it.toString())
-                 }
-             }
-
-        /*  viewModel.allContentBylevel?.observe(viewLifecycleOwner) { levelList ->
-              levelList?.forEach { content ->
-                  binding?.apply {
-                      tvTitleLesson.text = content.textTitle
-                      tvTextFirst.text = content.textFirst
-                      initAllViews(content)
-                  }
-              }
-          }*/
+            val tuhthughtu = viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,args.LevelNumber)?.textTitle ?: "gotkgotogktogktog"
+            viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,args.LevelNumber, isText = {
+                Log.d("firjfirjfirjfijrfjri","ttitleStart:${tuhthughtu}")
+                binding!!.tvTitleLesson.text = tuhthughtu
+            }, LastLesson = {
+                howManyTermTreatmentResult()
+            }, isVictorine = {
+                viewModel.checkVictorineExistTheme({
+                    if(it){
+                        ShowDialogHelper.showDialogAttention(requireContext()) {
+                            val action =
+                                LessonFragmentDirections.actionLessonFragmentToVictorineFragment(
+                                    args.uniqueThemeId,
+                                    args.courseName,
+                                    args.CourseNumber,
+                                    args.courseNameReal
+                                )
+                            binding?.root?.let { it1 ->
+                                Navigation.findNavController(it1).navigate(action)
+                            }
+                        }
+                    }else{
+                        Toast.makeText(requireContext(),getString(R.string.there_is_no_quiz_in_this_theme),Toast.LENGTH_LONG).show()
+                        val action = LessonFragmentDirections.actionLessonFragmentToThemesFragment(args.CourseNumber, args.courseName)
+                        binding?.root?.let { it1 ->
+                            Navigation.findNavController(it1).navigate(action)
+                        }
+                    }
+                },args.uniqueThemeId)
+            })?.let {  Initialization.initAllViews(it,binding,requireContext())
+                Log.d("LessonContentLogger",it.toString())
+            }
+        }
         binding!!.apply {
             btnPrevious.setOnClickListener {
                 if(next>1) {
-                next--
-                lifecycleScope.launch {
+                    next--
+                    lifecycleScope.launch {
 
                         val textTitle = viewModel.getPreviousContent(
                             args.CourseNumber,
@@ -182,18 +126,14 @@ class LessonFragment : Fragment() {
 
             }
             btnNext.setOnClickListener {
-
-
-
-                    Log.d("firjfirjfirjfijrfjri","nextLesson")
-
-                 next++
-                    Log.d("firjfirjfirjfijrfjri","nextValue${next}")
-                    lifecycleScope.launch {
-                        val nexText =  viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,next ?: 1)?.textTitle
-                        Log.d("firjfirjfirjfijrfjri","courseNumberArgs:${args.CourseNumber},themeNumber:${args.ThemeNumber},levelNUmber:${next}")
-                        viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,next ?: 1,{
-                            Log.d("firjfirjfirjfijrfjri", "nextVictorine")
+                Log.d("firjfirjfirjfijrfjri","nextLesson")
+                next++
+                Log.d("firjfirjfirjfijrfjri","nextValue${next}")
+                lifecycleScope.launch {
+                    val nexText =  viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,next ?: 1)?.textTitle
+                    Log.d("firjfirjfirjfijrfjri","courseNumberArgs:${args.CourseNumber},themeNumber:${args.ThemeNumber},levelNUmber:${next}")
+                    viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,next ?: 1,{
+                        Log.d("firjfirjfirjfijrfjri", "nextVictorine")
                         viewModel.checkVictorineExistTheme({
                             if(it){
                                 ShowDialogHelper.showDialogAttention(requireContext()) {
@@ -209,100 +149,86 @@ class LessonFragment : Fragment() {
                                     }
                                 }
                             }else{
-                                Toast.makeText(requireContext(),"В этой теме нет викторины",Toast.LENGTH_LONG).show()
+                                Toast.makeText(requireContext(),getString(R.string.there_is_no_quiz_in_this_theme),Toast.LENGTH_LONG).show()
                                 val action = LessonFragmentDirections.actionLessonFragmentToThemesFragment(args.CourseNumber, args.courseName)
                                 binding?.root?.let { it1 ->
                                     Navigation.findNavController(it1).navigate(action)
                                 }
                             }
-                        },args.uniqueThemeId)
-
-                        },{
-
+                        },args.uniqueThemeId) }
+                        ,{
                             requireActivity().runOnUiThread {
                                 binding!!.tvTitleLesson.text = nexText
                             }
                         },{
-                           var termVar = ""
-                           viewModel.howManyTerm({ state->
-                               when(state){
-                                   ErrorEnum.NOTNETWORK -> {
-                                       TODO()
-                                   }
-                                   ErrorEnum.ERROR -> {
-                                       TODO()
-                                   }
-                                   ErrorEnum.SUCCESS -> {
-                                       if(termVar!=""){
-                                           isTermExistButton = true
-                                           val drawable = ContextCompat.getDrawable(requireContext(),R.drawable.ic_lock) // Замените R.drawable.my_drawable на свой ресурс
-                                           btnNext.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-                                           btnNext.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error))
-                                           btnNext.text = termVar
-                                           btnNext.isEnabled = false
-                                       }
-                                   }
-                                   ErrorEnum.UNKNOWNERROR -> {
-                                       TODO()
-                                   }
-                                   ErrorEnum.TIMEOUTERROR -> {
-                                       TODO()
-                                   }
-                                   ErrorEnum.NULLPOINTERROR -> {
-                                       TODO()
-                                   }
-                                   ErrorEnum.OFFLINEMODE -> {
-                                       TODO()
-                                   }
-                                   ErrorEnum.OFFLINETHEMEBUY -> {
-                                       TODO()
-                                   }
-                               }
-                           },{ term->
-                               if(term=="Invalid date"){
-
-                               }else{
-                                   termVar = term
-                               }
-                           }, themeNumber = args.ThemeNumber, courseNumber = args.CourseNumber)
+                            howManyTermTreatmentResult()
                         }) ?.let {  Initialization.initAllViews(it,binding,requireContext()) }
-                    }
-
-
-
-
-
-                /*viewModel.allLevelsByTheme?.value?.let { levelList ->
-                    if (levelList.isNotEmpty()) {
-                        currentIndex = (currentIndex + 1) % levelList.size
-                        if (currentIndex != levelList.size && currentIndex != levelList.size - 1) {
-//                            levelList[currentIndex].levelContent.forEach { content ->
-//                                binding?.apply {
-//                                    tvTitleLesson.text = content.textTitle
-//                                    tvTextFirst.text = content.textFirst
-//                                    initAllViews(content)
-//                                }
-//                            }
-                        //                            levelList[currentIndex].levelContent.forEach { content ->
-//                                binding?.apply {
-//                                    tvTitleLesson.text = content.textTitle
-//                                    tvTextFirst.text = content.textFirst
-//                                    initAllViews(content)
-//                                }
-//                            }
-                        }
-                        
-                        if (currentIndex == levelList.size) {
-                            // запуск  виктарину
-                        }
-
-                        if (currentIndex == levelList.size - 1) {
-                            // запускаем итерактив
-                        }
-                    }
-                }*/
+                }
             }
         }
+    }
+
+    private fun howManyTermTreatmentResult() {
+        var termVar = ""
+        viewModel.howManyTerm({ state->
+            when(state){
+                ErrorEnum.SUCCESS -> {
+                    if(termVar!=""){
+                        isTermExistButton = true
+                        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_lock) // Замените R.drawable.my_drawable на свой ресурс
+                        binding?.btnNext?.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+                        binding?.btnNext?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error))
+                        binding?.btnNext?.text = termVar
+                        binding?.btnNext?.isEnabled = false
+                    }
+                }
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) { howManyTermTreatmentResult() }
+                    }
+                }
+
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {howManyTermTreatmentResult() }
+                    }
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {howManyTermTreatmentResult() }
+                    }
+                }
+
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {howManyTermTreatmentResult() }
+                    }
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) { howManyTermTreatmentResult() }
+                    }
+                }
+                ErrorEnum.OFFLINEMODE ->{
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+            }
+        },{ term->
+            if(term=="Invalid date"){
+
+            }else{
+                termVar = term
+            }
+        },args.ThemeNumber,args.CourseNumber)
     }
 
     private fun copyText(text: TextView){

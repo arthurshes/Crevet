@@ -28,6 +28,12 @@ class SplashScreenViewModel@Inject constructor(private val splashScreenUseCase: 
         }
     }
 
+    fun checkSubscribeActual(result: (ErrorEnum) -> Unit){
+        viewModelScope.launch {
+            cacheUseCase.checkSubscribesAndBuyCourse(result)
+        }
+    }
+
 
 
 }

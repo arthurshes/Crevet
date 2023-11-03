@@ -17,8 +17,8 @@ interface VictorineDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVictorineClue(victorineClueEntity: VictorineClueEntity)
 
-    @Query("SELECT * FROM victorineClueEntity WHERE questionId = :questionId AND victorineAnswerId = :victorineAnswerId")
-    suspend fun getVictorineClue(victorineAnswerId: Int, questionId: Int): VictorineClueEntity
+    @Query("SELECT * FROM victorineClueEntity WHERE questionId = :questionId AND victorineId = :vicotineTestId")
+    suspend fun getVictorineClue(questionId: Int,vicotineTestId: Int): VictorineClueEntity
 
     @Query("DELETE FROM victorineClueEntity")
     suspend fun deleteAllVictorineClue()

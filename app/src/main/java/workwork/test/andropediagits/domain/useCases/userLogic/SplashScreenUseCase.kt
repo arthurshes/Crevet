@@ -58,11 +58,14 @@ class SplashScreenUseCase @Inject constructor(private val userLogicRepo: UserLog
                 return
             }
             if(checkSubscibe()){
+                Log.d("Splashss","subsdirifri")
                 isSuccess.invoke(SplashActionEnum.OFFLINEMODE)
                 return
+            }else{
+                Log.d("Splashss",e.toString())
+                isSuccess.invoke(SplashActionEnum.TRYAGAINSNACk)
             }
-            Log.d("Splashss",e.toString())
-            isSuccess.invoke(SplashActionEnum.TRYAGAINSNACk)
+
         }catch (e:HttpException){
             Log.d("Splashss",e.toString())
             isSuccess.invoke(SplashActionEnum.TRYAGAINSNACk)
@@ -76,13 +79,14 @@ class SplashScreenUseCase @Inject constructor(private val userLogicRepo: UserLog
     }
 
     private suspend fun checkSubscibe():Boolean{
-        val userSubscribes = transactionRepo.getSubscribe()
-        userSubscribes?.let { sub->
+        val sub = transactionRepo.getSubscribe()
+        if(sub!=null){
             val currentDateLocal = Date()
-            if (sub.date.time>currentDateLocal.time){
+            if (sub.date.time+sub.term>currentDateLocal.time){
                 return true
             }
         }
+
         return false
     }
 

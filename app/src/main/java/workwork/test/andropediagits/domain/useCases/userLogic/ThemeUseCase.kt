@@ -1083,7 +1083,7 @@ class ThemeUseCase @Inject constructor(
             val currentThemeLocal = courseRepo.searchThemeWithUniwueId(currentUniqueThemeId)
             currentThemeLocal?.let { theme ->
                 ///Это первое действие
-                val nextThemeUniqueId = theme.courseNumber + theme.themeNumber.plus(1)
+                val nextThemeUniqueId = theme.courseNumber + theme.themeNumber.plus(1)+1
 
                 val nextTheme = courseRepo.searchThemeWithUniwueId(nextThemeUniqueId)
                 if(nextTheme!=null){

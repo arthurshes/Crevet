@@ -287,7 +287,7 @@ interface CourseRepo {
 
     suspend fun insertVictorineClue(victorineClueEntity: VictorineClueEntity)
 
-    suspend fun getVictorineClue(victorineAnswerId:Int,questionId:Int):VictorineClueEntity
+    suspend fun getVictorineClue( questionId: Int,victorineTestId:Int): VictorineClueEntity
 
     suspend fun deleteAllVictorineClue()
 

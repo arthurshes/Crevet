@@ -62,15 +62,16 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
                //проверка подписки конец
                if (subscribeCheck.subscribeIsActual) {
                        updateThemeUseCase.updateTheme(answer.uniqueThemeId,UpdateThemeState.ISVICTORINEMISTAKE)
-                   if(pref?.getString(Constatns.CLUE_KEY,"")=="true") {
+//                   if(pref?.getString(Constatns.CLUE_KEY,"")=="false") {
                        val victorinClue = courseRepo.getVictorineClue(
-                           victorineAnswerId = answer.victorineAnswerId,
-                           questionId = answer.questionId
+                           questionId = answer.questionId,
+                           victorineTestId = answer.vicotineTestId
                        )
+                       Log.d("vpkokot3333333bopdrtbkpordtkb",victorinClue.toString())
                        if (victorinClue != null) {
                            isClue?.invoke(victorinClue.clueText)
                        }
-                   }
+//                   }
 
                } else {
                    ///Проверка подписки промокода начало
@@ -83,8 +84,8 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
                        if (responsePromo.isActual){
                            if(pref?.getString(Constatns.CLUE_KEY,"")=="true") {
                                val victorinClue = courseRepo.getVictorineClue(
-                                   victorineAnswerId = answer.victorineAnswerId,
-                                   questionId = answer.questionId
+                                   questionId = answer.questionId,
+                                   victorineTestId = answer.vicotineTestId
                                )
                                if (victorinClue != null) {
                                    isClue?.invoke(victorinClue.clueText)
@@ -99,8 +100,8 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
                if(buyCourses[0].codeAnswer!=707){
                    if(pref?.getString(Constatns.CLUE_KEY,"")=="true") {
                        val victorinClue = courseRepo.getVictorineClue(
-                           victorineAnswerId = answer.victorineAnswerId,
-                           questionId = answer.questionId
+                           questionId = answer.questionId,
+                           victorineTestId = answer.vicotineTestId
                        )
                        if (victorinClue != null) {
                            isClue?.invoke(victorinClue.clueText)
@@ -112,8 +113,8 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
                        if (oneBuyTheme.uniqueThemeId == answer.uniqueThemeId) {
                            if(pref?.getString(Constatns.CLUE_KEY,"")=="true") {
                                val victorinClue = courseRepo.getVictorineClue(
-                                   victorineAnswerId = answer.victorineAnswerId,
-                                   questionId = answer.questionId
+                                   questionId = answer.questionId,
+                                   victorineTestId = answer.vicotineTestId
                                )
                                if (victorinClue != null) {
                                    isClue?.invoke(victorinClue.clueText)

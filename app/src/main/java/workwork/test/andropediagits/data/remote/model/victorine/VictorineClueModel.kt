@@ -4,7 +4,6 @@ import java.util.Date
 
 data class VictorineClueModel(
     val vicotineTestId:Int,
-    val victorineAnswerId:Int,
     val uniqueThemeId:Int,
     val questionId:Int,
     val lastUpdateDate: Date,

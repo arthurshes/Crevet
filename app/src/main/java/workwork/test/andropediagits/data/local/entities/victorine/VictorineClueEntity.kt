@@ -10,6 +10,5 @@ data class VictorineClueEntity(
     val victorineId:Int,
     val questionId:Int,
     val clueText:String,
-    val victorineAnswerId:Int,
     val uniqueThemeId:Int
 )

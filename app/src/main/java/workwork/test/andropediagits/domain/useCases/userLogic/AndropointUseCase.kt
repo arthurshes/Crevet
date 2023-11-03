@@ -460,6 +460,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                             BuyForAndropointStates.NOMONEY ->           isAndropointState.invoke(BuyForAndropointStates.NOMONEY)
                         }
                     })
+                    isSuccess.invoke(ErrorEnum.SUCCESS)
                 } catch (e: IOException) {
                     if(checkSubscibe()){
                         isSuccess.invoke(ErrorEnum.OFFLINEMODE)
@@ -493,6 +494,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                             BuyForAndropointStates.NOMONEY ->           isAndropointState.invoke(BuyForAndropointStates.NOMONEY)
                         }
                     })
+                    isSuccess.invoke(ErrorEnum.SUCCESS)
                 } catch (e: IOException) {
                     if(checkSubscibe()){
                         isSuccess.invoke(ErrorEnum.OFFLINEMODE)
@@ -526,6 +528,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                             BuyForAndropointStates.NOMONEY ->           isAndropointState.invoke(BuyForAndropointStates.NOMONEY)
                         }
                     })
+                    isSuccess.invoke(ErrorEnum.SUCCESS)
                 }catch (e:IOException){
                         if(checkSubscibe()){
                             isSuccess.invoke(ErrorEnum.OFFLINEMODE)

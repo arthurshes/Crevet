@@ -36,6 +36,7 @@ import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntit
 import workwork.test.andropediagits.databinding.FragmentVictorineBinding
 import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeState
 import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
+import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper.showDialogClue
 import workwork.test.andropediagits.presenter.lesson.victorine.customview.AnimatedCircleView
 
 import workwork.test.andropediagits.presenter.lesson.victorine.viewmodel.VictorineViewModel
@@ -406,6 +407,7 @@ class VictorineFragment : Fragment() {
         numberItem: Int,
         item: List<VictorineAnswerVariantEntity>?
     ) {
+//        var isClueExist = false
         val currentAnswer = item?.get(numberItem)
         if (currentAnswer?.isCorrectAnswer == true) {
             correctAnswers++
@@ -464,7 +466,30 @@ class VictorineFragment : Fragment() {
             Log.d("victorineClueadfrofkrof", isClue.toString())
             if (pref?.getString(Constatns.CLUE_KEY, "") == "true") {
                 if (isClue != null) {
-                    Toast.makeText(requireActivity(), isClue, Toast.LENGTH_LONG).show()
+//                    isClueExist = true
+//                    Toast.makeText(requireActivity(), isClue, Toast.LENGTH_LONG).show()
+//                    val rootView: View = requireView()
+//                    val snackbar = Snackbar.make(rootView, "Snackbar с кнопкой", Snackbar.LENGTH_LONG)
+//                    snackbar.setAction("Нажми меня") {
+//                       showDialogClue(requireContext(), isClue!!)
+//                    }
+//                    snackbar.show()
+                    if (victorinesQuestions?.size != currentIndex) {
+                        val snackbar = view?.let {
+                            Snackbar.make(
+                                it,
+                                R.string.clue_snackbar,
+                                Snackbar.LENGTH_LONG
+                            )
+                        }
+                        snackbar?.setAction(R.string.clue_snackbar_view) {
+                            binding?.dimViewVictorine?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogClue(requireContext(), isClue,{
+                                binding?.dimViewVictorine?.visibility = View.GONE
+                            })
+                        }
+                        snackbar?.show()
+                    }
 //                    val rootView = requireView()
 //                    val snackbar = Snackbar.make(rootView, "Snackbar с кнопкой", Snackbar.LENGTH_LONG)
 //                    snackbar.setAction("Нажми меня") {

@@ -42,7 +42,6 @@ fun VictorineClueModel.toVictorineClueEntity(): VictorineClueEntity {
         questionId = questionId,
         uniqueThemeId = uniqueThemeId,
         clueText = clueText,
-        victorineAnswerId = victorineAnswerId,
         victorineId = vicotineTestId,
     )
 }

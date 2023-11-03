@@ -436,8 +436,8 @@ class CourseRepoImpl @Inject constructor(val mainDb: MainDb, val logicUserApiSer
         victorineDao.insertVictorineClue(victorineClueEntity)
     }
 
-    override suspend fun getVictorineClue(victorineAnswerId: Int, questionId: Int): VictorineClueEntity {
-       return victorineDao.getVictorineClue(victorineAnswerId,questionId)
+    override suspend fun getVictorineClue( questionId: Int,victorineTestId:Int): VictorineClueEntity {
+       return victorineDao.getVictorineClue(questionId,victorineTestId)
     }
 
     override suspend fun deleteAllVictorineClue() {

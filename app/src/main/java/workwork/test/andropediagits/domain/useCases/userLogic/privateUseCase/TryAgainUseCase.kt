@@ -123,18 +123,21 @@ class TryAgainUseCase @Inject constructor(private val courseRepo: CourseRepo, pr
             val subscribeInfoLocal = transactionRepo.getSubscribe()
              subscribeInfoLocal?.let { sub->
                  val currentDate = Date()
-                 if (sub.date.time>currentDate.time){
+                 if (sub.date.time+sub.term>currentDate.time){
                      isSuccess?.invoke(ErrorEnum.OFFLINEMODE)
+                     return
                  }
              }
              if(checkBuyCourse()){
                  isSuccess?.invoke(ErrorEnum.OFFLINEMODE)
+                 return
              }
             checkAndGeIdtLocalBuyThemes({
                 buyThemesId?.invoke(it)
             },{ isBuy->
                 if (isBuy){
                     isSuccess?.invoke(ErrorEnum.OFFLINETHEMEBUY)
+                    return@checkAndGeIdtLocalBuyThemes
                 }
             })
             isSuccess?.invoke(ErrorEnum.NOTNETWORK)

@@ -106,6 +106,7 @@ class CoursesFragment (): Fragment(){
                     var isOpenDialogBuy = false
                     binding?.dimViewCourse?.visibility = View.VISIBLE
                     ShowDialogHelper.showDialogClose(requireContext(),{
+                        isOpenDialogBuy = true
                         ShowDialogHelper.showDialogBuy(requireContext(),rubPrice,androPrice,{
                             if(rubPrice==150){
                               billingManager?.billingSetup(PayState.COURSEBUYADVANCED,buyCourseNumber)
@@ -214,6 +215,7 @@ class CoursesFragment (): Fragment(){
     private fun buyCourseAndropointTreatmentResult(buyCourseNumber: Int, price: Int) {
         var isBuy:BuyForAndropointStates?=null
         viewModel.buyCourseAndropoint({state->
+
             when(state){
                 ErrorEnum.SUCCESS -> {
                     when(isBuy){
