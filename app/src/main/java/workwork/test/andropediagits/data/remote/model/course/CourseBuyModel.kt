@@ -10,7 +10,8 @@ data class CourseBuyModel(
     val promoCode: String? = null,
     val transactionId: String,
     val codeAnswer: Int? = null,
-    val andropointBuy:Boolean
+    val andropointBuy:Int,
+    val andropointMinus:Int?=null
 )
 
 

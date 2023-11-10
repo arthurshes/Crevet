@@ -143,6 +143,7 @@ class ListLessonsFragment : Fragment() {
 
     private fun checkCurrentThemeTermTreatmentResult() {
         viewModel.checkCurrentThemeTerm(args.ThemeId,{ state->
+            Log.d("hei4399439u39439493u",state.toString())
             when(state){
                 ErrorEnum.SUCCESS -> {
                     Log.d("isTernVarStateVictorine",isTermVar.toString())
@@ -184,13 +185,15 @@ class ListLessonsFragment : Fragment() {
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        showDialogOffline()
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                     showDialogOffline()
                     }
                 }
             }
@@ -199,20 +202,48 @@ class ListLessonsFragment : Fragment() {
         })
     }
 
+    private fun showDialogOffline(){
+        binding?.dimViewListLesson?.visibility = View.VISIBLE
+        ShowDialogHelper.showDialogOffline(requireContext(),{
+            val data = Bundle()
+            Log.d("isTernVarStateVictoriwwww22222ne",args.ThemeId.toString())
+            Log.d("isTernVarStateVictoriwwww22222ne",args.courseName.toString())
+            Log.d("isTernVarStateVictoriwwww22222ne",args.courseNameReal.toString())
+            Log.d("isTernVarStateVictoriwwww22222ne",isThemePassed.toString())
+            Log.d("isTernVarStateVictoriwwww22222ne",adapter?.diffList?.currentList?.get(0)?.courseNumber .toString())
+            Log.d("isTernVarStateVictoriwwww22222ne",isTermVar.toString())
+
+            data.putInt("uniqueThemeID",args.ThemeId)
+            data.putString("courseName",args.courseName)
+            data.putString("courseNameReal",args.courseNameReal)
+            data.putBoolean("isThemePassed",isThemePassed)
+            data.putInt("courseNumber",adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1)
+            data.putString("termDate","Invalid date" )
+            data.putBoolean("isTerm",isTermVar)
+            bs?.arguments = data
+            bs?.show(requireActivity().supportFragmentManager, "Tag2")
+        },{
+            binding?.dimViewListLesson?.visibility = View.GONE
+        })
+    }
+
     private fun howManyTermTreatmentResult() {
         viewModel.howManyTerm({stateHow->
             when(stateHow){
                 ErrorEnum.SUCCESS -> {
-                    val data = Bundle()
-                    data.putInt("uniqueThemeID",args.ThemeId)
-                    data.putString("courseName",args.courseName)
-                    data.putString("courseNameReal",args.courseNameReal)
-                    data.putBoolean("isThemePassed",isThemePassed)
-                    data.putInt("courseNumber",adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1)
-                    data.putString("termDate",terString )
-                    data.putBoolean("isTerm",isTermVar)
-                    bs?.arguments = data
-                    bs?.show(requireActivity().supportFragmentManager, "Tag2")
+                    requireActivity().runOnUiThread {
+                        val data = Bundle()
+                        data.putInt("uniqueThemeID",args.ThemeId)
+                        data.putString("courseName",args.courseName)
+                        data.putString("courseNameReal",args.courseNameReal)
+                        data.putBoolean("isThemePassed",isThemePassed)
+                        data.putInt("courseNumber",adapter?.diffList?.currentList?.get(0)?.courseNumber ?: 1)
+                        data.putString("termDate",terString )
+                        data.putBoolean("isTerm",isTermVar)
+                        bs?.arguments = data
+                        bs?.show(requireActivity().supportFragmentManager, "Tag2")
+                    }
+
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -250,13 +281,25 @@ class ListLessonsFragment : Fragment() {
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewListLesson?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewListLesson?.visibility = View.GONE
+                        })
                     }
                 }
             }

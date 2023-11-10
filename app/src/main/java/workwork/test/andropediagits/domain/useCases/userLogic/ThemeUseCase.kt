@@ -21,6 +21,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.Try
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.UpdateThemeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.updateStates.UpdateLessonState
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.updateStates.UpdateThemeState
+import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
@@ -38,7 +39,8 @@ class ThemeUseCase @Inject constructor(
 
 
 
-    suspend fun termExitVictorine(uniqueThemeId: Int,termI:((Boolean)->Unit),termEndingDate:((String)->Unit),buythemesId:((List<Int>)->Unit)?=null){
+    suspend fun termExitVictorine(uniqueThemeId: Int,termI:((Boolean)->Unit),termEndingDate:((String)->Unit),buythemesId:((List<Int>)->Unit)?=null,isSuccess:((ErrorEnum)->Unit)){
+        try{
             val theme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
             if(theme.isThemePassed){
                 termI.invoke(false)
@@ -77,6 +79,32 @@ class ThemeUseCase @Inject constructor(
                 },buythemesId)
 
             }
+        }catch (e:IOException){
+            if(checkSubscibe()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            if (checkBuyCourse()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            checkAndGeIdtLocalBuyThemes({
+                buythemesId?.invoke(it)
+            },{ isBuy->
+                if (isBuy){
+                    isSuccess.invoke(ErrorEnum.OFFLINETHEMEBUY)
+                }
+            })
+            isSuccess.invoke(ErrorEnum.NOTNETWORK)
+        }catch (e:NullPointerException){
+            isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
+        }catch (e:TimeoutException){
+            isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
+        }catch (e:HttpException){
+            isSuccess.invoke(ErrorEnum.ERROR)
+        }catch (e:Exception) {
+            isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
+        }
     }
 
     suspend fun thisThemeVictorineYes(victorineYes:((Boolean)->Unit),uniqueThemeId: Int){
@@ -540,10 +568,59 @@ class ThemeUseCase @Inject constructor(
         }catch (e:IOException){
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             if(checkSubscibe()){
+                val theme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
+                val updateTheme = ThemeEntity(
+                    uniqueThemeId =  theme.uniqueThemeId,
+                    themeName = theme.themeName,
+                    themeNumber = theme.themeNumber,
+                    courseNumber = theme.courseNumber,
+                    lessonsCount = theme.lessonsCount,
+                    lastUpdateDate = theme.lastUpdateDate,
+                    termHourse = null,
+                    termDateApi = null,
+                    victorineMistakeAnswer = theme.victorineMistakeAnswer,
+                    victorineCorrectAnswer = theme.victorineCorrectAnswer,
+                    interactiveCodeMistakes = theme.interactiveCodeMistakes,
+                    interactiveCodeCorrect = theme.interactiveCodeCorrect,
+                    interactiveQuestionCount = theme.interactiveQuestionCount,
+                    victorineQuestionCount = theme.victorineQuestionCount,
+                    vicotineTestId = theme.vicotineTestId,
+                    interactiveTestId = theme.interactiveTestId,
+                    imageTheme = theme.imageTheme,
+                    isOpen = theme.isOpen,
+                    duoDate = theme.duoDate,
+                    victorineDate = theme.victorineDate,
+                    isVictorine = theme.isVictorine,
+                    isDuoInter = theme.isDuoInter,
+                    isFav = theme.isFav,
+                    isThemePassed = true,
+                    possibleToOpenThemeFree = theme.possibleToOpenThemeFree,
+                    lastCourseTheme = theme.lastCourseTheme,
+                    themePrice = theme.themePrice
+                )
+                courseRepo.updateTheme(updateTheme)
+                if(!theme.lastCourseTheme){
+                    openNextTheme(uniqueThemeId,{errorState->
+                        when(errorState){
+                            ErrorEnum.NOTNETWORK -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                            ErrorEnum.ERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                            ErrorEnum.SUCCESS -> isSuccess.invoke(ErrorStateView.SUCCESS)
+                            ErrorEnum.UNKNOWNERROR -> isSuccess.invoke(ErrorStateView.ERROR)
+                            ErrorEnum.TIMEOUTERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                            ErrorEnum.NULLPOINTERROR -> isSuccess.invoke(ErrorStateView.ERROR)
+                            ErrorEnum.OFFLINEMODE -> isSuccess.invoke(ErrorStateView.OFFLINE)
+                            ErrorEnum.OFFLINETHEMEBUY -> isSuccess.invoke(ErrorStateView.OFFLINEBUYTHEME)
+                        }
+                    },{ uniqueIds->
+                        buythemesId?.invoke(uniqueIds)
+                    })
+                }
+                saveKeyTryAgainTheme(uniqueThemeId.plus(1))
                 isSuccess.invoke(ErrorStateView.OFFLINE)
                 return
             }
             if (checkBuyCourse()){
+                saveKeyTryAgainTheme(uniqueThemeId.plus(1))
                 isSuccess.invoke(ErrorStateView.OFFLINE)
                 return
             }
@@ -935,6 +1012,7 @@ class ThemeUseCase @Inject constructor(
                 buyThemeId?.invoke(it)
             },{ isBuy->
                 if (isBuy){
+                    Log.d("hei4399439u39439493u","tjgjjgaxaxaxax")
                     isSuccess.invoke(ErrorEnum.OFFLINETHEMEBUY)
                 }
             })
@@ -1206,17 +1284,32 @@ class ThemeUseCase @Inject constructor(
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
-
     private suspend fun checkSubscibe():Boolean{
-        val userSubscribes = transactionRepo.getSubscribe()
-        userSubscribes?.let { sub->
+        val sub = transactionRepo.getSubscribe()
+        if(sub!=null){
             val currentDateLocal = Date()
-            if (sub.date.time>currentDateLocal.time){
+            Log.d("obkobkokoybybybhnb",sub.date.toString())
+
+            val calendar = Calendar.getInstance()
+            calendar.time = sub.date
+            calendar.add(Calendar.DAY_OF_MONTH,31*sub.term)
+            if (calendar.time.time>currentDateLocal.time){
                 return true
             }
         }
+
         return false
     }
+//    private suspend fun checkSubscibe():Boolean{
+//        val userSubscribes = transactionRepo.getSubscribe()
+//        userSubscribes?.let { sub->
+//            val currentDateLocal = Date()
+//            if (sub.date.time>currentDateLocal.time){
+//                return true
+//            }
+//        }
+//        return false
+//    }
 
     private suspend fun checkBuyCourse():Boolean{
         val buyCourses = transactionRepo.getAllMyCourseBuy()
@@ -1266,14 +1359,17 @@ class ThemeUseCase @Inject constructor(
 
     private suspend fun checkAndGeIdtLocalBuyThemes(isThemesId:((List<Int>)->Unit)?=null,isBuy:((Boolean)->Unit)){
         val buyThemes = transactionRepo.getAllBuyThemes()
-        buyThemes?.let { buyThemesNotNull->
-            val buyThemesIdList = ArrayList<Int>()
-            buyThemesNotNull.forEach { oneBuyTheme->
-                buyThemesIdList.add(oneBuyTheme.uniqueThemeId)
+        if(!buyThemes.isNullOrEmpty()){
+            buyThemes?.let { buyThemesNotNull->
+                val buyThemesIdList = ArrayList<Int>()
+                buyThemesNotNull.forEach { oneBuyTheme->
+                    buyThemesIdList.add(oneBuyTheme.uniqueThemeId)
+                }
+                isThemesId?.invoke(buyThemesIdList)
+                isBuy.invoke(true)
             }
-            isThemesId?.invoke(buyThemesIdList)
-            isBuy.invoke(true)
         }
+
         isBuy.invoke(false)
     }
     private suspend fun localCheckBuyThemes(uniqueThemeId:Int,isSuccess:((ErrorEnum)->Unit),isBuy:((Boolean)->Unit)){

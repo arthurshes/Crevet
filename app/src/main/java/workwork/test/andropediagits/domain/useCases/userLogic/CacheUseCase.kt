@@ -1,12 +1,11 @@
 package workwork.test.andropediagits.domain.useCases.userLogic
 
-import android.graphics.Bitmap
+import android.annotation.SuppressLint
 import android.util.Log
 
 import okio.IOException
 import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
-import workwork.test.andropediagits.core.exception.SplashActionEnum
 import workwork.test.andropediagits.core.mappers.toCourseBuyEntity
 import workwork.test.andropediagits.core.mappers.toCourseEntity
 import workwork.test.andropediagits.core.mappers.toLevelEntity
@@ -95,8 +94,11 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             val myBuyCourses = transactionRepo.checkMyBuyCourse(userInfoLocal?.token ?: "")
             if(!myBuyCourses.isNullOrEmpty()&&myBuyCourses[0].codeAnswer != 707){
                 myBuyCourses.forEach { buyCourse->
-                    if (!buyCourse.andropointBuy){
-                        openAllThemesBuyCourse(buyCourse.courseNumber)
+                    Log.d("vklerfnvlnefwtrnvbIKQewvogiNqw","lastOpenCourse:${cacheResponse.userProgress.lastOpenCourse} buyCourse:${buyCourse.courseNumber} andropointBuy:${buyCourse.andropointBuy} lasOpenTheme:${cacheResponse.userProgress.lastOpenTheme}")
+                    if (buyCourse.andropointBuy==0){
+
+                            openAllThemesBuyCourse(buyCourse.courseNumber, lastThemeNumber = cacheResponse.userProgress.lastOpenTheme ?: 1)
+
                     }
                 }
             }
@@ -122,6 +124,44 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
+
+    private suspend fun openFirstThemeCourse(lastOpenCourse: Int?) {
+        val allThemesCourse = courseRepo.searchThemesWithCourseNumber(lastOpenCourse ?: 1)
+        val n = allThemesCourse.minByOrNull { it.themeNumber }
+        if(n!=null) {
+            val updateThemeEntity = ThemeEntity(
+                uniqueThemeId = n.uniqueThemeId,
+                lastUpdateDate = Date(),
+                themeName = n.themeName,
+                courseNumber = n.courseNumber,
+                themeNumber = n.themeNumber,
+                interactiveCodeMistakes = n.interactiveCodeMistakes,
+                interactiveCodeCorrect = n.interactiveCodeCorrect,
+                victorineMistakeAnswer = n.victorineMistakeAnswer,
+                victorineCorrectAnswer = n.victorineCorrectAnswer,
+                victorineDate = n.victorineDate,
+                interactiveTestId = n.interactiveTestId,
+                interactiveQuestionCount = n.interactiveQuestionCount,
+                victorineQuestionCount = n.victorineQuestionCount,
+                vicotineTestId = n.vicotineTestId,
+                duoDate = n.duoDate,
+                isDuoInter = n.isDuoInter,
+                isVictorine = n.isVictorine,
+                isOpen = true,
+                termHourse = n.termHourse,
+                termDateApi = n.termDateApi,
+                imageTheme = n.imageTheme,
+                lessonsCount = n.lessonsCount,
+                lastCourseTheme = n.lastCourseTheme,
+                isFav = n.isFav,
+                isThemePassed = n.isThemePassed,
+                possibleToOpenThemeFree = n.possibleToOpenThemeFree,
+                themePrice = n.themePrice
+            )
+            courseRepo.updateTheme(updateThemeEntity)
+        }
+    }
+
     suspend fun downloadUpdateLang(isSuccess:((ErrorEnum)->Unit)){
         try {
             courseRepo.deleteAllCourse()
@@ -170,8 +210,10 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             val myBuyCourses = transactionRepo.checkMyBuyCourse(userInfo?.token ?: "")
             if(!myBuyCourses.isNullOrEmpty()&&myBuyCourses[0].codeAnswer != 707){
                 myBuyCourses.forEach { buyCourse->
-                    if (!buyCourse.andropointBuy){
-                        openAllThemesBuyCourse(buyCourse.courseNumber)
+                    if (buyCourse.andropointBuy==0){
+
+                            openAllThemesBuyCourse(buyCourse.courseNumber, lastThemeNumber = cacheResponse.userProgress.lastOpenTheme ?: 1)
+
                     }
                 }
             }
@@ -183,6 +225,17 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             }
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
+            if(checkBuyCourse()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            if(checkSubscibe()){
+                Log.d("sppspsp","e.toString()")
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }else{
+                isSuccess.invoke(ErrorEnum.NOTNETWORK)
+            }
             Log.d("downloadLanfintitoibnoyt",e.toString())
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
@@ -245,8 +298,10 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
                                 val myBuyCourses = transactionRepo.checkMyBuyCourse(myInfo?.token ?: "")
                                 if(!myBuyCourses.isNullOrEmpty()&&myBuyCourses[0].codeAnswer != 707){
                                     myBuyCourses.forEach { buyCourse->
-                                        if (!buyCourse.andropointBuy){
-                                            openAllThemesBuyCourse(buyCourse.courseNumber)
+                                        if (buyCourse.andropointBuy==0){
+
+                                                openAllThemesBuyCourse(buyCourse.courseNumber, lastThemeNumber = cacheResponse.userProgress.lastOpenTheme ?: 1)
+
                                         }
                                     }
                                 }
@@ -291,8 +346,10 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
                 val myBuyCourses = transactionRepo.checkMyBuyCourse(myInfo?.token ?: "")
                 if(!myBuyCourses.isNullOrEmpty()&&myBuyCourses[0].codeAnswer != 707){
                     myBuyCourses.forEach { buyCourse->
-                        if (!buyCourse.andropointBuy){
-                            openAllThemesBuyCourse(buyCourse.courseNumber)
+                        if (buyCourse.andropointBuy==0){
+
+                                openAllThemesBuyCourse(buyCourse.courseNumber, lastThemeNumber = cacheResponse.userProgress.lastOpenTheme ?: 1)
+
                         }
                     }
                 }
@@ -494,9 +551,12 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
                                 val myBuyCourses = transactionRepo.checkMyBuyCourse(userInfoLocal?.token ?: "")
                                 if(!myBuyCourses.isNullOrEmpty()&&myBuyCourses[0].codeAnswer != 707){
                                     myBuyCourses.forEach { buyCourse->
-                                        if (!buyCourse.andropointBuy){
-                                            openAllThemesBuyCourse(buyCourse.courseNumber)
+                                        if (buyCourse.andropointBuy==0){
+
+                                                openAllThemesBuyCourse(buyCourse.courseNumber, lastThemeNumber = cacheResponse.userProgress.lastOpenTheme ?: 1)
+
                                         }
+
                                     }
                                 }
                                 val buyThemes = transactionRepo.checkUserBuyTheme(userInfoLocal?.token ?: "")
@@ -815,48 +875,90 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
         courseRepo.updateTheme(updateTheme)
     }
 ///
-    private suspend fun openAllThemesBuyCourse(courseNumber:Int){
-        val allThemes = courseRepo.searchThemesWithCourseNumber(courseNumber)
-        allThemes.forEach { oneTheme->
-            val updateTheme = ThemeEntity(
-                uniqueThemeId = oneTheme.uniqueThemeId,
-                lastUpdateDate = Date(),
-                themeName = oneTheme.themeName,
-                courseNumber = oneTheme.courseNumber,
-                themeNumber = oneTheme.themeNumber,
-                interactiveCodeMistakes =oneTheme.interactiveCodeMistakes,
-                interactiveCodeCorrect = oneTheme.interactiveCodeCorrect,
-                victorineMistakeAnswer = oneTheme.victorineMistakeAnswer,
-                victorineCorrectAnswer = oneTheme.victorineCorrectAnswer,
-                victorineDate = oneTheme.victorineDate,
-                interactiveTestId = oneTheme.interactiveTestId,
-                interactiveQuestionCount = oneTheme.interactiveQuestionCount,
-                victorineQuestionCount = oneTheme.victorineQuestionCount,
-                vicotineTestId = oneTheme.vicotineTestId,
-                duoDate = oneTheme.duoDate,
-                isDuoInter = oneTheme.isDuoInter,
-                isVictorine = oneTheme.isVictorine,
-                isOpen = true,
-                termHourse = oneTheme.termHourse,
-                lessonsCount = oneTheme.lessonsCount,
-                imageTheme = oneTheme.imageTheme,
-                termDateApi = oneTheme.termDateApi,
-                lastCourseTheme = oneTheme.lastCourseTheme,
-                possibleToOpenThemeFree = oneTheme.possibleToOpenThemeFree,
-                isFav = oneTheme.isFav,
-                isThemePassed = oneTheme.isThemePassed,
-                themePrice = oneTheme.themePrice
-            )
-            courseRepo.updateTheme(updateTheme)
-        }
-    }
+    private suspend fun openAllThemesBuyCourse(courseNumber:Int,lastThemeNumber:Int){
 
+            val allThemes = courseRepo.searchThemesWithCourseNumber(courseNumber)
+            allThemes.forEach { oneTheme->
+                if(oneTheme.themeNumber<lastThemeNumber){
+                    val updateTheme = ThemeEntity(
+                        uniqueThemeId = oneTheme.uniqueThemeId,
+                        lastUpdateDate = Date(),
+                        themeName = oneTheme.themeName,
+                        courseNumber = oneTheme.courseNumber,
+                        themeNumber = oneTheme.themeNumber,
+                        interactiveCodeMistakes =oneTheme.interactiveCodeMistakes,
+                        interactiveCodeCorrect = oneTheme.interactiveCodeCorrect,
+                        victorineMistakeAnswer = oneTheme.victorineMistakeAnswer,
+                        victorineCorrectAnswer = oneTheme.victorineCorrectAnswer,
+                        victorineDate = oneTheme.victorineDate,
+                        interactiveTestId = oneTheme.interactiveTestId,
+                        interactiveQuestionCount = oneTheme.interactiveQuestionCount,
+                        victorineQuestionCount = oneTheme.victorineQuestionCount,
+                        vicotineTestId = oneTheme.vicotineTestId,
+                        duoDate = oneTheme.duoDate,
+                        isDuoInter = oneTheme.isDuoInter,
+                        isVictorine = oneTheme.isVictorine,
+                        isOpen = true,
+                        termHourse = oneTheme.termHourse,
+                        lessonsCount = oneTheme.lessonsCount,
+                        imageTheme = oneTheme.imageTheme,
+                        termDateApi = oneTheme.termDateApi,
+                        lastCourseTheme = oneTheme.lastCourseTheme,
+                        possibleToOpenThemeFree = oneTheme.possibleToOpenThemeFree,
+                        isFav = oneTheme.isFav,
+                        isThemePassed = true,
+                        themePrice = oneTheme.themePrice
+                    )
+                    courseRepo.updateTheme(updateTheme)
+                }else {
+                    val updateTheme = ThemeEntity(
+                        uniqueThemeId = oneTheme.uniqueThemeId,
+                        lastUpdateDate = Date(),
+                        themeName = oneTheme.themeName,
+                        courseNumber = oneTheme.courseNumber,
+                        themeNumber = oneTheme.themeNumber,
+                        interactiveCodeMistakes =oneTheme.interactiveCodeMistakes,
+                        interactiveCodeCorrect = oneTheme.interactiveCodeCorrect,
+                        victorineMistakeAnswer = oneTheme.victorineMistakeAnswer,
+                        victorineCorrectAnswer = oneTheme.victorineCorrectAnswer,
+                        victorineDate = oneTheme.victorineDate,
+                        interactiveTestId = oneTheme.interactiveTestId,
+                        interactiveQuestionCount = oneTheme.interactiveQuestionCount,
+                        victorineQuestionCount = oneTheme.victorineQuestionCount,
+                        vicotineTestId = oneTheme.vicotineTestId,
+                        duoDate = oneTheme.duoDate,
+                        isDuoInter = oneTheme.isDuoInter,
+                        isVictorine = oneTheme.isVictorine,
+                        isOpen = true,
+                        termHourse = oneTheme.termHourse,
+                        lessonsCount = oneTheme.lessonsCount,
+                        imageTheme = oneTheme.imageTheme,
+                        termDateApi = oneTheme.termDateApi,
+                        lastCourseTheme = oneTheme.lastCourseTheme,
+                        possibleToOpenThemeFree = oneTheme.possibleToOpenThemeFree,
+                        isFav = oneTheme.isFav,
+                        isThemePassed = false,
+                        themePrice = oneTheme.themePrice
+                    )
+                    courseRepo.updateTheme(updateTheme)
+                }
+
+            }
+        }
+
+
+
+
+
+
+
+    @SuppressLint("SuspiciousIndentation")
     private suspend fun checkSubscibe():Boolean{
         val sub = transactionRepo.getSubscribe()
-        Log.d("obkobkokoybybybhnb",sub.toString())
+
             if(sub!=null){
                 val currentDateLocal = Date()
-                Log.d("obkobkokoybybybhnb",currentDateLocal.toString())
+
 
                 val calendar = Calendar.getInstance()
                 calendar.time = sub.date

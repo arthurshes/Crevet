@@ -17,55 +17,92 @@ import workwork.test.andropediagits.databinding.FragmentLessonBinding
 
 
 object OptimizationText {
-     fun specialCharacterColoring(inputText: String,context: Context): SpannableStringBuilder {
-        val words = inputText.split(" ")
-        val spannableStringBuilder = SpannableStringBuilder()
 
-        val keywordsColor = ContextCompat.getColor(context, R.color.keywords_color)
+    fun specialCharacterColoring(inputText: String,context: Context): String {
+        var result = inputText
+        val keywordsColor = ContextCompat.getColor(context, R.color.keywords_color) .toString()
+        val manifestColor = ContextCompat.getColor(context, R.color.manifest_keywords_color).toString()
+        val customColors = mapOf(
+            "class" to keywordsColor,
+            "internal" to keywordsColor,
+            "interface" to keywordsColor,
 
-        for (word in words) {
-            val spannableWord = SpannableString(word)
-            val manifestColor = ContextCompat.getColor(context, R.color.manifest_keywords_color)
-            when (word) {
-                "manifest" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "uses-permission" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "activity" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "intent-filter" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "provider" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "application" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "action" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "var" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "val" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "while" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "fun" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "when" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "override" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "super" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "init" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "private" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "protected" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "this" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "public" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "lateinit" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "," -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "for" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "in" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "true" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "false" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "null" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "if" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "else" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "return" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "object" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                "import" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                else->{}
-            }
+            "var" to keywordsColor,
+            "null" to keywordsColor,        "val" to keywordsColor ,
+            "var" to keywordsColor ,        "while" to keywordsColor,
+            "fun" to keywordsColor,        "when" to keywordsColor,
+            "override" to keywordsColor,        "super" to keywordsColor,
+            "init" to keywordsColor,        "private" to keywordsColor,
+            "protected" to keywordsColor,        "this" to keywordsColor,
+            "public" to keywordsColor,        "lateinit" to keywordsColor,
+            "," to keywordsColor,        "for" to keywordsColor,
+            "in" to keywordsColor,        "true" to keywordsColor,
+            "false" to keywordsColor,        "null" to keywordsColor,
+            "if" to keywordsColor,        "else" to keywordsColor,
+            "return" to keywordsColor,        "object" to keywordsColor,
+            "import" to keywordsColor,        "manifest" to manifestColor,
+            "uses-permission" to manifestColor,        "activity" to manifestColor,
+            "intent-filter" to manifestColor,        "provider" to manifestColor,
+            "application" to manifestColor,        "action" to manifestColor)
 
-            spannableStringBuilder.append(spannableWord).append(" ")
+        for ((word, color) in customColors) {        val escapedWord = Regex.escape(word)
+            val regex = Regex("(\\b$escapedWord\\b)")
+            result =  regex.replace(result) {
+                "<font color=\"$color\">$word</font>"        }
         }
-
-        return spannableStringBuilder
+        return result
     }
+
+
+//     fun specialCharacterColoring(inputText: String,context: Context): SpannableStringBuilder {
+//        val words = inputText.split(" ")
+//        val spannableStringBuilder = SpannableStringBuilder()
+//
+//        val keywordsColor = ContextCompat.getColor(context, R.color.keywords_color)
+//
+//        for (word in words) {
+//            val spannableWord = SpannableString(word)
+//            val manifestColor = ContextCompat.getColor(context, R.color.manifest_keywords_color)
+//            when (word) {
+//                "manifest" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "uses-permission" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "activity" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "intent-filter" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "provider" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "application" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "action" -> spannableWord.setSpan(ForegroundColorSpan(manifestColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "var" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "val" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "while" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "fun" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "when" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "override" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "super" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "init" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "private" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "protected" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "this" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "public" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "lateinit" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "," -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "for" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "in" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "true" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "false" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "null" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "if" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "else" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "return" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "object" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                "import" -> spannableWord.setSpan(ForegroundColorSpan(keywordsColor), 0, word.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+//                else->{}
+//            }
+//
+//            spannableStringBuilder.append(spannableWord).append(" ")
+//        }
+//
+//        return spannableStringBuilder
+//    }
 
 //   fun optimizeCodeFragment(text: String): String {
 //        return text.replace(",,", "\n").replace("##", "\t")

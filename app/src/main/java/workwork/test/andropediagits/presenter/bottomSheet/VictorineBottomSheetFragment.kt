@@ -179,20 +179,26 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                     Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
                     if (isActualNotTerm) {
                         if (startTimerViewAds) {
-                            Toast.makeText(
-                                requireContext(),
-                               getString(R.string.advertising_will_be_available_through),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            requireActivity().runOnUiThread {
+                                Toast.makeText(
+                                    requireContext(),
+                                    getString(R.string.advertising_will_be_available_through),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
                         } else {
                             showRewardedVideo()
                         }
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.advertising_limit_has_been_reached),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(
+                                requireContext(),
+                                getString(R.string.advertising_limit_has_been_reached),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
                     }
                 }
                 ErrorEnum.NOTNETWORK -> {
@@ -382,7 +388,10 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
         viewModel.minus2HoursTermAds({ state ->
             when (state) {
                 ErrorEnum.SUCCESS -> {
-                    Toast.makeText(requireContext(),getString(R.string.delay_was_successfully_reset), Toast.LENGTH_SHORT).show()
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(),getString(R.string.delay_was_successfully_reset), Toast.LENGTH_SHORT).show()
+                    }
+
                 }
 
                 ErrorEnum.NOTNETWORK -> {

@@ -122,6 +122,7 @@ class VictorineFragment : Fragment() {
             victorinesQuestions?.shuffled()
             binding?.tvQuestion?.text = victorinesQuestions?.get(currentIndex)?.questionText ?: ""
             viewModel.getAllQuestionAnswerVariants(victorineEntities[0].questionId) { victorineAnswerVariantEntities ->
+                Log.d("showShowShow200",victorineAnswerVariantEntities.toString())
                 showFirstElement(victorineAnswerVariantEntities, binding)
                 victorineAnswerVariants = victorineAnswerVariantEntities
                 Log.d(
@@ -427,44 +428,68 @@ class VictorineFragment : Fragment() {
                 }
 
                 ErrorEnum.NOTNETWORK -> {
+                requireActivity().runOnUiThread {
                     ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
                         checkResultAnswer(numberItem, item)
                     }
                 }
 
+                }
+
                 ErrorEnum.ERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkResultAnswer(numberItem, item)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkResultAnswer(numberItem, item)
+                        }
                     }
+
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkResultAnswer(numberItem, item)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkResultAnswer(numberItem, item)
+                        }
                     }
+
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
-                    ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                        checkResultAnswer(numberItem, item)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            checkResultAnswer(numberItem, item)
+                        }
                     }
+
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkResultAnswer(numberItem, item)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkResultAnswer(numberItem, item)
+                        }
+                    }
+
+                }
+
+                ErrorEnum.OFFLINEMODE->{
+                    if (victorinesQuestions?.size != currentIndex) {
+                        showNextElement()
                     }
                 }
 
                 else -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkResultAnswer(numberItem, item)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkResultAnswer(numberItem, item)
+                        }
                     }
+
                 }
             }
         }, { isClue ->
             Log.d("victorineClueadfrofkrof", isClue.toString())
-            if (pref?.getString(Constatns.CLUE_KEY, "") == "true") {
+            if (pref?.getString(Constatns.CLUE_KEY, "true") == "true") {
                 if (isClue != null) {
 //                    isClueExist = true
 //                    Toast.makeText(requireActivity(), isClue, Toast.LENGTH_LONG).show()
@@ -475,20 +500,23 @@ class VictorineFragment : Fragment() {
 //                    }/
 //                    snackbar.show()
                     if (victorinesQuestions?.size != currentIndex) {
-                        val snackbar = view?.let {
-                            Snackbar.make(
-                                it,
-                                R.string.clue_snackbar,
-                                Snackbar.LENGTH_LONG
-                            )
+                        requireActivity().runOnUiThread {
+                            val snackbar = view?.let {
+                                Snackbar.make(
+                                    it,
+                                    R.string.clue_snackbar,
+                                    Snackbar.LENGTH_LONG
+                                )
+                            }
+                            snackbar?.setAction(R.string.clue_snackbar_view) {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogClue(requireContext(), isClue,{
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                })
+                            }
+                            snackbar?.show()
                         }
-                        snackbar?.setAction(R.string.clue_snackbar_view) {
-                            binding?.dimViewVictorine?.visibility = View.VISIBLE
-                            ShowDialogHelper.showDialogClue(requireContext(), isClue,{
-                                binding?.dimViewVictorine?.visibility = View.GONE
-                            })
-                        }
-                        snackbar?.show()
+
                     }
 //                    val rootView = requireView()
 //                    val snackbar = Snackbar.make(rootView, "Snackbar с кнопкой", Snackbar.LENGTH_LONG)
@@ -562,14 +590,15 @@ class VictorineFragment : Fragment() {
 
                 ErrorStateView.OFFLINE -> {
                     requireActivity().runOnUiThread {
-                        val action =
-                            VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
-                                args.courseNumber,
-                                args.courseName
-                            )
-                        binding?.root?.let { Navigation.findNavController(it).navigate(action) }
                         ShowDialogHelper.showDialogSuccessTest(requireContext()) {
-                            strikeModeTreatmentResult()
+
+                            val action =
+                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                    args.courseNumber,
+                                    args.courseName
+                                )
+                            binding?.root?.let { Navigation.findNavController(it).navigate(action) }
+
                         }
                     }
                 }
@@ -629,54 +658,81 @@ class VictorineFragment : Fragment() {
                 ErrorEnum.SUCCESS -> {}
 
                 ErrorEnum.OFFLINEMODE ->{
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        })
                     }
                 }
 
                 ErrorEnum.NOTNETWORK -> {
-                    ShowDialogHelper.showDialogNotNetworkError(
-                        requireContext()
-                    ) {
-                        addAndropointsTreatmentResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(
+                            requireContext()
+                        ) {
+                            addAndropointsTreatmentResult()
+                        }
                     }
+
                 }
 
                 ErrorEnum.ERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(
-                        requireContext()
-                    ) {
-                        addAndropointsTreatmentResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(
+                            requireContext()
+                        ) {
+                            addAndropointsTreatmentResult()
+                        }
                     }
+
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(
-                        requireContext()
-                    ) {
-                        addAndropointsTreatmentResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(
+                            requireContext()
+                        ) {
+                            addAndropointsTreatmentResult()
+                        }
                     }
+
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
-                    ShowDialogHelper.showDialogTimeOutError(
-                        requireContext()
-                    ) {
-                        addAndropointsTreatmentResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(
+                            requireContext()
+                        ) {
+                            addAndropointsTreatmentResult()
+                        }
                     }
+
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(
-                        requireContext()
-                    ) {
-                        addAndropointsTreatmentResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(
+                            requireContext()
+                        ) {
+                            addAndropointsTreatmentResult()
+                        }
                     }
+
                 }
             }
         }
@@ -693,7 +749,7 @@ class VictorineFragment : Fragment() {
                     val action =
                         VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
                             args.courseNumber,
-                            args.courseName
+                            args.courseNameReal
                         )
                     binding?.root?.let { Navigation.findNavController(it).navigate(action) }
                 }
@@ -1039,7 +1095,9 @@ class VictorineFragment : Fragment() {
 
     private fun checkTryAgainResult() {
         viewModel.tryAgainSendProgress({ resultTryAgain ->
+            Log.d("startTimerVic", resultTryAgain.toString()+"tryAgain")
             when (resultTryAgain) {
+
                 ErrorEnum.SUCCESS -> {
                     strikeModeTreatmentResult()
                 }
@@ -1053,33 +1111,48 @@ class VictorineFragment : Fragment() {
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
-                    ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                        checkTryAgainResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            checkTryAgainResult()
+                        }
                     }
+
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkTryAgainResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkTryAgainResult()
+                        }
                     }
+
                 }
 
                 ErrorEnum.NOTNETWORK -> {
-                    ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                        checkTryAgainResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            checkTryAgainResult()
+                        }
                     }
+
                 }
 
                 ErrorEnum.ERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkTryAgainResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkTryAgainResult()
+                        }
                     }
+
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkTryAgainResult()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkTryAgainResult()
+                        }
                     }
+
                 }
             }
         })
@@ -1100,74 +1173,181 @@ class VictorineFragment : Fragment() {
                 if (it) {
                     victorineExit = true
                 }
-            }, {})
+            }, {
+
+            },{
+
+            })
         }
     }
+
+
+
+
 
     private fun startTimerFun() {
         var timerStart = false
 
+        var timerCours:((Boolean)->Unit)?=null
 
         viewModel.getTimeVictorine({ sec ->
             Log.d("kfkrofkorkfo5t59t9564g54", sec.toString())
             victorineSec = sec
         }, args.uniqueThemeId, {
+            Log.d("startTimerVic", it.toString())
             when (it) {
                 ErrorEnum.SUCCESS -> {
                     Log.d("kfkrofkorkfo5t59t9564g5444", timerStart.toString())
                     Log.d("kfkrofkorkfo5t59t9564g5444", victorineSec.toString())
                     if (!timerStart) {
-                        if (victorineSec?.equals(0) == false) {
-                            CustomTimerUtil.startTimer(victorineSec) {
-                                checkTestTreatmentResult(victorinesQuestions ?: emptyList(), true)
-                            }
-                        }
+                        checkBuyCourse()
                     } else {
-                        binding?.tvTimer?.text = "∞"
+                        requireActivity().runOnUiThread {
+                            binding?.tvTimer?.text = "∞"
+                        }
+
                     }
+                }
+
+                ErrorEnum.OFFLINEMODE->{
+//                    Log.d("kfkrofkorkfo5t59t9564g5444", timerStart.toString())
+//                    Log.d("kfkrofkorkfo5t59t9564g5444", victorineSec.toString())
+//
+                        requireActivity().runOnUiThread {    binding?.tvTimer?.text = "∞"
+                        }
+
+
                 }
 
                 ErrorEnum.NOTNETWORK -> {
-                    ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                        startTimerFun()
-                    }
+                    checkBuyCourse()
                 }
 
                 ErrorEnum.ERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        startTimerFun()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            startTimerFun()
+                        }
                     }
+
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        startTimerFun()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            startTimerFun()
+                        }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
-                    ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                        startTimerFun()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            startTimerFun()
+                        }
                     }
-
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        startTimerFun()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            startTimerFun()
+                        }
                     }
                 }
 
                 else -> {
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        startTimerFun()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            startTimerFun()
+                        }
                     }
                 }
             }
         }, {
+            Log.d("kfkrofkorkfo5t59t9564g5444",it.toString())
             timerStart = it
         })
     }
+
+    private fun checkBuyCourse(){
+        var timerCours = false
+        viewModel.checkCourseBuy({
+            Log.d("startTimerVic2", it.toString())
+            when(it){
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            startTimerFun()
+                        }
+                    }
+
+                }
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            startTimerFun()
+                        }
+                    }
+
+                }
+                ErrorEnum.SUCCESS -> {
+
+
+                        Log.d("startTimerVic","testBool:${it.toString()}")
+                        if(!timerCours){
+                            if (victorineSec?.equals(0) == false) {
+                                CustomTimerUtil.startTimer(victorineSec) {
+                                    checkTestTreatmentResult(victorinesQuestions ?: emptyList(), true)
+                                }
+                            }
+                        }else{
+                            requireActivity().runOnUiThread {
+                                binding?.tvTimer?.text = "∞"
+                            }
+
+                        }
+
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            startTimerFun()
+                        }
+                    }
+
+                }
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            startTimerFun()
+                        }
+                    }
+
+                }
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            startTimerFun()
+                        }
+                    }
+
+                }
+                ErrorEnum.OFFLINEMODE -> {
+
+                            binding?.tvTimer?.text = "∞"
+
+
+
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> TODO()
+            }
+        },{
+            Log.d("startTimerVic2", "${it} it.toString()")
+            timerCours = it
+        })
+    }
+
 
     override fun onStart() {
         super.onStart()

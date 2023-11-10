@@ -1,6 +1,7 @@
 package workwork.test.andropediagits.presenter.courses
 
 import android.content.Context
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,10 +59,18 @@ class CourseAdapter(private val context: Context) :
                     isCourseOpen?.invoke(currentCourse.isOpen)
                 }
             }
+            val currentTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
             if (!currentCourse.isOpen) {
-                btnLock.visibility = View.VISIBLE
-                cardCourse.background =
-                    ContextCompat.getDrawable(context, R.drawable.custom_card_course_premium)
+                if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+                    btnLock.visibility = View.VISIBLE
+                    cardCourse.background =
+                        ContextCompat.getDrawable(context, R.drawable.custom_card_course_premium_black)
+                }else{
+                    btnLock.visibility = View.VISIBLE
+                    cardCourse.background =
+                        ContextCompat.getDrawable(context, R.drawable.custom_card_course_premium)
+                }
+
             }
         }
 

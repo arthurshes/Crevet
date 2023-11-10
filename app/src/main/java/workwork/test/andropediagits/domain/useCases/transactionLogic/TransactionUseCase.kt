@@ -1,6 +1,7 @@
 package workwork.test.andropediagits.domain.useCases.transactionLogic
 
 
+import android.util.Log
 import okio.IOException
 import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -21,6 +22,7 @@ import workwork.test.andropediagits.data.remote.model.updateModel.UpdateThemeMod
 import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
+import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
@@ -371,7 +373,7 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
                     courseNumber = courseNumber,
                     dateBuy = currentTime.datetime,
                     transactionId = myInfo.token + courseNumber.toString(),
-                    andropointBuy = false
+                    andropointBuy = 0
                 )
                 transactionRepo.sendCourseBuy(courseBuy)
                 val updateCourseModel = UpdateCourseModel(
@@ -432,7 +434,7 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
                 courseNumber = courseNumber,
                 dateBuy = currentTime.datetime,
                 transactionId = myInfo.token + courseNumber.toString(),
-                andropointBuy = false
+                andropointBuy = 0
             )
             transactionRepo.sendCourseBuy(courseBuy)
             val updateCourseModel = UpdateCourseModel(
@@ -500,7 +502,8 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
         courseNumber?.let {courNotnull->
             val updateKeyEntity = UpdatesKeyEntity(
                 buyCourseNumber = courNotnull,
-                updateTime = Date()
+                updateTime = Date(),
+                buyCourseAndropoint = false
             )
             courseRepo.insertKey(updateKeyEntity)
         }
@@ -616,6 +619,11 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
             isActual.invoke(response.subscribeIsActual)
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
+            if(checkSubscibe()){
+                isActual.invoke(true)
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
             e.printStackTrace()
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
@@ -630,6 +638,23 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
     suspend fun checkCourseBuy(token: String, isSuccess: ((ErrorLamdaRes) -> Unit), isBuy:((Boolean)->Unit)){
 //        val response = transactionRepo.checkMyBuyCourse(token)
         
+    }
+
+    private suspend fun checkSubscibe():Boolean{
+        val sub = transactionRepo.getSubscribe()
+        if(sub!=null){
+            val currentDateLocal = Date()
+            Log.d("obkobkokoybybybhnb",currentDateLocal.toString())
+
+            val calendar = Calendar.getInstance()
+            calendar.time = sub.date
+            calendar.add(Calendar.DAY_OF_MONTH,31*sub.term)
+            if (calendar.time.time>currentDateLocal.time){
+                return true
+            }
+        }
+
+        return false
     }
 
 }

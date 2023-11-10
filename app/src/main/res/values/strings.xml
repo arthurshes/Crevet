@@ -1,4 +1,5 @@
 <resources>
+    <string name="Ok_offline_button">Хорошо</string>
     <string name="clue_snackbar">Появилась подсказка</string>
     <string name="clue_snackbar_view">Посмотреть</string>
     <string name="close_btn">Закрыть</string>
@@ -48,6 +49,8 @@
     <string name="delay_has_been_successfully_reset">Задержка была успешно сброшена!</string>
     <!--SignUp-->
     <string name="welcome">Добро пожаловать!</string>
+
+
     <string name="sign_in">Войти</string>
     <string name="sign_up">Зарегистрироваться</string>
     <string name="sign_in_existing_account">Войти в существуюший аккаунт</string>
@@ -176,6 +179,7 @@
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
 
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
@@ -212,7 +216,6 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-
 
     <!--Forget--><!--Forget--><!--Forget-->
 

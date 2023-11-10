@@ -33,6 +33,7 @@ import workwork.test.andropediagits.presenter.reset.DatePickerFragment
 object ShowDialogHelper {
    private var dialog: Dialog? = null
    private var isDialogStrikeShow = false
+    private var isDialogSuccess = false
     fun showDialogUnknownError(
         context: Context,
         pressButton: (() -> Unit)
@@ -84,12 +85,14 @@ object ShowDialogHelper {
         dialog?.show()
     }  fun showDialogOffline(
         context: Context,
+        okClick:(()->Unit)?=null,
+        close:(()->Unit)?=null
     ) {
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.offline_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         val tvNotAvailableSmAndPurchases = dialog?.findViewById<TextView>(R.id.tvNotAvailableSmAndPurchases)
-
+        val buttonGood = dialog?.findViewById<CardView>(R.id.btnCloseOfflineDialog)
         val text = context.getString(R.string.shock_mode_and_purchases_will_not_be_available)
 
 
@@ -106,7 +109,11 @@ object ShowDialogHelper {
 
         val start1 = text.indexOf(keyword1)
         val start2 = text.indexOf(keyword2)
-
+        buttonGood?.setOnClickListener {
+            dialog?.dismiss()
+            dialog = null
+            okClick?.invoke()
+        }
         if (start1 != -1) {
             spannable.setSpan(colorSpan1, start1, start1 + keyword1.length, 0)
             spannable.setSpan(styleSpanBold1, start1, start1 + keyword1.length, 0)
@@ -118,6 +125,9 @@ object ShowDialogHelper {
         }
         tvNotAvailableSmAndPurchases?.text = spannable
         dialog?.show()
+        dialog?.setOnDismissListener {
+            close?.invoke()
+        }
     }
 
     fun showDialogStrikeMode(
@@ -322,29 +332,35 @@ object ShowDialogHelper {
     }
 
     fun showDialogSuccessTest(context: Context, close: () -> Unit) {
-        dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.test_success_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val dialogButton = dialog?.findViewById<CardView>(R.id.btnContinue)
-        val addTextAndropoints = dialog?.findViewById<TextView>(R.id.textViewAddAndropointsSuccess)
-        dialogButton?.isClickable = false
-        var buttonEnable = false
-       dialogButton?.animate()
-            ?.alpha(1f)
-            ?.setDuration(3000)
-            ?.withEndAction {
-                dialogButton?.isClickable = true
-                buttonEnable = true
+        if(!isDialogSuccess){
+            isDialogSuccess = true
+            dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+            dialog?.setContentView(R.layout.test_success_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val dialogButton = dialog?.findViewById<CardView>(R.id.btnContinue)
+            val addTextAndropoints = dialog?.findViewById<TextView>(R.id.textViewAddAndropointsSuccess)
+            dialogButton?.isClickable = false
+            var buttonEnable = false
+            var buttonClick = false
+            dialogButton?.animate()
+                ?.alpha(1f)
+                ?.setDuration(3000)
+                ?.withEndAction {
+                    dialogButton?.isClickable = true
+                    buttonEnable = true
 
+                }
+            dialogButton?.setOnClickListener {
+                if(buttonEnable&&!buttonClick){
+                    buttonClick = true
+                    dialog?.dismiss()
+                    dialog = null
+                    close.invoke()
+                }
             }
-        dialogButton?.setOnClickListener {
-            if(buttonEnable){
-                dialog?.dismiss()
-                dialog = null
-                close.invoke()
-            }
+            dialog?.show()
         }
-        dialog?.show()
+
     }
 
     fun showDialogFailTest(context: Context, correctTest:Int,mistakeTest: Int, size: Int, dateTerm: String,isClose:(()->Unit),isTimerOut:Boolean) {
@@ -533,6 +549,7 @@ object ShowDialogHelper {
          val tvPriceToRub = dialog?.findViewById<TextView>(R.id.tvPriceToRub)
         btnGoogleBuy?.setOnClickListener {
             pressGoogle.invoke()
+            dialog?.dismiss()
             dialog = null
         }
 //        btnAndroBuy
@@ -547,6 +564,7 @@ object ShowDialogHelper {
         btnAndroBuy?.text = priceAndropoint.toString()
         btnAndroBuy?.setOnClickListener {
             pressAndro.invoke()
+            dialog?.dismiss()
             dialog = null
         }
         dialog?.setOnDismissListener {

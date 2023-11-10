@@ -49,7 +49,7 @@ class CoursesViewModel @Inject constructor(val coursesRepo: CourseRepo, private 
         }
     }
 
-    private fun initialCourse(){
+     fun initialCourse(){
         viewModelScope.launch {
             _allCourses.postValue(coursesRepo.getAllCourses())
         }

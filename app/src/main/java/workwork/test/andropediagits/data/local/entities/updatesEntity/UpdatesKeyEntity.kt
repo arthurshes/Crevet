@@ -19,5 +19,7 @@ data class UpdatesKeyEntity(
     val updateNameBoolean:Boolean ?= false,
     val updateTime:Date,
     val openCourseNumber:Int?=null,
-    val openUniqueThemeId:Int?=null
+    val openUniqueThemeId:Int?=null,
+    val buyCourseAndropoint:Boolean?=null,
+    val courseAndropointCount:Int?=null
 )

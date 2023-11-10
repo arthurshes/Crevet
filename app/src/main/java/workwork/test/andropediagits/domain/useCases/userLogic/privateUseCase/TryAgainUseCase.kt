@@ -5,6 +5,9 @@ import android.util.Log
 import okio.IOException
 import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
+import workwork.test.andropediagits.data.local.entities.course.CourseBuyEntity
+import workwork.test.andropediagits.data.local.entities.course.CourseEntity
+import workwork.test.andropediagits.data.local.entities.theme.ThemeEntity
 import workwork.test.andropediagits.data.remote.model.SubscribeModel
 import workwork.test.andropediagits.data.remote.model.course.CourseBuyModel
 import workwork.test.andropediagits.data.remote.model.theme.ThemeBuyModel
@@ -74,14 +77,46 @@ class TryAgainUseCase @Inject constructor(private val courseRepo: CourseRepo, pr
                         courseRepo.searchCourseWithNumber(it)
                     }
                     courseBuy?.let { courseBuyNotNull->
-                        val courseBuyModel = CourseBuyModel(
-                            dateBuy = currentDate.datetime,
-                            courseNumber = courseBuyNotNull.courseNumber,
-                            token = userLocalInfo?.token ?: "",
-                            transactionId = courseBuyNotNull.transactionId,
-                            andropointBuy = courseBuyNotNull.andropointBuy
-                        )
-                        transactionRepo.sendCourseBuy(courseBuyModel)
+                        if( courseBuyNotNull.andropointBuy){
+                            val themesCourse = courseRepo.searchThemesWithCourseNumber(courseBuyNotNull.courseNumber)
+                            val n = themesCourse.minByOrNull { it.themeNumber }
+                            val courseBuyModel = CourseBuyModel(
+                                dateBuy = currentDate.datetime,
+                                courseNumber = courseBuyNotNull.courseNumber,
+                                token = userLocalInfo?.token ?: "",
+                                transactionId = courseBuyNotNull.transactionId,
+                                andropointBuy =1,
+                                andropointMinus = key.courseAndropointCount,
+
+                            )
+                            transactionRepo.sendCourseBuy(courseBuyModel)
+                            val updateCourseModel = UpdateCourseModel(
+                                courseNumber = courseBuyNotNull.courseNumber,
+                                isOpenCourse = true,
+                                token = userLocalInfo?.token ?: "",
+                                isBuyCourse = false,
+                                dateApi = currentDate.datetime,
+                                courseFirstTheme  = n?.themeNumber ?: 0
+                            )
+
+                            val updateAnswerModel = UpdateAnswerModel(
+                                updateCourses = updateCourseModel,
+                                token = userLocalInfo?.token ?: "",
+                                AndropointCount = userLocalInfo?.andropointCount ?: 0
+                            )
+                            courseRepo.sendMyProgress(updateAnswerModel)
+                        }else{
+                            val courseBuyModel = CourseBuyModel(
+                                dateBuy = currentDate.datetime,
+                                courseNumber = courseBuyNotNull.courseNumber,
+                                token = userLocalInfo?.token ?: "",
+                                transactionId = courseBuyNotNull.transactionId,
+                                andropointBuy =0
+                            )
+                            transactionRepo.sendCourseBuy(courseBuyModel)
+                            courseBuyMoney(courseBuyNotNull.courseNumber)
+                        }
+
                     }
 
                         val courseModel = UpdateCourseModel(
@@ -212,6 +247,220 @@ class TryAgainUseCase @Inject constructor(private val courseRepo: CourseRepo, pr
             isBuy.invoke(true)
         }
         isBuy.invoke(false)
+    }
+private  suspend fun courseBuyMoney(courseNumber:Int){
+
+        val currentTime = transactionRepo.getCurrentTime()
+        val currentCourse = courseRepo.searchCourseWithNumber(courseNumber)
+        val myInfo = userLogicRepo.getUserInfoLocal()
+        val promoInfoLocal = userLogicRepo.getAllMyPromo()
+
+        promoInfoLocal?.let { promocode ->
+            val courseBuyEntity = CourseBuyEntity(
+                token = myInfo.token,
+                courseNumber = courseNumber,
+                promoCode = promocode.promoCode,
+                date = Date(),
+                transactionId = myInfo.token+courseNumber.toString(),
+                andropointBuy = false
+            )
+            transactionRepo.insertCourseBuy(courseBuyEntity)
+            val courseBuy = CourseBuyModel(
+                token = myInfo.token,
+                promoCode = promocode.promoCode,
+                courseNumber = courseNumber,
+                dateBuy = currentTime.datetime,
+                transactionId = myInfo.token + courseNumber.toString(),
+                andropointBuy = 0
+            )
+            transactionRepo.sendCourseBuy(courseBuy)
+            val updateCourseModel = UpdateCourseModel(
+                courseNumber = courseNumber,
+                isBuyCourse = true,
+                isOpenCourse = true,
+                dateApi = currentTime.datetime,
+                token = myInfo.token ?: ""
+            )
+            val updateAnswerModel = UpdateAnswerModel(
+                updateCourses = updateCourseModel,
+                token = myInfo.token ?: "",
+                AndropointCount = myInfo.andropointCount ?: 0
+            )
+            courseRepo.sendMyProgress(updateAnswerModel)
+            val courses = courseRepo.getAllCourses()
+            courses?.forEach { oneCourse->
+                if (oneCourse.courseNumber == courseNumber){
+                    val updateCourseEntity = CourseEntity(
+                        isOpen = true,
+                        courseNumber = oneCourse.courseNumber,
+                        description = oneCourse.description,
+                        courseName = oneCourse.courseName,
+                        isNetworkConnect = oneCourse.isNetworkConnect,
+                        possibleToOpenCourseFree = oneCourse.possibleToOpenCourseFree,
+                        lastUpdateDate = oneCourse.lastUpdateDate
+                    )
+                    courseRepo.updateCourse(updateCourseEntity)
+                    openAllThemesCourse(oneCourse.courseNumber,true)
+                }
+//                    if (oneCourse.possibleToOpenCourseFree){
+//                        val updateCourseEntity = CourseEntity(
+//                            isOpen = true,
+//                            courseNumber = oneCourse.courseNumber,
+//                            description = oneCourse.description,
+//                            courseName = oneCourse.courseName,
+//                            isNetworkConnect = oneCourse.isNetworkConnect,
+//                            possibleToOpenCourseFree = oneCourse.possibleToOpenCourseFree,
+//                            lastUpdateDate = oneCourse.lastUpdateDate
+//                        )
+//                        courseRepo.updateCourse(updateCourseEntity)
+//                        openAllThemesCourse(oneCourse.courseNumber,false)
+//                    }
+            }
+
+            return
+        }
+        val courseBuyEntity = CourseBuyEntity(
+            token = myInfo.token,
+            courseNumber = courseNumber,
+            date = Date(),
+            transactionId = myInfo.token+courseNumber.toString(),
+            andropointBuy = false
+        )
+        transactionRepo.insertCourseBuy(courseBuyEntity)
+        val courseBuy = CourseBuyModel(
+            token = myInfo.token,
+            courseNumber = courseNumber,
+            dateBuy = currentTime.datetime,
+            transactionId = myInfo.token + courseNumber.toString(),
+            andropointBuy = 0
+        )
+        transactionRepo.sendCourseBuy(courseBuy)
+        val updateCourseModel = UpdateCourseModel(
+            courseNumber = courseNumber,
+            isBuyCourse = true,
+            isOpenCourse = true,
+            dateApi = currentTime.datetime,
+            token = myInfo.token ?: ""
+        )
+        val updateAnswerModel = UpdateAnswerModel(
+            updateCourses = updateCourseModel,
+            token = myInfo.token ?: "",
+            AndropointCount = myInfo?.andropointCount ?: 0
+        )
+        courseRepo.sendMyProgress(updateAnswerModel)
+        val courses = courseRepo.getAllCourses()
+        courses?.forEach { oneCourse->
+            if (oneCourse.courseNumber == courseNumber){
+                val updateCourseEntity = CourseEntity(
+                    isOpen = true,
+                    courseNumber = oneCourse.courseNumber,
+                    description = oneCourse.description,
+                    courseName = oneCourse.courseName,
+                    isNetworkConnect = oneCourse.isNetworkConnect,
+                    possibleToOpenCourseFree = oneCourse.possibleToOpenCourseFree,
+                    lastUpdateDate = oneCourse.lastUpdateDate
+                )
+                courseRepo.updateCourse(updateCourseEntity)
+                openAllThemesCourse(oneCourse.courseNumber,true)
+            }
+            if (oneCourse.possibleToOpenCourseFree){
+                val updateCourseEntity = CourseEntity(
+                    isOpen = true,
+                    courseNumber = oneCourse.courseNumber,
+                    description = oneCourse.description,
+                    courseName = oneCourse.courseName,
+                    isNetworkConnect = oneCourse.isNetworkConnect,
+                    possibleToOpenCourseFree = oneCourse.possibleToOpenCourseFree,
+                    lastUpdateDate = oneCourse.lastUpdateDate
+                )
+                courseRepo.updateCourse(updateCourseEntity)
+                openAllThemesCourse(oneCourse.courseNumber,false)
+            }
+        }
+
+
+}
+
+    private suspend fun openAllThemesCourse(courseNumber: Int,isBuyCourse:Boolean){
+        val userInfo = userLogicRepo.getUserInfoLocal()
+        val allThemes = courseRepo.searchThemesWithCourseNumber(courseNumber)
+        val currentTime = courseRepo.getCurrentTime().datetime
+        allThemes?.forEach { oneTheme->
+            val updateThemeEntity = ThemeEntity(
+                uniqueThemeId = oneTheme.uniqueThemeId,
+                themeNumber = oneTheme.themeNumber,
+                courseNumber = oneTheme.courseNumber,
+                themeName = oneTheme.themeName,
+                imageTheme = oneTheme.imageTheme,
+                lastUpdateDate = oneTheme.lastUpdateDate,
+                victorineMistakeAnswer = oneTheme.victorineMistakeAnswer,
+                interactiveCodeMistakes = oneTheme.interactiveCodeMistakes,
+                victorineCorrectAnswer = oneTheme.victorineCorrectAnswer,
+                interactiveCodeCorrect = oneTheme.interactiveCodeCorrect,
+                lastCourseTheme = oneTheme.lastCourseTheme,
+                lessonsCount = oneTheme.lessonsCount,
+                victorineQuestionCount = oneTheme.victorineQuestionCount,
+                victorineDate = oneTheme.victorineDate,
+                vicotineTestId = oneTheme.vicotineTestId,
+                interactiveQuestionCount = oneTheme.interactiveQuestionCount,
+                interactiveTestId = oneTheme.interactiveTestId,
+                isOpen = true,
+                termHourse = null,
+                termDateApi = null,
+                isDuoInter = oneTheme.isDuoInter,
+                duoDate = oneTheme.duoDate,
+                possibleToOpenThemeFree = oneTheme.possibleToOpenThemeFree,
+                isVictorine = oneTheme.isVictorine,
+                isFav = oneTheme.isFav,
+                isThemePassed = oneTheme.isThemePassed,
+                themePrice = oneTheme.themePrice
+            )
+            courseRepo.updateTheme(updateThemeEntity)
+            if(isBuyCourse==true&&oneTheme.lastCourseTheme){
+                if(oneTheme.isThemePassed){
+                    val updateThemeModel = UpdateThemeModel(
+                        courseNumber = oneTheme.courseNumber,
+                        uniqueThemeId = oneTheme.uniqueThemeId,
+                        themeNumber = oneTheme.themeNumber,
+                        termDateApi = null,
+                        termHourse = null,
+                        token = userInfo?.token ?: "",
+                        isOpenTheme = true,
+                        interactiveId = oneTheme.interactiveTestId,
+                        victorineId = oneTheme.vicotineTestId,
+                        dateApi = currentTime,
+                        lasThemePassed = true
+                    )
+                    val updateAnswerModel = UpdateAnswerModel(
+                        token = userInfo?.token ?: "",
+                        updateThemes = updateThemeModel,
+                        AndropointCount = userInfo?.andropointCount ?: 0
+                    )
+                    courseRepo.sendMyProgress(updateAnswerModel)
+                }else{
+                    val updateThemeModel = UpdateThemeModel(
+                        courseNumber = oneTheme.courseNumber,
+                        uniqueThemeId = oneTheme.uniqueThemeId,
+                        themeNumber = oneTheme.themeNumber,
+                        termDateApi = null,
+                        termHourse = null,
+                        token = userInfo?.token ?: "",
+                        isOpenTheme = true,
+                        interactiveId = oneTheme.interactiveTestId,
+                        victorineId = oneTheme.vicotineTestId,
+                        dateApi = currentTime,
+                        lasThemePassed = false
+                    )
+                    val updateAnswerModel = UpdateAnswerModel(
+                        token = userInfo?.token ?: "",
+                        updateThemes = updateThemeModel,
+                        AndropointCount = userInfo?.andropointCount ?: 0
+                    )
+                    courseRepo.sendMyProgress(updateAnswerModel)
+                }
+
+            }
+        }
     }
 
 }

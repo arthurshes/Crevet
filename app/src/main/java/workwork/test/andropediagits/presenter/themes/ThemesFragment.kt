@@ -386,7 +386,10 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         viewModel.buyThemeForMoney(uniqueIdThemeBuy) { state ->
             when (state) {
                 ErrorEnum.SUCCESS -> {
-                    Toast.makeText(requireContext(),getString(R.string.theme_was_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(),getString(R.string.theme_was_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    }
+
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -425,12 +428,22 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
                 ErrorEnum.OFFLINEMODE ->{
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -441,7 +454,10 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         viewModel.buyAndropoints(quantityAndropoint){
             when(it){
                 ErrorEnum.SUCCESS -> {
-                    Toast.makeText(requireContext(),getString(R.string.andropoints_were_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(),getString(R.string.andropoints_were_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    }
+
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -480,12 +496,22 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
                 ErrorEnum.OFFLINEMODE ->{
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -503,53 +529,70 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                            langChooseTreatmentResult(LanguagesEnum.ENGLISH)
+                            langChooseTreatmentResult(language)
                         }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            langChooseTreatmentResult(LanguagesEnum.ENGLISH)
+                            langChooseTreatmentResult(language)
                         }
                     }
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            langChooseTreatmentResult(LanguagesEnum.ENGLISH)
+                            langChooseTreatmentResult(language)
                         }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                            langChooseTreatmentResult(LanguagesEnum.ENGLISH)
+                            langChooseTreatmentResult(language)
                         }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            langChooseTreatmentResult(LanguagesEnum.ENGLISH)
+                            langChooseTreatmentResult(language)
                         }
                     }
                 }
 
                 ErrorEnum.OFFLINEMODE -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        ShowDialogHelper.closeDialogLoadData()
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
 
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        ShowDialogHelper.closeDialogLoadData()
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -558,17 +601,23 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
     private fun downloadUpdateLangTreatmentResult() {
         viewModel.downloadUpdateLang { downLoadState ->
+            Log.d("pgrlepgkperkgperkgperkgpkewpg",downLoadState.toString())
             when (downLoadState) {
+
                 ErrorEnum.SUCCESS -> {
-                    ShowDialogHelper.closeDialogLoadData()
-                    val action = ThemesFragmentDirections.actionThemesFragmentToCoursesFragment(false)
-                    binding?.root?.let {
-                        Navigation.findNavController(it).navigate(action)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                        val action = ThemesFragmentDirections.actionThemesFragmentToCoursesFragment(false)
+                        binding?.root?.let {
+                            Navigation.findNavController(it).navigate(action)
+                        }
                     }
+
                 }
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
                             downloadUpdateLangTreatmentResult()
                         }
@@ -577,6 +626,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
                             downloadUpdateLangTreatmentResult()
                         }
@@ -585,6 +635,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
                             downloadUpdateLangTreatmentResult()
                         }
@@ -593,6 +644,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogTimeOutError(requireContext()) {
                             downloadUpdateLangTreatmentResult()
                         }
@@ -601,6 +653,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
                             downloadUpdateLangTreatmentResult()
                         }
@@ -609,13 +662,25 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
                 ErrorEnum.OFFLINEMODE -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        ShowDialogHelper.closeDialogLoadData()
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
 
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        ShowDialogHelper.closeDialogLoadData()
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -632,10 +697,17 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                     Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
                     if (isActualNotTerm) {
                         if (startTimerViewAds) {
-                            Toast.makeText(requireContext(), getString(R.string.advertising_will_be_available_through), Toast.LENGTH_SHORT).show()
-                        } else { showRewardedVideo() }
+                            requireActivity().runOnUiThread {
+                                Toast.makeText(requireContext(), getString(R.string.advertising_will_be_available_through), Toast.LENGTH_SHORT).show()
+                            }
+
+                        } else {
+                            showRewardedVideo() }
                     } else {
-                        Toast.makeText(requireContext(), getString(R.string.advertising_limit_has_been_reached), Toast.LENGTH_SHORT).show()
+                        requireActivity().runOnUiThread {
+                            Toast.makeText(requireContext(), getString(R.string.advertising_limit_has_been_reached), Toast.LENGTH_SHORT).show()
+                        }
+
                     }
                 }
 
@@ -857,12 +929,22 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
                 ErrorEnum.OFFLINEMODE ->{
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -888,10 +970,14 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.SUCCESS -> {
                     val currentAndropointCount = countAndropoints?.text?.toString()?.toInt()
                     val plusAddAndropoint = currentAndropointCount?.plus(1)
-                    countAndropoints?.text = plusAddAndropoint?.toString()
+
                     startTimerViewAdsFun()
                     startTimerViewAds = true
-                    Toast.makeText(requireContext(), getString(R.string.success_award_credited), Toast.LENGTH_SHORT).show()
+                    requireActivity().runOnUiThread {
+                        countAndropoints?.text = plusAddAndropoint?.toString()
+                        Toast.makeText(requireContext(), getString(R.string.success_award_credited), Toast.LENGTH_SHORT).show()
+                    }
+
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -919,10 +1005,22 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogOffline(requireContext()) }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                    },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                    }) }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogOffline(requireContext()) }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }) }
                 }
             }
         }
@@ -947,6 +1045,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
             )
         }
+
     }
     /* private fun buyThemeTreatmentResult() {
        var resultCourseBuy: ErrorEnum? = null

@@ -5,5 +5,6 @@ data class UpdateCourseModel(
     val courseNumber:Int,
     val dateApi:String,
     val isBuyCourse:Boolean?=null,
-    val isOpenCourse:Boolean
+    val isOpenCourse:Boolean,
+    val courseFirstTheme:Int?=null
 )

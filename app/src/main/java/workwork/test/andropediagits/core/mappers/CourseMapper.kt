@@ -1,10 +1,12 @@
 package workwork.test.andropediagits.core.mappers
 
 
+import android.annotation.SuppressLint
 import workwork.test.andropediagits.data.local.entities.course.CourseBuyEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseEntity
 import workwork.test.andropediagits.data.remote.model.course.CourseAnswerModel
 import workwork.test.andropediagits.data.remote.model.course.CourseBuyModel
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -26,16 +28,34 @@ fun CourseAnswerModel.toCourseEntity(): CourseEntity {
     )
 }
 
+@SuppressLint("SimpleDateFormat")
 fun CourseBuyModel.toCourseBuyEntity(): CourseBuyEntity {
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    val date = dateFormat.parse(dateBuy)
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ")
+    val date: Date = try {
+        dateFormat.parse(dateBuy)
+    } catch (e: ParseException) {
+        // Handle parsing exception
+        Date()
+    }
+    val androBuy = andropointBuy == 1
     return CourseBuyEntity(
         token = token,
         transactionId = transactionId,
-        date = date ?: Date(),
+        date = date,
         courseNumber = courseNumber,
-        andropointBuy = andropointBuy
+        andropointBuy = androBuy
     )
+
+//    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+//    val date = dateFormat.parse(dateBuy)
+//    val androBuy = andropointBuy == 1
+//    return CourseBuyEntity(
+//        token = token,
+//        transactionId = transactionId,
+//        date = date ?: Date(),
+//        courseNumber = courseNumber,
+//        andropointBuy = androBuy
+//    )
 }
 
 

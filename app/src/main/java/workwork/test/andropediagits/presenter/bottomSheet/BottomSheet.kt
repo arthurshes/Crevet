@@ -58,7 +58,13 @@ class BottomSheet : BottomSheetDialogFragment() {
         viewModel.buySubscribe({state->
             when(state){
                 ErrorEnum.SUCCESS -> {
-                    Toast.makeText(requireContext(),getString(R.string.subscription_was_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.subscription_was_successfully_purchased),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {

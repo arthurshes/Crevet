@@ -85,40 +85,50 @@ class ForgetFragment : Fragment() {
             }
         }, {
             when (it) {
-                ErrorEnum.SUCCESS -> ShowDialogHelper.closeDialogLoadData()
+                ErrorEnum.SUCCESS ->     requireActivity().runOnUiThread {ShowDialogHelper.closeDialogLoadData()}
 
                 ErrorEnum.NOTNETWORK -> {
-                    ShowDialogHelper.closeDialogLoadData()
-                    ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                        checkResetTextTreatmentResult(keyword)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                            checkResetTextTreatmentResult(keyword)
+                        }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
-                    ShowDialogHelper.closeDialogLoadData()
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkResetTextTreatmentResult(keyword)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkResetTextTreatmentResult(keyword)
+                        }
                     }
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
-                    ShowDialogHelper.closeDialogLoadData()
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkResetTextTreatmentResult(keyword)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkResetTextTreatmentResult(keyword)
+                        }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
-                    ShowDialogHelper.closeDialogLoadData()
-                    ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                        checkResetTextTreatmentResult(keyword)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                            checkResetTextTreatmentResult(keyword)
+                        }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
-                    ShowDialogHelper.closeDialogLoadData()
-                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                        checkResetTextTreatmentResult(keyword)
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            checkResetTextTreatmentResult(keyword)
+                        }
                     }
                 }
 

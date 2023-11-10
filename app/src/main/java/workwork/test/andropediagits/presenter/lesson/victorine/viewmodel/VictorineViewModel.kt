@@ -14,6 +14,7 @@ import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntit
 import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.useCases.transactionLogic.TransactionUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.AndropointUseCase
+import workwork.test.andropediagits.domain.useCases.userLogic.CourseUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.StrikeModeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.ThemeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.VictorineUseCase
@@ -22,16 +23,16 @@ import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeSt
 import javax.inject.Inject
 
 @HiltViewModel
-class VictorineViewModel @Inject constructor(private val coursesRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val victorineUseCase: VictorineUseCase, private val tryAgainUseCase: TryAgainUseCase, private val strikeModeUseCase: StrikeModeUseCase, private val andropointUseCase: AndropointUseCase, private  val transactionUseCase: TransactionUseCase): ViewModel() {
+class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUseCase,private val coursesRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val victorineUseCase: VictorineUseCase, private val tryAgainUseCase: TryAgainUseCase, private val strikeModeUseCase: StrikeModeUseCase, private val andropointUseCase: AndropointUseCase, private  val transactionUseCase: TransactionUseCase): ViewModel() {
 //    private var _allVictorineByTheme: MutableLiveData<List<VictorineEntity>> = MutableLiveData()
 //    var allVictorineByTheme: List<VictorineEntity>?=null
 //    private var _timerValue: MutableLiveData<Long> = MutableLiveData()
 //    var timerValue:LiveData<Long>?=null
 //     var _allVictorineAnswerVariantByTheme: List<VictorineAnswerVariantEntity>?=null
 
-    fun victorineExit(uniqueThemeId: Int,isTerm:((Boolean)->Unit),isDateUnlock:((String)->Unit)){
+    fun victorineExit(uniqueThemeId: Int,isTerm:((Boolean)->Unit),isDateUnlock:((String)->Unit),isSucces: ((ErrorEnum) -> Unit)){
         viewModelScope.launch {
-            themeUseCase.termExitVictorine(uniqueThemeId,isTerm,isDateUnlock)
+            themeUseCase.termExitVictorine(uniqueThemeId,isTerm,isDateUnlock,isSuccess=isSucces)
         }
     }
 
@@ -47,10 +48,21 @@ class VictorineViewModel @Inject constructor(private val coursesRepo: CourseRepo
             transactionUseCase.checkSubscribeActual({
                 isSucces.invoke(it)
             },{
-                Log.d("kfkrofkorkfo5t59t9564g54",it.toString())
                 isTimerStart.invoke(it)
             })
 
+        }
+    }
+
+
+    fun checkCourseBuy(isSucces: (ErrorEnum) -> Unit, isBuy:((Boolean)->Unit)){
+        viewModelScope.launch {
+            courseUseCase.checkCourseBuy({
+                Log.d("startTimerVic2","viewMOdel:${it}")
+                  isBuy.invoke(it)
+            },{
+                isSucces.invoke(it)
+            })
         }
     }
 

@@ -20,6 +20,7 @@ import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.UpdateThemeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.updateStates.UpdateThemeState
+import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
@@ -127,10 +128,31 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
            isSuccess.invoke(ErrorEnum.SUCCESS)
        }catch (e:IOException){
            if(checkSubscibe()){
+               updateThemeUseCase.updateTheme(answer.uniqueThemeId,UpdateThemeState.ISVICTORINEMISTAKE)
+//                   if(pref?.getString(Constatns.CLUE_KEY,"")=="false") {
+               val victorinClue = courseRepo.getVictorineClue(
+                   questionId = answer.questionId,
+                   victorineTestId = answer.vicotineTestId
+               )
+               Log.d("vpkokot3333333bopdrtbkpordtkb",victorinClue.toString())
+               if (victorinClue != null) {
+                   isClue?.invoke(victorinClue.clueText)
+               }
                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                return
            }
+           Log.d("vpkokot3333333bopdrtbkpord3333tkb",checkBuyCourse().toString())
            if(checkBuyCourse()){
+               updateThemeUseCase.updateTheme(answer.uniqueThemeId,UpdateThemeState.ISVICTORINEMISTAKE)
+//                   if(pref?.getString(Constatns.CLUE_KEY,"")=="false") {
+               val victorinClue = courseRepo.getVictorineClue(
+                   questionId = answer.questionId,
+                   victorineTestId = answer.vicotineTestId
+               )
+               Log.d("vpkokot3333333bopdrtbkpordtkb",victorinClue.toString())
+               if (victorinClue != null) {
+                   isClue?.invoke(victorinClue.clueText)
+               }
                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                return
            }
@@ -152,15 +174,32 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
    }
 
     private suspend fun checkSubscibe():Boolean{
-        val userSubscribes = transactionRepo.getSubscribe()
-        userSubscribes?.let { sub->
+        val sub = transactionRepo.getSubscribe()
+        if(sub!=null){
             val currentDateLocal = Date()
-            if (sub.date.time>currentDateLocal.time){
+            Log.d("obkobkokoybybybhnb",sub.date.toString())
+
+            val calendar = Calendar.getInstance()
+            calendar.time = sub.date
+            calendar.add(Calendar.DAY_OF_MONTH,31*sub.term)
+            if (calendar.time.time>currentDateLocal.time){
                 return true
             }
         }
+
         return false
     }
+
+//    private suspend fun checkSubscibe():Boolean{
+//        val userSubscribes = transactionRepo.getSubscribe()
+//        userSubscribes?.let { sub->
+//            val currentDateLocal = Date()
+//            if (sub.date.time>currentDateLocal.time){
+//                return true
+//            }
+//        }
+//        return false
+//    }
 
     private suspend fun checkBuyCourse():Boolean{
         val buyCourses = transactionRepo.getAllMyCourseBuy()

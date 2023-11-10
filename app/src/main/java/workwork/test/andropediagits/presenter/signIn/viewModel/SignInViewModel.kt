@@ -52,4 +52,10 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
          }
     }
 
+    fun checkSubscribesAndBuyCourse(isSuccess: ((ErrorEnum) -> Unit)){
+        viewModelScope.launch {
+            cacheUseCase.checkSubscribesAndBuyCourse(isSuccess)
+        }
+    }
+
 }

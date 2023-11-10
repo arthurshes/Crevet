@@ -179,15 +179,32 @@ class AdsUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo, p
     }
 
     private suspend fun checkSubscibe():Boolean{
-        val userSubscribes = transactionRepo.getSubscribe()
-        userSubscribes?.let { sub->
+        val sub = transactionRepo.getSubscribe()
+        if(sub!=null){
             val currentDateLocal = Date()
-            if (sub.date.time>currentDateLocal.time){
+            Log.d("obkobkokoybybybhnb",currentDateLocal.toString())
+
+            val calendar = Calendar.getInstance()
+            calendar.time = sub.date
+            calendar.add(Calendar.DAY_OF_MONTH,31*sub.term)
+            if (calendar.time.time>currentDateLocal.time){
                 return true
             }
         }
+
         return false
     }
+
+//    private suspend fun checkSubscibe():Boolean{
+//        val userSubscribes = transactionRepo.getSubscribe()
+//        userSubscribes?.let { sub->
+//            val currentDateLocal = Date()
+//            if (sub.date.time>currentDateLocal.time){
+//                return true
+//            }
+//        }
+//        return false
+//    }
 
     private suspend fun checkBuyCourse():Boolean{
         val buyCourses = transactionRepo.getAllMyCourseBuy()

@@ -178,6 +178,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                                 ShowDialogHelper.closeDialogLoadData()
                                 ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
                                     checkResultSignInUseCase()
@@ -185,6 +188,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ShowDialogHelper.showDialogTimeOutError(requireContext()){
                                 checkResultSignInUseCase()
@@ -192,6 +198,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ShowDialogHelper.showDialogUnknownError(requireContext()){
                                 checkResultSignInUseCase()
@@ -199,6 +208,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.WrongAddressEmail -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -210,6 +222,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.TooLongPassword -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -221,6 +236,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.IncorrectPassword -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -232,6 +250,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ShowDialogHelper.showDialogUnknownError(requireContext()){
                                 checkResultSignInUseCase()
@@ -239,6 +260,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.PasswordIsEmpty -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -250,6 +274,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.EmailIsEmpty -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -262,6 +289,9 @@ class SignInFragment : Fragment() {
                         }
 
                         EmailErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+
+                            }
                             ShowDialogHelper.closeDialogLoadData()
                             ShowDialogHelper.showDialogUnknownError(requireContext()) {
                                 checkResultSignInUseCase()
@@ -276,15 +306,69 @@ class SignInFragment : Fragment() {
             viewModel.loadData({loadState->
                 when(loadState) {
                     ErrorEnum.SUCCESS -> {
-                        Log.d("LoadFragmState", "SUCCESS")
-                        ShowDialogHelper.closeDialogLoadData()
-                        val action =
-                            SignInFragmentDirections.actionSignInFragmentToPasswordRecoveryMethodFragment()
-                        binding?.root.let { it1 ->
-                            if (it1 != null) {
-                                Navigation.findNavController(it1).navigate(action)
+                        viewModel.checkSubscribesAndBuyCourse {checkState->
+                            when(checkState){
+                                ErrorEnum.NOTNETWORK -> {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                                            downloadlCourses(lang)
+                                        }
+                                    }
+                                }
+                                ErrorEnum.ERROR -> {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                            downloadlCourses(lang)
+                                        }
+                                    }
+                                }
+                                ErrorEnum.SUCCESS -> {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.closeDialogLoadData()
+                                        val action =
+                                            SignInFragmentDirections.actionSignInFragmentToPasswordRecoveryMethodFragment()
+                                        binding?.root.let { it1 ->
+                                            if (it1 != null) {
+                                                Navigation.findNavController(it1).navigate(action)
+                                            }
+                                        }
+                                    }
+                                }
+                                ErrorEnum.UNKNOWNERROR -> {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                            downloadlCourses(lang)
+                                        }
+                                    }
+                                }
+                                ErrorEnum.TIMEOUTERROR -> {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                                            downloadlCourses(lang)
+                                        }
+                                    }
+                                }
+                                ErrorEnum.NULLPOINTERROR -> {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                            downloadlCourses(lang)
+                                        }
+                                    }
+                                }
+                                ErrorEnum.OFFLINEMODE -> {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.showDialogOffline(requireContext())
+                                    }
+                                }
+                                ErrorEnum.OFFLINETHEMEBUY -> {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.showDialogOffline(requireContext())
+                                    }
+                                }
                             }
                         }
+                        Log.d("LoadFragmState", "SUCCESS")
+
                     }
 
                     ErrorEnum.NOTNETWORK -> {

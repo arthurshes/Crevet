@@ -27,8 +27,9 @@ class LessonViewModel @Inject constructor(
     var currentState: String = ""
     private var dataKey = "IntKey"
     private var countKey = "countKey"
-
-// Используйте значение по умолчанию, если оно не было установлено
+    private var maxLevelNumberWithIndex = 0
+    private var minLeveNumberWithIndex = 0
+    // Используйте значение по умолчанию, если оно не было установлено
     private var currentIndex=0
     //  private var countLesson = savedStateHandle.getLiveData<Int>(countKey, -1)
     //  private set
@@ -57,11 +58,13 @@ private var countLesson:Int = 0
     }
 
       @SuppressLint("SuspiciousIndentation")
-     suspend fun putUniqueThemeIdForGetLevels(uniqueThemeId: Int) {
+     suspend fun putUniqueThemeIdForGetLevels(uniqueThemeId: Int,minNumber:((Int)->Unit)) {
           Log.d("firjfirjfirjfijrfjri","uniqueThemeID:${uniqueThemeId}")
 
-        allLevelsByTheme = coursesRepo.searchAllLevelsTheme(uniqueThemeId)
-          Log.d("firjfirjfirjfijrfjri",allLevelsByTheme.toString())
+       allLevelsByTheme = coursesRepo.searchAllLevelsTheme(uniqueThemeId)
+         maxLevelNumberWithIndex = allLevelsByTheme.maxByOrNull { it.levelNumber }?.levelNumber ?: 0
+       minLeveNumberWithIndex = allLevelsByTheme.minByOrNull { it.levelNumber }?.levelNumber ?: 0
+          minNumber.invoke(minLeveNumberWithIndex)
           countLesson = allLevelsByTheme.size
           Log.d("firjfirjfirjfijrfjri","countSize:${countLesson}")
     }
@@ -90,20 +93,14 @@ private var countLesson:Int = 0
        }*/
     suspend fun getNextContent(courseNumber:Int,themeNumber:Int,LevelNumber:Int,isVictorine:(()->Unit)?=null,isText:(()->Unit)?=null,LastLesson:(()->Unit)?=null): ThemeLevelContentEntity? {
 
-        //  if (currentLevel != null && currentIndex.value!! + 1 < currentLevel!!.value!!.size) {
-        //  currentIndex = ++currentIndex
-        /* if(currentIndex==countLesson.value){
-             return coursesRepo.searchOneLevelContent(currentIndex++).value
-         }*//*else{
-                isVictorine=true
-//            }*/
-//        currentIndex=allLevelsByTheme.indexOfFirst { it.uniqueLevelId == uniqueLevelId } ?: 0
-        if(countLesson==LevelNumber){
+
+        if(maxLevelNumberWithIndex==LevelNumber){
             LastLesson?.invoke()
         }
         Log.d("firjfirjfirjfijrfjri","courseNumberViewModel:${courseNumber},themeNumber:${themeNumber},levelNUmber:${LevelNumber}")
-        if(smallAndBigInt(LevelNumber,countLesson)){
-            Log.d("firjfirjfirjfijrfjri", "boolean view ints: "+smallAndBigInt(LevelNumber,countLesson).toString())
+        if(maxLevelNumberWithIndex>=LevelNumber){
+
+//            Log.d("firjfirjfirjfijrfjri", "boolean view ints: "+smallAndBigInt(LevelNumber,countLesson).toString())
             isText?.invoke()
             return coursesRepo.getNextContentTestFun(courseNumber,themeNumber,LevelNumber)
 
@@ -111,13 +108,20 @@ private var countLesson:Int = 0
             isVictorine?.invoke()
             Log.d("firjfirjfirjfijrfjri","isVicotorineInViewModel:${isVictorine}")
         }
-        Log.d("firjfirjfirjfijrfjri","checknotwork:${smallAndBigInt(LevelNumber,countLesson).toString()}")
+//        Log.d("firjfirjfirjfijrfjri","checknotwork:${smallAndBigInt(LevelNumber,countLesson).toString()}")
          return null
     }
 
-    private fun smallAndBigInt(small:Int,big:Int):Boolean{
-        return big>=small
-    }
+//    private fun smallAndBigInt(small:Int,big:Int):Boolean{
+//        return big>=small
+//    }
+
+//    private fun smallAndBigIntTest(lesso:Int,big:Int):Boolean{
+////        return big>=small
+//
+//    }
+
+
 
     suspend fun getPreviousContent(courseNumber:Int,themeNumber:Int,LevelNumber:Int): ThemeLevelContentEntity? {
         /*  var currentIndexValue = currentIndex.value ?: 0
@@ -126,8 +130,8 @@ private var countLesson:Int = 0
               return currentLevel!!.value!![currentIndex.value!!]
           }
           return null*/
-        if(LevelNumber>0){
-            Log.d("firjfirjfirjfijrfjri",coursesRepo.getNextContentTestFun(courseNumber,themeNumber,LevelNumber).toString())
+        if(LevelNumber>=minLeveNumberWithIndex){
+
             return coursesRepo.getNextContentTestFun(courseNumber,themeNumber,LevelNumber)
         }
             return null

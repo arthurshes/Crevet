@@ -49,9 +49,12 @@ class TestSplScrFragment : Fragment() {
                      viewModel.checkSubscribeActual{state->
                          when(state){
                              ErrorEnum.NOTNETWORK -> {
-                                 ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                                     splashScreenTreatmentResult()
+                                 requireActivity().runOnUiThread {
+                                     ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                                         splashScreenTreatmentResult()
+                                     }
                                  }
+
                              }
                              ErrorEnum.ERROR -> {
                                  requireActivity().runOnUiThread {
@@ -74,12 +77,15 @@ class TestSplScrFragment : Fragment() {
                                          }
 
                                          SplashActionEnum.RESETDATASCREEN ->{
-                                             val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToPasswordRecoveryMethodFragment()
-                                             binding?.root.let { it1 ->
-                                                 if (it1 != null) {
-                                                     Navigation.findNavController(it1).navigate(action)
+                                             requireActivity().runOnUiThread {
+                                                 val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToPasswordRecoveryMethodFragment()
+                                                 binding?.root.let { it1 ->
+                                                     if (it1 != null) {
+                                                         Navigation.findNavController(it1).navigate(action)
+                                                     }
                                                  }
                                              }
+
                                          }
                                          SplashActionEnum.HOMESCREEN -> {
                                              requireActivity().runOnUiThread {
@@ -129,19 +135,28 @@ class TestSplScrFragment : Fragment() {
                                  }
                              }
                              ErrorEnum.UNKNOWNERROR -> {
-                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                     splashScreenTreatmentResult()
+                                 requireActivity().runOnUiThread {
+                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                         splashScreenTreatmentResult()
+                                     }
                                  }
+
                              }
                              ErrorEnum.TIMEOUTERROR -> {
-                                 ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                                     splashScreenTreatmentResult()
+                                 requireActivity().runOnUiThread {
+                                     ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                                         splashScreenTreatmentResult()
+                                     }
                                  }
+
                              }
                              ErrorEnum.NULLPOINTERROR -> {
-                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                     splashScreenTreatmentResult()
+                                 requireActivity().runOnUiThread {
+                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                         splashScreenTreatmentResult()
+                                     }
                                  }
+
                              }
                              ErrorEnum.OFFLINEMODE -> {
                                  requireActivity().runOnUiThread {
@@ -159,9 +174,12 @@ class TestSplScrFragment : Fragment() {
                      }
                  }
                  ErrorEnum.NOTNETWORK -> {
-                     ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                         splashScreenTreatmentResult()
+                     requireActivity().runOnUiThread {
+                         ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                             splashScreenTreatmentResult()
+                         }
                      }
+
                  }
                  ErrorEnum.ERROR -> {
                      requireActivity().runOnUiThread {
@@ -171,19 +189,28 @@ class TestSplScrFragment : Fragment() {
                      }
                  }
                  ErrorEnum.UNKNOWNERROR -> {
-                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                         splashScreenTreatmentResult()
+                     requireActivity().runOnUiThread {
+                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                             splashScreenTreatmentResult()
+                         }
                      }
+
                  }
                  ErrorEnum.TIMEOUTERROR -> {
-                     ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                         splashScreenTreatmentResult()
+                     requireActivity().runOnUiThread {
+                         ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                             splashScreenTreatmentResult()
+                         }
                      }
+
                  }
                  ErrorEnum.NULLPOINTERROR -> {
-                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                         splashScreenTreatmentResult()
+                     requireActivity().runOnUiThread {
+                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                             splashScreenTreatmentResult()
+                         }
                      }
+
                  }
                  ErrorEnum.OFFLINEMODE ->{
                      requireActivity().runOnUiThread {

@@ -15,6 +15,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +33,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
+import workwork.test.andropediagits.data.local.entities.course.CourseEntity
 import workwork.test.andropediagits.databinding.FragmentCoursesBinding
 import workwork.test.andropediagits.domain.googbilling.BillingManager
 import workwork.test.andropediagits.domain.googbilling.PayState
@@ -52,7 +54,7 @@ class CoursesFragment (): Fragment(){
     private var adapter : CourseAdapter?=null
     private val viewModel: CoursesViewModel by viewModels()
     private var billingManager: BillingManager?=null
-
+    private var obServer:Observer<List<CourseEntity>>?=null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,6 +80,7 @@ class CoursesFragment (): Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         adapter = CourseAdapter(requireContext())
         if (savedInstanceState != null) {
             viewModel.currentState = savedInstanceState.getString("state_key_course", "")
@@ -152,7 +155,11 @@ class CoursesFragment (): Fragment(){
 
         binding?.rcViewCourses?.layoutManager = LinearLayoutManager(requireContext())
         binding?.rcViewCourses?.adapter = adapter
-        viewModel.allCourses.observe(viewLifecycleOwner) {
+//        viewModel.allCourses.observe(viewLifecycleOwner) {
+//
+//            333rtgvfbvgf
+//        }
+        obServer = Observer {
             adapter?.diffList?.submitList(it)
         }
     }
@@ -161,7 +168,12 @@ class CoursesFragment (): Fragment(){
         viewModel.buyCourseForMoney({state->
             when(state){
                 ErrorEnum.SUCCESS -> {
-                    Toast.makeText(requireContext(),getString(R.string.course_was_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(),getString(R.string.course_was_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    }
+
+                    viewModel.initialCourse()
+
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -199,13 +211,25 @@ class CoursesFragment (): Fragment(){
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -223,10 +247,16 @@ class CoursesFragment (): Fragment(){
                             buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
                         }
                         BuyForAndropointStates.NOMONEY -> {
-                            Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                            requireActivity().runOnUiThread {
+                                Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                            }
+
                         }
                         null -> {
-                            Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                            requireActivity().runOnUiThread {
+                                Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                            }
+
                         }
                     }
 
@@ -267,13 +297,26 @@ class CoursesFragment (): Fragment(){
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        })
+
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -287,7 +330,10 @@ class CoursesFragment (): Fragment(){
         viewModel.buyCourseAndropointOpen({
             when(it){
                 ErrorEnum.SUCCESS -> {
-                 Toast.makeText(requireContext(),getString(R.string.course_was_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    requireActivity().runOnUiThread {
+                        Toast.makeText(requireContext(),getString(R.string.course_was_successfully_purchased), Toast.LENGTH_SHORT).show()
+                    }
+                    viewModel.initialCourse()
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -325,13 +371,25 @@ class CoursesFragment (): Fragment(){
                     }
                 }
                 ErrorEnum.OFFLINEMODE -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -516,13 +574,25 @@ class CoursesFragment (): Fragment(){
                     }
                 }
                 ErrorEnum.OFFLINEMODE -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
+
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewCourse?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -530,6 +600,19 @@ class CoursesFragment (): Fragment(){
 
         })
     }
+
+    override fun onStart() {
+        super.onStart()
+        obServer?.let { viewModel.allCourses.observe(this, it) }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        obServer?.let { viewModel.allCourses.removeObserver(it
+        ) }
+    }
+
+
 
     private fun checkForAppUpdates(){
         appUpdateManager?.appUpdateInfo?.addOnSuccessListener { info->

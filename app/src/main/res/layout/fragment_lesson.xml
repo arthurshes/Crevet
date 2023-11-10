@@ -6,7 +6,13 @@
     android:theme="@style/ConstraintLightAndBlack"
     tools:context=".presenter.lesson.LessonFragment">
 
-
+    <View
+        android:id="@+id/dimViewLesson"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:elevation="20dp"
+        android:visibility="gone" />
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
