@@ -20,6 +20,7 @@ import com.android.billingclient.api.consumePurchase
 
 
 import com.google.common.collect.ImmutableList
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,6 +39,7 @@ import workwork.test.andropediagits.core.utils.Constatns.THEME_BUY_CALCUL
 import workwork.test.andropediagits.core.utils.Constatns.THEME_BUY_NEWS_LIST
 import workwork.test.andropediagits.core.utils.Constatns.THEME_BUY_NOTEST
 import javax.inject.Inject
+
 
 class BillingManager(val context: AppCompatActivity) {
 

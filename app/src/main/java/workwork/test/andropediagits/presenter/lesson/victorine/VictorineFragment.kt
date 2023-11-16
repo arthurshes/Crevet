@@ -45,6 +45,7 @@ import kotlin.time.Duration.Companion.nanoseconds
 
 @AndroidEntryPoint
 class VictorineFragment : Fragment() {
+    private var IsFeedback = false
     private var timerObser: Observer<Long>? = null
     private var binding: FragmentVictorineBinding? = null
     private var clickCount = 0
@@ -135,13 +136,23 @@ class VictorineFragment : Fragment() {
         Log.d("vicotinresViewModel", victorinesQuestions.toString())
         binding?.apply {
             btnNext.setOnClickListener {
-                Log.d("victorineGrhtut", currentIndex.toString())
-                Log.d("victorineGrhtut", progress.toString())
-                checkAnswer(victorineAnswerVariants)
-                tvQuestion.text = victorinesQuestions?.get(currentIndex)?.questionText ?: ""
-                if (progress < (victorinesQuestions?.size ?: 0)) {
-                    updateProgressBarWithAnimation(victorinesQuestions ?: emptyList())
+                if(!isFirstItemSelected&&!isSecondItemSelected&&!isThirdItemSelected&&!isForthItemSelected&&!isFifthItemSelected){
+
+                }else{
+                    animatedCircleViewFifth?.isAnimating = false
+                    animatedCircleViewFirst?.isAnimating = false
+                    animatedCircleViewFourth?.isAnimating = false
+                    animatedCircleViewThird?.isAnimating = false
+                    animatedCircleViewSecond?.isAnimating = false
+                    Log.d("victorineGrhtut", currentIndex.toString())
+                    Log.d("victorineGrhtut", progress.toString())
+                    checkAnswer(victorineAnswerVariants)
+                    tvQuestion.text = victorinesQuestions?.get(currentIndex)?.questionText ?: ""
+                    if (progress < (victorinesQuestions?.size ?: 0)) {
+                        updateProgressBarWithAnimation(victorinesQuestions ?: emptyList())
+                    }
                 }
+
             }
 
             optionFirst.cardOption.setOnClickListener {
@@ -576,14 +587,14 @@ class VictorineFragment : Fragment() {
         }
     }
 
-    private fun showFeedbackDialog() {
-        val reviewManager = ReviewManagerFactory.create(requireActivity().applicationContext)
-        reviewManager.requestReviewFlow().addOnCompleteListener {
-            if (it.isSuccessful) {
-                reviewManager.launchReviewFlow(requireActivity(), it.result)
-            }
-        }
-    }
+//    private fun showFeedbackDialog() {
+//        val reviewManager = ReviewManagerFactory.create(requireActivity().applicationContext)
+//        reviewManager.requestReviewFlow().addOnCompleteListener {
+//            if (it.isSuccessful) {
+//                reviewManager.launchReviewFlow(requireActivity(), it.result)
+//            }
+//        }
+//    }
 
     private fun checkTestTreatmentResult(victorines: List<VictorineEntity>, isTimerOut: Boolean) {
         victorineEnded = true
@@ -605,7 +616,8 @@ class VictorineFragment : Fragment() {
                                     strikeModeTreatmentResult()
                                 }
                             }
-                            showFeedbackDialog()
+//                            showFeedbackDialog()
+                            IsFeedback = true
                             addAndropointsTreatmentResult()
                         }
                     }
@@ -793,14 +805,27 @@ class VictorineFragment : Fragment() {
             Log.d("victorineTestResultStateSimpleTreamtResult", resultStrikeModeDay.toString())
             if (resultStrikeModeDay == 0 && !isNextFlag) {
                 isNextFlag = true
-                requireActivity().runOnUiThread {
-                    val action =
-                        VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
-                            args.courseNumber,
-                            args.courseNameReal
-                        )
-                    binding?.root?.let { Navigation.findNavController(it).navigate(action) }
+                if(IsFeedback){
+                    requireActivity().runOnUiThread {
+                        val action =
+                            VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                args.courseNumber,
+                                args.courseNameReal,
+                                feedbackVisible = true
+                            )
+                        binding?.root?.let { Navigation.findNavController(it).navigate(action) }
+                    }
+                }else{
+                    requireActivity().runOnUiThread {
+                        val action =
+                            VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                args.courseNumber,
+                                args.courseNameReal
+                            )
+                        binding?.root?.let { Navigation.findNavController(it).navigate(action) }
+                    }
                 }
+
             } else {
                 Log.d("victorineTestResultStateSimpleTreamtResult", resultStrikeMode.toString())
                 when (resultStrikeMode) {
@@ -941,7 +966,8 @@ class VictorineFragment : Fragment() {
                                             val action =
                                                 VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
                                                     args.courseNumber,
-                                                    args.courseNameReal
+                                                    args.courseNameReal,
+                                                    feedbackVisible = true
                                                 )
                                             binding?.root?.let {
                                                 Navigation.findNavController(it).navigate(action)

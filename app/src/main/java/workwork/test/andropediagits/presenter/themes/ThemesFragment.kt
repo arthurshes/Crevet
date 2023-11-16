@@ -38,6 +38,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.navigation.NavigationView
+import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -83,6 +84,30 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
     private val russianText = "🇷🇺    Рус"
     private val englishText = "🇺🇸    Eng"
 
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.action_menu, menu)
+        val moreMenu = menu.findItem(R.id.action_more)
+        moreMenu.isVisible = googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("thisScreen", "ThemesFrag")
+        binding = FragmentThemesBinding.inflate(inflater, container, false)
+        googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
+        init()
+        billingManager = BillingManager(requireActivity() as AppCompatActivity)
+        return binding?.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+
     @SuppressLint("SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -92,7 +117,9 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 binding?.root?.let { Navigation.findNavController(it).navigate(action) }
             }
         }
-        // Добавьте обратный вызов для обработки нажатия на кнопку "назад"
+        if(args.feedbackVisible){
+            showFeedbackDialog()
+        }
         if (args.premiumVisible) {
             openBS()
         }
@@ -260,6 +287,16 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         } else if (russianTextLang?.text == englishText) {
             ShowDialogHelper.showDialogLoadData(requireContext())
             langChooseTreatmentResult(LanguagesEnum.RUSSIAN)
+        }
+    }
+
+
+    private fun showFeedbackDialog() {
+        val reviewManager = ReviewManagerFactory.create(requireActivity().applicationContext)
+        reviewManager.requestReviewFlow().addOnCompleteListener {
+            if (it.isSuccessful) {
+                reviewManager.launchReviewFlow(requireActivity(), it.result)
+            }
         }
     }
 
@@ -1210,27 +1247,6 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
             )
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.action_menu, menu)
-        val moreMenu = menu.findItem(R.id.action_more)
-        moreMenu.isVisible = googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("thisScreen", "ThemesFrag")
-        binding = FragmentThemesBinding.inflate(inflater, container, false)
-        googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
-        init()
-        billingManager = BillingManager(requireActivity() as AppCompatActivity)
-        return binding?.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
 }

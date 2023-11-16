@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="280dp"
+    style="@style/ConstraintLightAndBlack"
     android:background="@drawable/radius_bottom_sheet"
     tools:context=".presenter.bottomSheet.VictorineBottomSheetFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
-        style="@style/ConstraintLightAndBlack"
+
         android:layout_height="match_parent">
 
         <LinearLayout

@@ -68,6 +68,10 @@ object Initialization {
                 val html = Html.fromHtml(keywords2.toString(), Html.FROM_HTML_MODE_LEGACY)
                 val textViewTSec = colorizeNumbers(html, context)
                 val spannableString = SpannableString(textViewTSec)
+                beforePoint(spannableString,textViewTSec,context)
+                afterPoint(spannableString,textViewTSec,context)
+
+
                 val regex = Regex("(val|var|fun)\\s(\\w+)")
                 val matches = regex.findAll(textViewTSec)
                 for (match in matches) {
@@ -82,8 +86,8 @@ object Initialization {
                     spannableString.setSpan(ForegroundColorSpan(color), start, end + 1, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
                 quotesColorize(textViewTSec, spannableString, context)
-                afterPoint(spannableString,textViewTSec,context)
-                beforePoint(spannableString,textViewTSec,context)
+
+
                 textCode.text = spannableString
                 textCode.setTextSize(pref?.getString(Constatns.CODE_KEY, "20"))
             } else {

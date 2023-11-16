@@ -67,6 +67,10 @@
             android:name="premiumVisible"
             app:argType="boolean"
             android:defaultValue="false" />
+        <argument
+            android:name="feedbackVisible"
+            app:argType="boolean"
+            android:defaultValue="false" />
 
     </fragment>
     <fragment

@@ -70,23 +70,23 @@
         android:id="@+id/btnFav"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         android:background="@null"
-        app:layout_constraintBottom_toBottomOf="@+id/tvTitleLessonItem"
+        android:theme="@style/bookmark"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTitleLessonItem"
-        android:theme="@style/bookmark" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/btnFavClickeds"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         android:background="@null"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/tvTitleLessonItem"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTitleLessonItem"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_bookmark_24" />
 
     <androidx.cardview.widget.CardView

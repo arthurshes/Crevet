@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
@@ -80,6 +81,12 @@ class CoursesFragment (): Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Ваш код для обработки нажатия на кнопку "назад"        // Например, закрытие фрагмента или выполнение определенного действия
+            }}
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         adapter = CourseAdapter(requireContext())
         if (savedInstanceState != null) {
@@ -737,4 +744,9 @@ class CoursesFragment (): Fragment(){
             }
         }
     }
+
+
+
+
+
 }
