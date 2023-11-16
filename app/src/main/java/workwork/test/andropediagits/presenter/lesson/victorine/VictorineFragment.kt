@@ -428,18 +428,25 @@ class VictorineFragment : Fragment() {
                 }
 
                 ErrorEnum.NOTNETWORK -> {
-                requireActivity().runOnUiThread {
-                    ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                        checkResultAnswer(numberItem, item)
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            checkResultAnswer(numberItem, item)
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
                     }
-                }
 
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResultAnswer(numberItem, item)
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -447,8 +454,12 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResultAnswer(numberItem, item)
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -456,8 +467,12 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             checkResultAnswer(numberItem, item)
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -465,8 +480,12 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResultAnswer(numberItem, item)
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -480,8 +499,12 @@ class VictorineFragment : Fragment() {
 
                 else -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResultAnswer(numberItem, item)
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -625,20 +648,27 @@ class VictorineFragment : Fragment() {
                 ErrorStateView.OFFLINEBUYTHEME -> {}
                 ErrorStateView.TRYAGAIN -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkTryAgainResult()
                             checkTestTreatmentResult(victorines, isTimerOut)
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorStateView.ERROR -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(
-                            requireContext()
+                            requireContext(),{
+                                checkTryAgainResult()
+                                checkTestTreatmentResult(victorines, isTimerOut)
+                            }
                         ) {
-                            checkTryAgainResult()
-                            checkTestTreatmentResult(victorines, isTimerOut)
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
                 }
@@ -682,10 +712,14 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogNotNetworkError(
-                            requireContext()
+                            requireContext(),{
+                                strikeModeTreatmentResult()
+                            }
                         ) {
-                            addAndropointsTreatmentResult()
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -693,10 +727,13 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(
                             requireContext()
-                        ) {
-                            addAndropointsTreatmentResult()
+                            ,{
+                                strikeModeTreatmentResult()
+                            }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -704,10 +741,14 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(
-                            requireContext()
+                            requireContext(),{
+                                strikeModeTreatmentResult()
+                            }
                         ) {
-                            addAndropointsTreatmentResult()
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -715,10 +756,14 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogTimeOutError(
-                            requireContext()
+                            requireContext(),{
+                                strikeModeTreatmentResult()
+                            }
                         ) {
-                            addAndropointsTreatmentResult()
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -726,10 +771,13 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(
-                            requireContext()
-                        ) {
-                            addAndropointsTreatmentResult()
+                            requireContext(),{
+                                strikeModeTreatmentResult()
+                            }
+                        ) { binding?.dimViewVictorine?.visibility = View.GONE
+
                         }
                     }
 
@@ -770,50 +818,70 @@ class VictorineFragment : Fragment() {
 
                     ErrorEnum.NOTNETWORK -> {
                         requireActivity().runOnUiThread {
+                            binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogNotNetworkError(
-                                requireContext()
+                                requireContext(),{
+                                    strikeModeTreatmentResult()
+                                }
                             ) {
-                                strikeModeTreatmentResult()
+
+                                binding?.dimViewVictorine?.visibility = View.GONE
                             }
                         }
                     }
 
                     ErrorEnum.ERROR -> {
                         requireActivity().runOnUiThread {
+                            binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogUnknownError(
-                                requireContext()
+                                requireContext(),{
+                                    strikeModeTreatmentResult()
+                                }
                             ) {
-                                strikeModeTreatmentResult()
+
+                                binding?.dimViewVictorine?.visibility = View.GONE
                             }
                         }
                     }
 
                     ErrorEnum.UNKNOWNERROR -> {
                         requireActivity().runOnUiThread {
+                            binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogUnknownError(
-                                requireContext()
+                                requireContext(),{
+                                    strikeModeTreatmentResult()
+                                }
                             ) {
-                                strikeModeTreatmentResult()
+
+                                binding?.dimViewVictorine?.visibility = View.GONE
                             }
                         }
                     }
 
                     ErrorEnum.TIMEOUTERROR -> {
                         requireActivity().runOnUiThread {
+                            binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogTimeOutError(
-                                requireContext()
+                                requireContext(),{
+                                    strikeModeTreatmentResult()
+                                }
                             ) {
-                                strikeModeTreatmentResult()
+
+                                binding?.dimViewVictorine?.visibility = View.GONE
                             }
                         }
                     }
 
                     ErrorEnum.NULLPOINTERROR -> {
                         requireActivity().runOnUiThread {
+                            binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogUnknownError(
-                                requireContext()
+                                requireContext(),{
+                                    strikeModeTreatmentResult()
+                                }
                             ) {
-                                strikeModeTreatmentResult()
+
+                                binding?.dimViewVictorine?.visibility = View.GONE
                             }
                         }
                     }
@@ -840,16 +908,24 @@ class VictorineFragment : Fragment() {
                         when (checkkState) {
                             ErrorEnum.NOTNETWORK -> {
                                 requireActivity().runOnUiThread {
-                                    ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                                    binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                                         strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                    }) {
+                                        binding?.dimViewVictorine?.visibility = View.GONE
+
                                     }
                                 }
                             }
 
                             ErrorEnum.ERROR -> {
                                 requireActivity().runOnUiThread {
-                                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                    binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
                                         strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                    }) {
+                                        binding?.dimViewVictorine?.visibility = View.GONE
+
                                     }
                                 }
                             }
@@ -888,34 +964,47 @@ class VictorineFragment : Fragment() {
 
                             ErrorEnum.UNKNOWNERROR -> {
                                 requireActivity().runOnUiThread {
-                                    ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                                    binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
                                         strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                    }) {
+                                        binding?.dimViewVictorine?.visibility = View.GONE
+
                                     }
                                 }
                             }
 
                             ErrorEnum.TIMEOUTERROR -> {
                                 requireActivity().runOnUiThread {
+                                    binding?.dimViewVictorine?.visibility = View.VISIBLE
                                     ShowDialogHelper.showDialogTimeOutError(
                                         requireContext()
-                                    ) {
-                                        strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                        ,{
+                                            strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                        }) {
+                                        binding?.dimViewVictorine?.visibility = View.GONE
+
                                     }
                                 }
                             }
 
                             ErrorEnum.NULLPOINTERROR -> {
                                 requireActivity().runOnUiThread {
+                                    binding?.dimViewVictorine?.visibility = View.VISIBLE
                                     ShowDialogHelper.showDialogUnknownError(
-                                        requireContext()
+                                        requireContext(),{
+                                            strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                        }
                                     ) {
-                                        strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                        binding?.dimViewVictorine?.visibility = View.GONE
+
                                     }
                                 }
                             }
 
                             ErrorEnum.OFFLINEMODE -> {
                                 requireActivity().runOnUiThread {
+
                                     ShowDialogHelper.showDialogAttentionStrikeMode(
                                         requireContext(),
                                         {
@@ -987,44 +1076,64 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+
                         }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+
                         }
                     }
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+
                         }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogTimeOutError(
-                            requireContext()
+                            requireContext(),{
+                                strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                            }
                         ) {
-                            strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(
-                            requireContext()
+                            requireContext(),{
+                                strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                            }
                         ) {
-                            strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
                 }
@@ -1112,8 +1221,12 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             checkTryAgainResult()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -1121,8 +1234,12 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkTryAgainResult()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -1130,8 +1247,12 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             checkTryAgainResult()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -1139,8 +1260,11 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkTryAgainResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -1148,8 +1272,12 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkTryAgainResult()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -1213,8 +1341,8 @@ class VictorineFragment : Fragment() {
 //                    Log.d("kfkrofkorkfo5t59t9564g5444", timerStart.toString())
 //                    Log.d("kfkrofkorkfo5t59t9564g5444", victorineSec.toString())
 //
-                        requireActivity().runOnUiThread {    binding?.tvTimer?.text = "∞"
-                        }
+                    requireActivity().runOnUiThread {    binding?.tvTimer?.text = "∞"
+                    }
 
 
                 }
@@ -1225,8 +1353,12 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             startTimerFun()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+
                         }
                     }
 
@@ -1234,32 +1366,48 @@ class VictorineFragment : Fragment() {
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             startTimerFun()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             startTimerFun()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             startTimerFun()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
                 }
 
                 else -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             startTimerFun()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+
                         }
                     }
                 }
@@ -1277,16 +1425,24 @@ class VictorineFragment : Fragment() {
             when(it){
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             startTimerFun()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             startTimerFun()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
@@ -1294,48 +1450,60 @@ class VictorineFragment : Fragment() {
                 ErrorEnum.SUCCESS -> {
 
 
-                        Log.d("startTimerVic","testBool:${it.toString()}")
-                        if(!timerCours){
-                            if (victorineSec?.equals(0) == false) {
-                                CustomTimerUtil.startTimer(victorineSec) {
-                                    checkTestTreatmentResult(victorinesQuestions ?: emptyList(), true)
-                                }
+                    Log.d("startTimerVic","testBool:${it.toString()}")
+                    if(!timerCours){
+                        if (victorineSec?.equals(0) == false) {
+                            CustomTimerUtil.startTimer(victorineSec) {
+                                checkTestTreatmentResult(victorinesQuestions ?: emptyList(), true)
                             }
-                        }else{
-                            requireActivity().runOnUiThread {
-                                binding?.tvTimer?.text = "∞"
-                            }
-
                         }
+                    }else{
+                        requireActivity().runOnUiThread {
+                            binding?.tvTimer?.text = "∞"
+                        }
+
+                    }
 
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             startTimerFun()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             startTimerFun()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             startTimerFun()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
                         }
                     }
 
                 }
                 ErrorEnum.OFFLINEMODE -> {
 
-                            binding?.tvTimer?.text = "∞"
+                    binding?.tvTimer?.text = "∞"
 
 
 

@@ -68,6 +68,11 @@ class ThemesAdapter(val args:ThemesFragmentArgs,val context:Context) : RecyclerV
             else if(!currentTheme.isOpen&&currentTheme.themePrice!=null&&currentTheme.themePrice!=0){
                 btnFav.visibility = View.GONE
                 cardBuyAndropointsOrMoney.visibility = View.VISIBLE
+            }else{
+                btnFav.visibility = View.VISIBLE
+                cardBuyAndropointsOrMoney.visibility = View.GONE
+                cardCloseTheme.visibility = View.GONE
+
             }
 
             if(currentTheme.isFav){

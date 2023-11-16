@@ -3,6 +3,7 @@ package workwork.test.andropediagits.presenter.themes
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -320,37 +321,67 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) { checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed) }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed) }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed)
+                        }) {  binding?.dimViewTheme?.visibility = View.GONE
+
+                        }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
 
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed) }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed)
+                        }) {  binding?.dimViewTheme?.visibility = View.GONE
+
+                        }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) { checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed) }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed) }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed)
+                        }) {  binding?.dimViewTheme?.visibility = View.GONE
+
+                        }
                     }
                 }
 
                 else -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed) }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId, themeName, themePassed)
+                        }) {  binding?.dimViewTheme?.visibility = View.GONE
+
+                        }
                     }
                 }
             }
@@ -393,36 +424,53 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             buyThemeForMoneyTreatmentResult(uniqueIdThemeBuy)
+                        }) {
+
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyThemeForMoneyTreatmentResult(uniqueIdThemeBuy)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyThemeForMoneyTreatmentResult(uniqueIdThemeBuy)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             buyThemeForMoneyTreatmentResult(uniqueIdThemeBuy)
+                        }) {
+
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyThemeForMoneyTreatmentResult(uniqueIdThemeBuy)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -461,36 +509,51 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             buyAndropointsTreatmentResult(quantityAndropoint)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyAndropointsTreatmentResult(quantityAndropoint)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyAndropointsTreatmentResult(quantityAndropoint)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             buyAndropointsTreatmentResult(quantityAndropoint)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyAndropointsTreatmentResult(quantityAndropoint)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -515,8 +578,8 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                     }
                 }
             }
-            }
         }
+    }
 
 
     private fun langChooseTreatmentResult(language: LanguagesEnum) {
@@ -530,8 +593,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             langChooseTreatmentResult(language)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -539,8 +605,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             langChooseTreatmentResult(language)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -548,8 +617,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             langChooseTreatmentResult(language)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -557,8 +629,12 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             langChooseTreatmentResult(language)
+                        }) {
+
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -566,8 +642,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             langChooseTreatmentResult(language)
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -598,7 +677,6 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             }
         }
     }
-
     private fun downloadUpdateLangTreatmentResult() {
         viewModel.downloadUpdateLang { downLoadState ->
             Log.d("pgrlepgkperkgperkgperkgpkewpg",downLoadState.toString())
@@ -618,8 +696,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             downloadUpdateLangTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -627,8 +708,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             downloadUpdateLangTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -636,17 +720,23 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             downloadUpdateLangTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             downloadUpdateLangTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -654,8 +744,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             downloadUpdateLangTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -688,6 +781,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
     }
 
 
+
     private fun checkLimitActualTreatmentResult() {
         var isActualNotTerm = false
         viewModel.checkLimitActual({ state ->
@@ -702,7 +796,8 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             }
 
                         } else {
-                            showRewardedVideo() }
+                           showRewardedVideo()
+                        }
                     } else {
                         requireActivity().runOnUiThread {
                             Toast.makeText(requireContext(), getString(R.string.advertising_limit_has_been_reached), Toast.LENGTH_SHORT).show()
@@ -713,36 +808,51 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
                         }
                     }
                 }
@@ -809,11 +919,29 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 startActivity(Intent(requireContext(), SettingActivity::class.java))
             }
 
-            R.id.id_about_Us -> {}
+            R.id.id_about_Us -> {
+                binding?.dimViewTheme?.visibility = View.VISIBLE
+                ShowDialogHelper.supportDialog(requireContext(), clickClose = {
+
+                }, clickTelegram = {
+                    openUrl("https://t.me/+HbIdITeaOsU3YzMy")
+                }, clickTikTok = {
+                    openUrl("https://www.tiktok.com/@andropedia.app?_t=8hP78QdSnpO&_r=1")
+                }, clickYoutube = {
+                    openUrl("https://www.youtube.com/channel/UCpMJV4D4qO4CN6udvYO9Bvw")
+                }, dialogClose = {
+                    binding?.dimViewTheme?.visibility = View.GONE
+                })
+            }
         }
         return true
     }
 
+    private fun openUrl(link: String) {
+        val uri = Uri.parse(link)
+        val intent = Intent(Intent.ACTION_VIEW,uri)
+        requireActivity().startActivity(intent)
+    }
 
 
     private fun checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId: Int, ) {
@@ -822,43 +950,76 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         viewModel.checkTermTheme(uniqueThemeId, { resultCheckTermTheme = it }, { isTerm = it })
         when (resultCheckTermTheme) {
             ErrorEnum.SUCCESS -> {
-                val action = ThemesFragmentDirections.actionThemesFragmentToListLessonsFragment(uniqueThemeId, args.courseName, isTerm, args.courseName)
-                binding?.root?.let { Navigation.findNavController(it).navigate(action) }
+                requireActivity().runOnUiThread {
+                    val action = ThemesFragmentDirections.actionThemesFragmentToListLessonsFragment(uniqueThemeId, args.courseName, isTerm, args.courseName)
+                    binding?.root?.let { Navigation.findNavController(it).navigate(action) }
+                }
+
             }
 
             ErrorEnum.NOTNETWORK -> {
-                ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                    checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                requireActivity().runOnUiThread {
+                    binding?.dimViewTheme?.visibility = View.VISIBLE
+                    ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                        checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                    }) {
+                        binding?.dimViewTheme?.visibility = View.GONE
+                    }
                 }
             }
 
             ErrorEnum.ERROR -> {
-                ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                    checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                requireActivity().runOnUiThread {
+                    binding?.dimViewTheme?.visibility = View.VISIBLE
+                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                        checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                    }) {
+                        binding?.dimViewTheme?.visibility = View.GONE
+                    }
                 }
             }
 
             ErrorEnum.NULLPOINTERROR -> {
-                ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                    checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                requireActivity().runOnUiThread {
+                    binding?.dimViewTheme?.visibility = View.VISIBLE
+                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                        checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                    }) {
+                        binding?.dimViewTheme?.visibility = View.GONE
+                    }
                 }
             }
 
             ErrorEnum.TIMEOUTERROR -> {
-                ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                    checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                requireActivity().runOnUiThread {
+                    binding?.dimViewTheme?.visibility = View.VISIBLE
+                    ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                        checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                    }) {
+                        binding?.dimViewTheme?.visibility = View.GONE
+                    }
                 }
             }
 
             ErrorEnum.UNKNOWNERROR -> {
-                ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                    checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                requireActivity().runOnUiThread {
+                    binding?.dimViewTheme?.visibility = View.VISIBLE
+                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                        checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                    }) {
+                        binding?.dimViewTheme?.visibility = View.GONE
+                    }
                 }
             }
 
             else -> {
-                ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                    checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                requireActivity().runOnUiThread {
+                    binding?.dimViewTheme?.visibility = View.VISIBLE
+                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                        checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId)
+                    }) {
+                        binding?.dimViewTheme?.visibility = View.GONE
+                    }
                 }
             }
         }
@@ -904,27 +1065,52 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 ErrorEnum.SUCCESS -> {}
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) { adsViewTreatmentResult() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { adsViewTreatmentResult() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { adsViewTreatmentResult() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) { adsViewTreatmentResult() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
+                    binding?.dimViewTheme?.visibility = View.VISIBLE
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { adsViewTreatmentResult() }
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
@@ -950,6 +1136,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             }
         }
     }
+
 
 
     private fun startTimerViewAdsFun() {
@@ -981,27 +1168,49 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) { addAndropoints() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            addAndropoints()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { addAndropoints() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            addAndropoints()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { addAndropoints() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            addAndropoints()
+                        }) {      binding?.dimViewTheme?.visibility = View.GONE }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) { addAndropoints() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            addAndropoints()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { addAndropoints() }
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            addAndropoints()
+                        }) { binding?.dimViewTheme?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
@@ -1009,9 +1218,9 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                         binding?.dimViewTheme?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogOffline(requireContext(),{
 
-                    },{
+                        },{
                             binding?.dimViewTheme?.visibility = View.GONE
-                    }) }
+                        }) }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {

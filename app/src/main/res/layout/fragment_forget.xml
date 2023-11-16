@@ -6,7 +6,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/forget_fragment_background"
     tools:context=".presenter.forgetScreens.ForgetFragment">
-
+    <View
+        android:id="@+id/dimForget"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:elevation="20dp"
+        android:visibility="gone" />
     <androidx.cardview.widget.CardView
         android:id="@+id/newPasswordCard"
         android:layout_width="match_parent"

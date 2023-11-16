@@ -1,5 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <style name="tiktok">    <item name="srcCompat">@drawable/tiktokcircle</item>
+    </style><style name="telegram">
+    <item name="srcCompat">@drawable/telegram_circle_light</item></style>
+    <style name="youTube">    <item name="srcCompat">@drawable/youtube_circle</item>
+    </style>
+
     <style name="editText_text" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/black</item>
     </style>
@@ -21,7 +27,7 @@
     <style name="btnGoogle" >    <item name="android:background">@drawable/button_edges_background</item>
     </style>
     <style name="subscription" >
-    <item name="android:background">@color/subscriptionLight</item></style>
+        <item name="android:background">@color/subscriptionLight</item></style>
 
     <style name="Base.Theme.AndroPediaGits" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -31,9 +37,9 @@
         <item name="android:background">@drawable/victorine_background_light</item>
     </style>
 
-<style name="lang_choose">
- <item name="android:textColor">@color/black</item>
-</style>
+    <style name="lang_choose">
+        <item name="android:textColor">@color/black</item>
+    </style>
 
     <style name="arrow_up">    <item name="srcCompat">@drawable/baseline_keyboard_arrow_up_24</item>
     </style>
@@ -88,7 +94,7 @@
         <item name="srcCompat">@drawable/github</item>
     </style>
     <style name="code_text_color" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">@color/code_color_light_theme</item>
+        <item name="android:textColor">@color/white</item>
     </style>
     <style name="card_fragment_code_color" >
         <item name="android:background">#D8D8D8</item>

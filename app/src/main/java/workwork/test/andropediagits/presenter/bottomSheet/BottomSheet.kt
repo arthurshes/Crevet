@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -41,9 +42,43 @@ class BottomSheet : BottomSheetDialogFragment() {
            buySubscribeTreatmentResult(subscribeTerm)
        }
         val currentTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        binding?.oneMonthSubscription?.let { setSubscriptionOnClickListeners(it, 1,currentTheme) }
-        binding?.halfYearSubscription?.let { setSubscriptionOnClickListeners(it, 6,currentTheme) }
-        binding?.oneYearSubscription?.let { setSubscriptionOnClickListeners(it, 12,currentTheme) }
+        if(currentTheme==Configuration.UI_MODE_NIGHT_YES){
+            binding?.tvOneMonthMonth?.setTextColor(requireContext().getColor(R.color.black))
+            binding?.tvOneMonthPeriod?.setTextColor(requireContext().getColor(R.color.black))
+            binding?.tvOnePrice?.setTextColor(requireContext().getColor(R.color.black))
+        }else{
+            binding?.tvOneMonthMonth?.setTextColor(requireContext().getColor(R.color.white))
+            binding?.tvOneMonthPeriod?.setTextColor(requireContext().getColor(R.color.white))
+            binding?.tvOnePrice?.setTextColor(requireContext().getColor(R.color.white))
+        }
+
+        binding?.oneMonthSubscription?.let { binding?.tvOneMonthMonth?.let { it1 ->
+            binding?.tvOneMonthPeriod?.let { it2 ->
+                binding?.tvOnePrice?.let { it3 ->
+                    setSubscriptionOnClickListeners(it, 1,currentTheme,
+                        it1, it2, it3
+                    )
+                }
+            }
+        } }
+        binding?.halfYearSubscription?.let { binding?.tvHalfMonth?.let { it1 ->
+            binding?.tvHalfPeriod?.let { it2 ->
+                binding?.tvHalfPrice?.let { it3 ->
+                    setSubscriptionOnClickListeners(it, 6,currentTheme,
+                        it1, it2, it3
+                    )
+                }
+            }
+        } }
+        binding?.oneYearSubscription?.let { binding?.tvYear?.let { it1 ->
+            binding?.tvYearPeriod?.let { it2 ->
+                binding?.tvYearPrice?.let { it3 ->
+                    setSubscriptionOnClickListeners(it, 12,currentTheme,
+                        it1, it2, it3
+                    )
+                }
+            }
+        } }
 
         binding?.btnPayGoogle?.setOnClickListener {
             when (selectedTermPremium) {
@@ -68,36 +103,46 @@ class BottomSheet : BottomSheetDialogFragment() {
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             buySubscribeTreatmentResult(subscribeTerm)
+                        }) {
+
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buySubscribeTreatmentResult(subscribeTerm)
+                        }) {
+
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buySubscribeTreatmentResult(subscribeTerm)
+                        }) {
+
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             buySubscribeTreatmentResult(subscribeTerm)
+                        }) {
+
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buySubscribeTreatmentResult(subscribeTerm)
+                        }) {
+
                         }
                     }
                 }
@@ -114,10 +159,52 @@ class BottomSheet : BottomSheetDialogFragment() {
             }
         },subscribeTerm)
     }
-    fun setSubscriptionOnClickListeners(selectedView: View, termPremium: Int, currentTheme: Int) {
+    fun setSubscriptionOnClickListeners(selectedView: View, termPremium: Int, currentTheme: Int,textView: TextView,text2:TextView,t3:TextView) {
         selectedView.setOnClickListener {
-            selectedView.background = ContextCompat.getDrawable(requireContext(), R.drawable.gradient_subscription_selection)
+            when(selectedTermPremium){
+                1 ->{
+                    if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
+                        binding?.tvYear?.setTextColor(requireContext().getColor(R.color.white))
+                        binding?.tvYearPeriod?.setTextColor(requireContext().getColor(R.color.white))
+                        binding?.tvYearPrice?.setTextColor(requireContext().getColor(R.color.white))
+                    }else{
+                        binding?.tvOneMonthMonth?.setTextColor(requireContext().getColor(R.color.black))
+                        binding?.tvOneMonthPeriod?.setTextColor(requireContext().getColor(R.color.black))
+                        binding?.tvOnePrice?.setTextColor(requireContext().getColor(R.color.black))
+                    }
 
+                }
+                6->{
+                    if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
+                        binding?.tvYear?.setTextColor(requireContext().getColor(R.color.white))
+                        binding?.tvYearPeriod?.setTextColor(requireContext().getColor(R.color.white))
+                        binding?.tvYearPrice?.setTextColor(requireContext().getColor(R.color.white))
+                    }else{
+                        binding?.tvHalfMonth?.setTextColor(requireContext().getColor(R.color.black))
+                        binding?.tvHalfPeriod?.setTextColor(requireContext().getColor(R.color.black))
+                        binding?.tvHalfPrice?.setTextColor(requireContext().getColor(R.color.black))
+                    }
+
+                }
+                12->{
+                    if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
+                        binding?.tvYear?.setTextColor(requireContext().getColor(R.color.white))
+                        binding?.tvYearPeriod?.setTextColor(requireContext().getColor(R.color.white))
+                        binding?.tvYearPrice?.setTextColor(requireContext().getColor(R.color.white))
+                    }else{
+                        binding?.tvYear?.setTextColor(requireContext().getColor(R.color.black))
+                        binding?.tvYearPeriod?.setTextColor(requireContext().getColor(R.color.black))
+                        binding?.tvYearPrice?.setTextColor(requireContext().getColor(R.color.black))
+                    }
+
+                }
+            }
+
+
+            selectedView.background = ContextCompat.getDrawable(requireContext(), R.drawable.gradient_subscription_selection)
+           text2.setTextColor(requireContext().getColor(R.color.white))
+            textView.setTextColor(requireContext().getColor(R.color.white))
+            t3.setTextColor(requireContext().getColor(R.color.white))
             val otherViews = arrayOf(binding?.oneMonthSubscription, binding?.halfYearSubscription, binding?.oneYearSubscription)
             val themeColorRes = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) R.color.subscriptionNight else R.color.subscriptionLight
 

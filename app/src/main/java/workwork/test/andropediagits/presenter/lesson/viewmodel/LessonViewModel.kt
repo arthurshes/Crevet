@@ -58,13 +58,14 @@ private var countLesson:Int = 0
     }
 
       @SuppressLint("SuspiciousIndentation")
-     suspend fun putUniqueThemeIdForGetLevels(uniqueThemeId: Int,minNumber:((Int)->Unit)) {
+     suspend fun putUniqueThemeIdForGetLevels(uniqueThemeId: Int,minNumber:((Int)->Unit),maxNumber:((Int)->Unit)) {
           Log.d("firjfirjfirjfijrfjri","uniqueThemeID:${uniqueThemeId}")
 
        allLevelsByTheme = coursesRepo.searchAllLevelsTheme(uniqueThemeId)
          maxLevelNumberWithIndex = allLevelsByTheme.maxByOrNull { it.levelNumber }?.levelNumber ?: 0
        minLeveNumberWithIndex = allLevelsByTheme.minByOrNull { it.levelNumber }?.levelNumber ?: 0
           minNumber.invoke(minLeveNumberWithIndex)
+          maxNumber.invoke(maxLevelNumberWithIndex)
           countLesson = allLevelsByTheme.size
           Log.d("firjfirjfirjfijrfjri","countSize:${countLesson}")
     }

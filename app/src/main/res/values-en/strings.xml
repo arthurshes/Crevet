@@ -1,0 +1,416 @@
+<resources>
+    <!--    <string name="social_network_description">Подписывайтесь на наши соц. сети чтобы быть в курсе последних обновлений и акций!</string>-->
+    <!--    <string name="no_ads_view">Пока нет рекламы</string>-->
+    <!--    <string name="cancel_rustore_billing">Вы отменили покупку</string>-->
+    <!--    <string name="error_rustore_billing">Произошла ошибка при совершении покупки</string>-->
+    <!--    <string name="rustore_not_install">Условия покупки не соблюдены</string>-->
+    <!--    <string name="Ok_offline_button">Хорошо</string>-->
+    <!--    <string name="clue_snackbar">Появилась подсказка</string>-->
+    <!--    <string name="clue_snackbar_view">Посмотреть</string>-->
+    <!--    <string name="close_btn">Закрыть</string>-->
+    <!--    <string name="there_is_no_quiz_in_this_theme">У этой темы нет викторины</string>-->
+    <!--    <string name="lesson_number">Урок</string>-->
+    <!--    <string name="theme_number">Тема</string>-->
+    <!--    <string name="node_money_andropoint">Не хватает андропоинтов</string>-->
+    <!--    <string name="term_exit_victorine">Вам зачислена задержка за выход из викторины</string>-->
+    <!--    <string name="restart_timer_victorine">Таймер перезапущен</string>-->
+    <!--    <string name="password_mismatch">Пароли не совпадают</string>-->
+    <!--    <string name="enter_your_email"> Введите вашу электронную почту для сброса пароля</string>-->
+    <!--    <string name="enter_your_password"> Введите новый пароль</string>-->
+    <!--    <string name="select_date">Выбрать дату</string><string name="select_date_description">Введите дату и подсказку для себя по которой вы сможете восстановить пароль</string>-->
+    <!--    <string name="select_keyword">Выбрать ключевую фразу</string><string name="select_keyword_description">Введите ключевую фразу с вопросом или подсказкой по которой вы сможете восстановить пароль</string>-->
+    <!--    <string name="app_name">AndroPediaGits</string>-->
+    <!--<string name="fill_text">Заполните ключевую фразу и подсказку</string>-->
+    <!--    <string name="keyword">Ключевая фраза</string>-->
+    <!--    <string name="invalid_date">Неверная дата</string><string name="invalid_keyword">Неверное слово</string>-->
+    <!--    <string name="choose_another_date">Выберите другую дату</string>-->
+    <!--    <string name="this_field_cannot_be_empty">Это поле не може быть пустым</string>-->
+    <!--    <string name="enter_key_phrase_with_question_or_hint">Введите ключевую фразу с вопросом или подсказкой</string>-->
+    <!--<string name="testing_passed">Пройти ещё</string>-->
+    <!--    <string name="fill_date">Заполните дату и подсказку</string>-->
+    <!--    <string name="enter_date_and_hint">Введите дату и подсказку для себя</string>-->
+    <!--    <string name="choose_recovery_method">Выберите способ восстановления</string>-->
+    <!--    <string name="description_set_up_backup_password">Настройте резервный способ восстановление пароля(обязательно)</string>-->
+    <!--    <string name="pay_no_caps">Оплатить</string>-->
+    <!--    &lt;!&ndash; TODO: Remove or change this placeholder text &ndash;&gt;-->
+    <!--    <string name="hello_blank_fragment">Hello blank fragment</string>-->
+    <!--    <string name="watch_ad_2">Смотреть рекламу -2ч </string>-->
+    <!--    <string name="buy">Купить</string>-->
+    <!--    <string name="skip_delay">Пропустить задержку</string>-->
+    <!--    <string name="delaySH">Задержка до DATA</string>-->
+    <!--    <string name="course_was_successfully_purchased">Курс был успешно куплен!</string>-->
+    <!--    <string name="This_theme_is_closed_for_now">Данная тема пока закрыта</string>-->
+    <!--    <string name="success_award_credited">Награда успеша зачислено</string>-->
+    <!--    <string name="theme_was_successfully_purchased">Тема была успешно куплена!</string>-->
+    <!--    <string name="andropoints_were_successfully_purchased">Андропоинты были успешно куплены</string>-->
+    <!--    <string name="subscription_was_successfully_purchased">Подписка была успешно куплена!</string>-->
+    <!--    <string name="loading_is_complete">Загрузка завершена, приложение будет перезагружено через 5 секунд</string>-->
+    <!--    <string name="you_not_have_favorite_lessons">У вас нет избранных уроков</string>-->
+    <!--    <string name="you_not_have_favorite_theme">У вас нет избранных тем</string>-->
+    <!--    <string name="in_developing">В разработке</string>-->
+    <!--    <string name="advertising_is_only_available_when_there_delay">Реклама доступна только при задержке</string>-->
+    <!--    <string name="victorine_is_closed_for_delay_until">Викторина закрыта на задержку до:</string>-->
+    <!--    <string name="delay_was_successfully_reset">2 часа задержки было успешно сброшенно!</string>-->
+    <!--    <string name="delay_has_been_successfully_reset">Задержка была успешно сброшена!</string>-->
+    <!--    &lt;!&ndash;SignUp&ndash;&gt;-->
+    <!--    <string name="welcome">Добро пожаловать!</string>-->
+
+
+    <!--    <string name="sign_in">Войти</string>-->
+    <!--    <string name="sign_up">Зарегистрироваться</string>-->
+    <!--    <string name="sign_in_existing_account">Войти в существуюший аккаунт</string>-->
+    <!--    <string name="create_account">Создать аккаунт</string>-->
+    <!--    <string name="welcome_back">С возвращением!</string>-->
+    <!--    <string name="sign_up_title">Регистрация</string>-->
+    <!--    <string name="forgot_password">Забыли пороль?</string>-->
+    <!--    &lt;!&ndash;SignUp&ndash;&gt;-->
+    <!--    &lt;!&ndash;Drawer&ndash;&gt; &lt;!&ndash;Drawer&ndash;&gt; &lt;!&ndash;Drawer&ndash;&gt; &lt;!&ndash;Drawer&ndash;&gt;-->
+    <!--    <string name="favourite">Избранные</string>-->
+    <!--    <string name="reminder_schedule">График напоминаний</string>-->
+    <!--    <string name="settings">Настройки</string>-->
+    <!--    <string name="about_Us">О нас</string>-->
+
+    <!--    <string name="basic_course">Базовый</string>-->
+    <!--    <string name="advance_course">Продвинутый</string>-->
+    <!--    <string name="depth_course">Углубленный</string>-->
+    <!--    &lt;!&ndash;Drawer&ndash;&gt; &lt;!&ndash;Drawer&ndash;&gt; &lt;!&ndash;Drawer&ndash;&gt; &lt;!&ndash;Drawer&ndash;&gt;-->
+    <!--    <integer name="com_vk_sdk_AppId">51688226</integer>-->
+
+    <!--    &lt;!&ndash;Bottom Sheet&ndash;&gt;&lt;!&ndash;Bottom Sheet&ndash;&gt;&lt;!&ndash;Bottom Sheet&ndash;&gt;&lt;!&ndash;Bottom Sheet&ndash;&gt;-->
+    <!--    <string name="what_gives_premium">Что дает премиум?</string>-->
+    <!--    <string name="buy_premium">Купить Premium</string>-->
+    <!--    <string name="Interactive">Интерактив</string>-->
+    <!--    <string name="skip_delay_bottom_sheet">Пропуск задержки после провального теста</string>-->
+    <!--    <string name="possibility_offline_bottom_sheet">Возможность работы приложения оффлайн</string>-->
+    <!--    <string name="double_bonus_bottom_sheet">Удвоенный бонус получение андропоинтов</string>-->
+    <!--    <string name="soon">Скоро</string>-->
+    <!--    <string name="theme_close_entirely">Эта тема сейчас закрыта. Чтобы получить доступ к ней, вам необходимо пройти предыдущую тему.</string>-->
+    <!--    <string name="or">Или</string>-->
+    <!--    <string name="testing">Тестирования</string>-->
+    <!--    &lt;!&ndash;Bottom Sheet&ndash;&gt;&lt;!&ndash;Bottom Sheet&ndash;&gt;&lt;!&ndash;Bottom Sheet&ndash;&gt;&lt;!&ndash;Bottom Sheet&ndash;&gt;-->
+    <!--    &lt;!&ndash;Lesson&ndash;&gt;&lt;!&ndash;Lesson&ndash;&gt;&lt;!&ndash;Lesson&ndash;&gt;&lt;!&ndash;Lesson&ndash;&gt;-->
+    <!--    <string name="next">Следующий-></string>-->
+    <!--    <string name="previous">Предыдущий</string>-->
+    <!--    &lt;!&ndash;Lesson&ndash;&gt;&lt;!&ndash;Lesson&ndash;&gt;&lt;!&ndash;Lesson&ndash;&gt;&lt;!&ndash;Lesson&ndash;&gt;-->
+    <!--    &lt;!&ndash;dialog&ndash;&gt; &lt;!&ndash;dialog&ndash;&gt; &lt;!&ndash;dialog&ndash;&gt; &lt;!&ndash;dialog&ndash;&gt;-->
+    <!--    <string name="try_again">Попробовать снова</string>-->
+    <!--    <string name="unknown_error">Возникла неизвестная ошибка</string>-->
+    <!--    <string name="advertising_limit_has_been_reached">У вас исчерпан лимит рекламы на 2 часа</string>-->
+    <!--    <string name="advertising_will_be_available_through">Реклама будет доступна через 11 секунд</string>-->
+    <!--    <string name="application_works_offline">Приложение работает в оффлайн режиме!</string>-->
+    <!--    <string name="shock_mode_and_purchases_will_not_be_available">Ударный режим и покупки будут недоступны.</string>-->
+    <!--    <string name="delete_in_offline_mode_progress">При удалении приложения прогресс полученный в оффлайн режиме будет утерян.</string>-->
+    <!--    <string name="unknown_error_description">Перезагрузите приложение или попробуйте снова</string>-->
+    <!--    <string name="server_not_responding_error">Сервер не отвечает</string>-->
+    <!--    <string name="server_not_responding_error_description">Время ожидания ответа истекло, попробуйте снова</string>-->
+    <!--    <string name="not_connected_internet">Упс... Кажется вы не подключены к Интернету</string>-->
+    <!--    <string name="not_connected_internet_description">Установите стабильное подключение или купите ПРЕМИУМ чтобы учиться без Интернета!</string>-->
+    <!--    &lt;!&ndash;dialog&ndash;&gt; &lt;!&ndash;dialog&ndash;&gt; &lt;!&ndash;dialog&ndash;&gt; &lt;!&ndash;dialog&ndash;&gt;-->
+    <!--    <string name="email_empty">Поле электронной почты не может быть пустым.</string>-->
+    <!--    <string name="password_empty">Поле пароля не может быть пустым.</string>-->
+    <!--    <string name="password_incorrect">Неверный пароль. Пожалуйста, попробуйте еще раз.</string>-->
+    <!--    <string name="email_incorrect">Неверный адрес электронной почты. Пожалуйста, убедитесь, что вы ввели правильный адрес.</string>-->
+    <!--    <string name="email_wrong">Некорректно введен адрес электронной почты. Пожалуйста, убедитесь, что вы ввели правильный адрес.</string>-->
+    <!--    <string name="password_too_long">Пароль слишком длинный. Пожалуйста, используйте пароль длиной не более 23 символов.</string>-->
+    <!--    <string name="code_success">Код упешно введен</string>-->
+    <!--    <string name="password_change">Пароль успешно изменен</string>-->
+    <!--    <string name="code_incorrect">Неправильный код</string>-->
+    <!--    <string name="close">Закрыть</string>-->
+    <!--    <string name="promo_code_already_entered">Промокод уже введен</string>-->
+    <!--    <string name="promo_code_already">У вас уже есть промокод</string>-->
+    <!--    <string name="promo_code_not_exist">Данного промокода не существует</string>-->
+    <!--    <string name="promo_code_was_success_used">Промокод был успешно использован</string>-->
+    <!--    <string name="fail_test">Вы провалили тест!</string>-->
+    <!--    <string name="count_mistake">6 из 10 правильных ответов</string>-->
+    <!--    <string name="advice">Советуем за это время хорошо подготовиться. И мы верим, что в следующий раз у вас все получится!</string>-->
+    <!--    <string name="watch_add">Вы можете посмотреть рекламу чтобы сократить задержку</string>-->
+    <!--    <string name="buy_premium_fail_test">Приобрести ПРЕМИУМ и избавится от задержки навсегда!</string>-->
+    <!--    <string name="term_before_fail_test">Вы сможете пройти тест повторно в DATA</string>-->
+    <!--    <string name="attention">ВНИМАНИЕ!</string>-->
+    <!--    <string name="end_theme">Поздравляем! Вы завершили тему!</string>-->
+    <!--    <string name="end_theme_description">Хорошая работа! Продолжайте в том же духе!</string>-->
+    <!--    <string name="continue_">Продолжить</string>-->
+    <!--    <string name="test_look_course">Осмотр курса</string>-->
+    <!--    <string name="test_look_theme">Осмотр темы</string>-->
+    <!--    <string name="good_luck">Удачи!</string>-->
+    <!--    <string name="good">Хорошо</string>-->
+    <!--    <string name="buy_course">Купить курс</string>-->
+    <!--    <string name="buy_theme">Купить тему</string>-->
+    <!--    <string name="close_theme">Данная тема закрыта. Чтобы открыть ее пройдите предыдущую тему</string>-->
+    <!--    <string name="you_are_on_a_roll">Ты в ударе!</string>-->
+    <!--    <string name="day_one">День 1</string>-->
+    <!--    <string name="day_two">День 2</string>-->
+    <!--    <string name="day_three">День 3</string>-->
+    <!--    <string name="day_four">День 4</string>-->
+    <!--    <string name="day_five">День 5</string>-->
+    <!--    <string name="day_six">День 6</string>-->
+    <!--    <string name="term_description">У вас задержка, вы сможете сново пройти тест в DATA, Либо вы можете приобрести ПРЕМИУМ и избавится от задержки</string>-->
+
+    <!--    <string name="day_seven">День 7</string>-->
+    <!--    <string name="andropints">АНДРОПОИНТЫ</string>-->
+    <!--    <string name="watch_ad">Смотреть рекламу +1</string>-->
+    <!--    <string name="to_buy">К покупке:</string>-->
+    <!--    <string name="pay">ОПЛАТИТЬ</string>-->
+    <!--    <string name="course_buy_success">Курс был успешно куплен</string>-->
+    <!--    <string name="theme_buy_success">Тема была успешно куплена</string>-->
+    <!--    <string name="double_daily_rewards">Удвоить ежедневные награды</string>-->
+    <!--    <string name="set_size_text">Изменить размер текста</string>-->
+    <!--    <string name="size_text">Размер текста</string>-->
+    <!--    <string name="set_lan">Изменить язык приложения</string>-->
+    <!--    <string name="language">Язык</string>-->
+    <!--    <string name="for_purchase">К покупке:</string>-->
+    <!--    <string name="needed_clue">Нужна ли подсказка</string>-->
+    <!--    <string name="set_size_code">Изменить размер кода</string>-->
+    <!--    <string name="course_close">Этот курс сейчас закрыт. Для получения доступа к его темам и материалам, вам необходимо приобрести данный курс.</string>-->
+    <!--    <string name="theme_close">Эта тема сейчас закрыта. Чтобы получить доступ к ней, вам необходимо приобрести соответствующую тему.</string>-->
+    <!--    <string name="choose_payment_method">К покупке</string>-->
+    <!--    <string name="load_data">Идет загрузка данных, ожидайте.</string>-->
+    <!--    <string name="error_victorine">Вы допустили ошибку</string>-->
+    <!--    <string name="clue">Подсказака</string>-->
+    <!--    <string name="attention_strike_mode">К сожалению, в оффлайн режиме невозможно получить награду за ударный режим. Для получения награды, пожалуйста, переключитесь в онлайн режим и завершите соответствующее задание или действие.</string>-->
+    <!--    <string name="attention_description">Не выходите из теста, в случае выхода тест будет автоматически провален!Вам будет дано определенное время на выполнение теста</string>-->
+    <!--    &lt;!&ndash;Forget&ndash;&gt;&lt;!&ndash;Forget&ndash;&gt;&lt;!&ndash;Forget&ndash;&gt;-->
+
+    <!--    <string name="send_again">Отправить заново</string>-->
+    <!--    <string name="ready">Готово</string>-->
+    <!--    <string name="send_code_success">Код подтверждения был успешно отправлен на вашу почту!</string>-->
+    <!--    <string name="send_code_exist">Код уже был отправлен на вашу почту. Пожалуйста проверьте вашу почту</string>-->
+    <!--    <string name="enter_new_password">Введите новый пароль</string>-->
+    <!--    <string name="enter_promo_code">Введите промокод</string>-->
+    <!--    <string name="enter_new_password_again">Подтвердите новый пароль</string>-->
+    <!--    <string name="email_not_exist">Данная почта не существует</string>-->
+    <!--    <string name="title_activity_setting">SettingActivity</string>-->
+    <!--    &lt;!&ndash; Strings used for fragments for navigation &ndash;&gt;-->
+    <!--    <string name="first_fragment_label">First Fragment</string>-->
+    <!--    <string name="second_fragment_label">Second Fragment</string>-->
+    <string name="mouth_prem">Mouth</string>
+    <string name="victorine_bottom">Victorine</string>
+    <string name="testing_bottom">Testing</string>
+    <string name="all_courses">All courses</string>
+    <string name="no_ads_view">No ads at moment</string>
+    <string name="cancel_rustore_billing">Your canceled purchase</string>
+    <string name="error_rustore_billing">Error purchased</string>
+    <string name="rustore_not_install">Условия покупки не соблюдены</string>
+    <string name="Ok_offline_button">Ok</string>
+    <string name="clue_snackbar">Victorine clue</string>
+    <string name="clue_snackbar_view">View</string>
+    <string name="close_btn">Close</string>
+
+
+
+    <string name="lesson_number">Lesson</string>
+    <string name="theme_number">Theme</string>
+    <string name="node_money_andropoint">Not enough Andropoints</string>
+    <string name="term_exit_victorine">Delay applied for exiting the quiz</string>
+    <string name="restart_timer_victorine">Timer restarted</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="enter_your_email">Enter your email to reset the password</string>
+    <string name="enter_your_password">Enter a new password</string>
+    <string name="select_date">Select date</string>
+    <string name="select_date_description">Enter the date and a hint to recover your password</string>
+    <string name="select_keyword">Select keyword</string>
+    <string name="select_keyword_description">Enter a keyword with a question or hint to recover your password</string>
+    <string name="app_name">AndroPediaGits</string>
+    <string name="fill_text">Fill in the keyword and hint</string>
+    <string name="keyword">Keyword</string>
+    <string name="invalid_date">Invalid date</string>
+    <string name="invalid_keyword">Invalid keyword</string>
+    <string name="choose_another_date">Choose another date</string>
+    <string name="this_field_cannot_be_empty">This field cannot be empty</string>
+    <string name="enter_key_phrase_with_question_or_hint">Enter a key phrase with a question or hint</string>
+    <string name="testing_passed">Pass again</string>
+    <string name="fill_date">Fill in the date and hint</string>
+    <string name="enter_date_and_hint">Enter the date and a hint for yourself</string>
+    <string name="choose_recovery_method">Choose a recovery method</string>
+    <string name="description_set_up_backup_password">Set up a backup password recovery method (mandatory)</string>
+    <string name="pay_no_caps">Pay</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="watch_ad_2">Watch an ad -2h </string>
+    <string name="buy">Buy</string>
+    <string name="skip_delay">Skip delay</string>
+    <string name="delaySH">Delay until DATA</string>
+    <string name="course_was_successfully_purchased">Course successfully purchased!</string>
+    <string name="This_theme_is_closed_for_now">This theme is currently closed</string>
+    <string name="success_award_credited">Success! Award credited</string>
+    <string name="theme_was_successfully_purchased">Theme successfully purchased!</string>
+    <string name="andropoints_were_successfully_purchased">Andropoints successfully purchased</string>
+    <string name="subscription_was_successfully_purchased">Subscription successfully purchased!</string>
+    <string name="loading_is_complete">Loading complete, the app will restart in 5 seconds</string>
+    <string name="you_not_have_favorite_lessons">You have no favorite lessons</string>
+    <string name="you_not_have_favorite_theme">You have no favorite themes</string>
+    <string name="in_developing">In development</string>
+    <string name="advertising_is_only_available_when_there_delay">Advertising is only available during a delay</string>
+    <string name="victorine_is_closed_for_delay_until">Quiz closed for delay until:</string>
+    <string name="delay_was_successfully_reset">2 hours delay successfully reset!</string>
+    <string name="delay_has_been_successfully_reset">Delay successfully reset!</string>
+    <!--SignUp-->
+    <string name="welcome">Welcome!</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in_existing_account">Sign in to an existing account</string>
+    <string name="create_account">Create an account</string>
+    <string name="welcome_back">Welcome back!</string>
+    <string name="sign_up_title">Registration</string>
+    <string name="forgot_password">Forgot password?</string>
+    <!--SignUp-->
+    <!--Drawer--> <!--Drawer--> <!--Drawer--> <!--Drawer-->
+    <string name="favourite">Favorites</string>
+    <string name="reminder_schedule">Reminder Schedule</string>
+    <string name="settings">Settings</string>
+    <string name="about_Us">About Us</string>
+
+    <string name="basic_course">Basic</string>
+    <string name="advance_course">Advanced</string>
+    <string name="depth_course">In-depth</string>
+    <!--Drawer--> <!--Drawer--> <!--Drawer--> <!--Drawer-->
+    <integer name="com_vk_sdk_AppId">51688226</integer>
+
+    <!--Bottom Sheet--><!--Bottom Sheet--><!--Bottom Sheet--><!--Bottom Sheet-->
+    <string name="what_gives_premium">What does Premium give?</string>
+    <string name="buy_premium">Buy Premium</string>
+    <string name="Interactive">Interactive</string>
+    <string name="skip_delay_bottom_sheet">Skip delay after a failed test</string>
+    <string name="possibility_offline_bottom_sheet">Ability to use the app offline</string>
+    <string name="double_bonus_bottom_sheet">Double bonus for earning Andropoints</string>
+    <string name="soon">Coming soon</string>
+    <string name="theme_close_entirely">This theme is currently closed. To access it, you need to complete the previous theme.</string>
+    <string name="or">Or</string>
+    <string name="testing">Testing</string>
+    <!--Bottom Sheet--><!--Bottom Sheet--><!--Bottom Sheet--><!--Bottom Sheet-->
+    <!--Lesson--><!--Lesson--><!--Lesson--><!--Lesson-->
+    <string name="next">Next-></string>
+    <string name="previous">Previous</string>
+    <!--Lesson--><!--Lesson--><!--Lesson--><!--Lesson-->
+    <!--dialog--> <!--dialog--> <!--dialog--> <!--dialog-->
+    <string name="try_again">Try again</string>
+    <string name="unknown_error">An unknown error occurred</string>
+    <string name="advertising_limit_has_been_reached">You have reached the ad limit for 2 hours</string>
+    <string name="advertising_will_be_available_through">Advertising will be available in 11 seconds</string>
+    <string name="application_works_offline">The application works in offline mode!</string>
+    <string name="shock_mode_and_purchases_will_not_be_available">Shock mode and purchases will not be available.</string>
+    <string name="delete_in_offline_mode_progress">When deleting the app, progress obtained in offline mode will be lost.</string>
+    <string name="unknown_error_description">Reload the app or try again</string>
+    <string name="server_not_responding_error">Server not responding</string>
+    <string name="server_not_responding_error_description">The response time has expired, please try again</string>
+    <string name="not_connected_internet">Oops... Looks like you\'re not connected to the Internet</string>
+    <string name="not_connected_internet_description">Establish a stable connection or buy PREMIUM to study without the Internet!</string>
+    <!--dialog--> <!--dialog--> <!--dialog--> <!--dialog-->
+    <string name="email_empty">Email field cannot be empty.</string>
+    <string name="password_empty">Password field cannot be empty.</string>
+    <string name="password_incorrect">Incorrect password. Please try again.</string>
+    <string name="email_incorrect">Incorrect email address. Please make sure you entered the correct address.</string>
+    <string name="email_wrong">Incorrectly entered email address. Please make sure you entered the correct address.</string>
+    <string name="password_too_long">Password is too long. Please use a password no longer than 23 characters.</string>
+    <string name="code_success">Code successfully entered</string>
+    <string name="password_change">Password successfully changed</string>
+    <string name="code_incorrect">Incorrect code</string>
+    <string name="close">Close</string>
+    <string name="promo_code_already_entered">Promo code already entered</string>
+    <string name="promo_code_already">You already have a promo code</string>
+    <string name="promo_code_not_exist">This promo code does not exist</string>
+    <string name="promo_code_was_success_used">Promo code was successfully used</string>
+    <string name="fail_test">You failed the test!</string>
+    <string name="count_mistake">6 out of 10 correct answers</string>
+    <string name="advice">We recommend using this time to prepare well. And we believe that next time you will succeed!</string>
+    <string name="watch_add">You can watch an ad to reduce the delay</string>
+    <string name="buy_premium_fail_test">Purchase PREMIUM and get rid of the delay forever!</string>
+    <string name="term_before_fail_test">You can retake the test in DATA</string>
+    <string name="attention">ATTENTION!</string>
+    <string name="end_theme">Congratulations! You have completed the theme!</string>
+    <string name="end_theme_description">Good job! Keep it up!</string>
+    <string name="continue_">Continue</string>
+    <string name="test_look_course">Tour of the course</string>
+    <string name="test_look_theme">Tour of the theme</string>
+    <string name="good_luck">Good luck!</string>
+    <string name="good">Good</string>
+    <string name="buy_course">Buy the course</string>
+    <string name="buy_theme">Buy the theme</string>
+    <string name="close_theme">This theme is closed. To open it, complete the previous theme</string>
+    <string name="you_are_on_a_roll">You\'re on a roll!</string>
+    <string name="day_one">Day 1</string>
+    <string name="day_two">Day 2</string>
+    <string name="day_three">Day 3</string>
+    <string name="day_four">Day 4</string>
+    <string name="day_five">Day 5</string>
+    <string name="day_six">Day 6</string>
+    <string name="term_description">You have a delay, you will be able to retake the test in DATA, or you can purchase PREMIUM and get rid of the delay</string>
+    <string name="day_seven">Day 7</string>
+    <string name="andropints">ANDROPOINTS</string>
+    <string name="watch_ad">Watch ad +1</string>
+    <string name="to_buy">To buy:</string>
+    <string name="pay">PAY</string>
+    <string name="course_buy_success">Course successfully purchased</string>
+    <string name="theme_buy_success">Theme successfully purchased</string>
+    <string name="double_daily_rewards">Double daily rewards</string>
+    <string name="set_size_text">Change text size</string>
+    <string name="size_text">Text size</string>
+    <string name="set_lan">Change app language</string>
+    <string name="language">Language</string>
+    <string name="for_purchase">To purchase:</string>
+    <string name="needed_clue">Is a clue needed</string>
+    <string name="set_size_code">Change code size</string>
+    <string name="course_close">This course is currently closed. To access its themes and materials, you need to purchase this course.</string>
+    <string name="theme_close">This theme is currently closed. To access it, you need to purchase the corresponding theme.</string>
+    <string name="choose_payment_method">To purchase</string>
+    <string name="load_data">Loading data, please wait.</string>
+    <string name="social_network_description">Follow our social networks to stay updated on the latest updates and promotions!</string>
+    <string name="error_victorine">You made a mistake</string>
+    <string name="clue">Clue</string>
+    <string name="attention_strike_mode">Unfortunately, it is impossible to receive a reward for the strike mode in offline mode. To receive a reward, please switch to online mode and complete the corresponding task or action.</string>
+    <string name="attention_description">Do not exit the test; in case of exit, the test will be automatically failed! You will be given a certain amount of time to complete the test.</string>
+    <!--Forget--><!--Forget--><!--Forget-->
+
+    <string name="send_again">Resend</string>
+    <string name="ready">Ready</string>
+    <string name="send_code_success">The confirmation code has been successfully sent to your email!</string>
+    <string name="send_code_exist">The code has already been sent to your email. Please check your email</string>
+    <string name="enter_new_password">Enter a new password</string>
+    <string name="enter_promo_code">Enter promo code</string>
+    <string name="enter_new_password_again">Confirm the new password</string>
+    <string name="email_not_exist">This email does not exist</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="there_is_no_quiz_in_this_theme">There is no quiz in this theme</string>
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+        bibendum, vel congue leo egestas.\n\n
+        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+        est.\n\n
+        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+        convallis.\n\n
+        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+
+    <!--Forget--><!--Forget--><!--Forget-->
+
+</resources>

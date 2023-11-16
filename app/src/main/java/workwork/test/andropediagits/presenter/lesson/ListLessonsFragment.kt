@@ -151,49 +151,76 @@ class ListLessonsFragment : Fragment() {
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             checkCurrentThemeTermTreatmentResult()
+                        }) {
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkCurrentThemeTermTreatmentResult()
+                        }) {
+                            binding?.dimViewListLesson?.visibility = View.GONE
+
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkCurrentThemeTermTreatmentResult()
+                        }) {
+                            binding?.dimViewListLesson?.visibility = View.GONE
+
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             checkCurrentThemeTermTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkCurrentThemeTermTreatmentResult()
+                        }) {
+                            binding?.dimViewListLesson?.visibility = View.GONE
+
                         }
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
-
                     requireActivity().runOnUiThread {
-                        showDialogOffline()
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewListLesson?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
-
                     requireActivity().runOnUiThread {
-                     showDialogOffline()
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewListLesson?.visibility = View.GONE
+                        })
                     }
                 }
             }
@@ -247,36 +274,55 @@ class ListLessonsFragment : Fragment() {
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             howManyTermTreatmentResult()
+                        }) {
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             howManyTermTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             howManyTermTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             howManyTermTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             howManyTermTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
@@ -340,48 +386,71 @@ class ListLessonsFragment : Fragment() {
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             buyThemeTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             buyThemeTreatmentResult()
+                        }) {
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyThemeTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyThemeTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyThemeTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }
 
                 else -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewListLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyThemeTreatmentResult()
+                        }) {
+
+                            binding?.dimViewListLesson?.visibility = View.GONE
                         }
                     }
                 }

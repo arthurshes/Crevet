@@ -7,6 +7,13 @@
     android:theme="@style/ConstraintLightAndBlack"
     tools:context=".presenter.signIn.SignInFragment">
 
+    <View
+        android:id="@+id/dimViewSignIng"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:elevation="20dp"
+        android:visibility="gone" />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

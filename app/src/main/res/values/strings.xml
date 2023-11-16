@@ -1,4 +1,13 @@
 <resources>
+    <string name="testing_bottom">Тестирования</string>
+    <string name="victorine_bottom">Викторина</string>
+    <string name="all_courses">Виды курсов</string>
+    <string name="mouth_prem">Мес</string>
+    <string name="social_network_description">Подписывайтесь на наши соц. сети чтобы быть в курсе последних обновлений и акций!</string>
+    <string name="no_ads_view">Пока нет рекламы</string>
+    <string name="cancel_rustore_billing">Вы отменили покупку</string>
+    <string name="error_rustore_billing">Произошла ошибка при совершении покупки</string>
+    <string name="rustore_not_install">Условия покупки не соблюдены</string>
     <string name="Ok_offline_button">Хорошо</string>
     <string name="clue_snackbar">Появилась подсказка</string>
     <string name="clue_snackbar_view">Посмотреть</string>
@@ -15,13 +24,13 @@
     <string name="select_date">Выбрать дату</string><string name="select_date_description">Введите дату и подсказку для себя по которой вы сможете восстановить пароль</string>
     <string name="select_keyword">Выбрать ключевую фразу</string><string name="select_keyword_description">Введите ключевую фразу с вопросом или подсказкой по которой вы сможете восстановить пароль</string>
     <string name="app_name">AndroPediaGits</string>
-<string name="fill_text">Заполните ключевую фразу и подсказку</string>
+    <string name="fill_text">Заполните ключевую фразу и подсказку</string>
     <string name="keyword">Ключевая фраза</string>
     <string name="invalid_date">Неверная дата</string><string name="invalid_keyword">Неверное слово</string>
     <string name="choose_another_date">Выберите другую дату</string>
     <string name="this_field_cannot_be_empty">Это поле не може быть пустым</string>
     <string name="enter_key_phrase_with_question_or_hint">Введите ключевую фразу с вопросом или подсказкой</string>
-<string name="testing_passed">Пройти ещё</string>
+    <string name="testing_passed">Пройти ещё</string>
     <string name="fill_date">Заполните дату и подсказку</string>
     <string name="enter_date_and_hint">Введите дату и подсказку для себя</string>
     <string name="choose_recovery_method">Выберите способ восстановления</string>

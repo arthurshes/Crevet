@@ -1,7 +1,8 @@
 package workwork.test.andropediagits.core.utils
 
 object Constatns {
-    const val BASE_URL = "http://10.0.2.2:8080/"
+//    const val BASE_URL = "http://10.0.2.2:8080/"
+    const val BASE_URL = "http://194.67.109.8/"
     const val TEXT_KEY = "text_size_key"
     const val CLUE_KEY = "victorine_clue_key"
     const val CODE_KEY = "code_size_key"

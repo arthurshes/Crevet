@@ -56,7 +56,10 @@ class SignInFragment : Fragment() {
                     downloadlCourses(chooseLang)
                 }
             } catch (e: ApiException) {
-                ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+
+                }) {
+                    binding?.dimViewSignIng?.visibility = View.GONE
                     //////////////////////////////////////////////////////////
                 }
                 Log.d("googleJackanfojrofj32",e.toString())
@@ -69,25 +72,50 @@ class SignInFragment : Fragment() {
             when(it){
                 ErrorEnum.SUCCESS -> {}
                 ErrorEnum.NOTNETWORK -> {
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogNotNetworkError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            saveUserInfoTreatmentResult(userLocal)
+                        }) {           binding?.dimViewSignIng?.visibility = View.GONE
+                        } }
                 }
                 ErrorEnum.ERROR -> {
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogUnknownError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            saveUserInfoTreatmentResult(userLocal)
+                        }) {  binding?.dimViewSignIng?.visibility = View.GONE} }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogUnknownError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            saveUserInfoTreatmentResult(userLocal)
+                        }) { binding?.dimViewSignIng?.visibility = View.GONE } }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogTimeOutError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            saveUserInfoTreatmentResult(userLocal)
+                        }) { binding?.dimViewSignIng?.visibility = View.GONE} }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogUnknownError(requireContext()) { saveUserInfoTreatmentResult(userLocal) } }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            saveUserInfoTreatmentResult(userLocal)
+                        }) { binding?.dimViewSignIng?.visibility = View.GONE } }
                 }
                 ErrorEnum.OFFLINEMODE ->{
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogOffline(requireContext()) }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext()) }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
-                    requireActivity().runOnUiThread { ShowDialogHelper.showDialogOffline(requireContext()) }
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext()) }
                 }
             }
         }
@@ -167,50 +195,60 @@ class SignInFragment : Fragment() {
         var isRegisters = false
         binding?.apply {
 
-                viewModel.signInEmail(edEmail.text.toString(), edPassword.text.toString(),lang = chooseLang,{ isRegister->
-                    isRegisters = isRegister
-                }) {
+            viewModel.signInEmail(edEmail.text.toString(), edPassword.text.toString(),lang = chooseLang,{ isRegister->
+                isRegisters = isRegister
+            }) {
 
                     emailResult->
-                    when (emailResult) {
-                        EmailErrorEnum.SUCCESS -> {
-                              downloadlCourses(chooseLang)
-                        }
+                when (emailResult) {
+                    EmailErrorEnum.SUCCESS -> {
+                        downloadlCourses(chooseLang)
+                    }
 
-                        EmailErrorEnum.NOTNETWORK -> {
-                            requireActivity().runOnUiThread {
-
-                            }
-                                ShowDialogHelper.closeDialogLoadData()
-                                ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                                    checkResultSignInUseCase()
-                                }
-                        }
-
-                        EmailErrorEnum.TIMEOUTERROR -> {
-                            requireActivity().runOnUiThread {
-
-                            }
+                    EmailErrorEnum.NOTNETWORK -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
-                            ShowDialogHelper.showDialogTimeOutError(requireContext()){
+                            binding?.dimViewSignIng?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                                 checkResultSignInUseCase()
+                            }) {
+
+                                binding?.dimViewSignIng?.visibility = View.GONE
                             }
                         }
 
-                        EmailErrorEnum.ERROR -> {
-                            requireActivity().runOnUiThread {
+                    }
 
-                            }
+                    EmailErrorEnum.TIMEOUTERROR -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
-                            ShowDialogHelper.showDialogUnknownError(requireContext()){
+                            binding?.dimViewSignIng?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                                 checkResultSignInUseCase()
+                            }){
+
+                                binding?.dimViewSignIng?.visibility = View.GONE
                             }
                         }
 
-                        EmailErrorEnum.WrongAddressEmail -> {
-                            requireActivity().runOnUiThread {
+                    }
 
+                    EmailErrorEnum.ERROR -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.closeDialogLoadData()
+                            binding?.dimViewSignIng?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                checkResultSignInUseCase()
+                            }){
+
+                                binding?.dimViewSignIng?.visibility = View.GONE
                             }
+                        }
+
+                    }
+
+                    EmailErrorEnum.WrongAddressEmail -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -221,10 +259,10 @@ class SignInFragment : Fragment() {
                             )
                         }
 
-                        EmailErrorEnum.TooLongPassword -> {
-                            requireActivity().runOnUiThread {
+                    }
 
-                            }
+                    EmailErrorEnum.TooLongPassword -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -235,10 +273,10 @@ class SignInFragment : Fragment() {
                             )
                         }
 
-                        EmailErrorEnum.IncorrectPassword -> {
-                            requireActivity().runOnUiThread {
+                    }
 
-                            }
+                    EmailErrorEnum.IncorrectPassword -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -249,20 +287,24 @@ class SignInFragment : Fragment() {
                             )
                         }
 
-                        EmailErrorEnum.NULLPOINTERROR -> {
-                            requireActivity().runOnUiThread {
+                    }
 
-                            }
+                    EmailErrorEnum.NULLPOINTERROR -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
-                            ShowDialogHelper.showDialogUnknownError(requireContext()){
+                            binding?.dimViewSignIng?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
                                 checkResultSignInUseCase()
+                            }){
+
+                                binding?.dimViewSignIng?.visibility = View.GONE
                             }
                         }
 
-                        EmailErrorEnum.PasswordIsEmpty -> {
-                            requireActivity().runOnUiThread {
+                    }
 
-                            }
+                    EmailErrorEnum.PasswordIsEmpty -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -273,10 +315,10 @@ class SignInFragment : Fragment() {
                             )
                         }
 
-                        EmailErrorEnum.EmailIsEmpty -> {
-                            requireActivity().runOnUiThread {
+                    }
 
-                            }
+                    EmailErrorEnum.EmailIsEmpty -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
                             ErrorHelper.showEmailErrorFeedback(
                                 requireContext(),
@@ -285,145 +327,181 @@ class SignInFragment : Fragment() {
                                 R.drawable.ic_email,
                                 getString(R.string.email_empty)
                             )
-
                         }
 
-                        EmailErrorEnum.UNKNOWNERROR -> {
-                            requireActivity().runOnUiThread {
 
-                            }
+                    }
+
+                    EmailErrorEnum.UNKNOWNERROR -> {
+                        requireActivity().runOnUiThread {
                             ShowDialogHelper.closeDialogLoadData()
-                            ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                            binding?.dimViewSignIng?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
                                 checkResultSignInUseCase()
+                            }) {
+
+                                binding?.dimViewSignIng?.visibility = View.GONE
                             }
                         }
+
                     }
                 }
+            }
         }
     }
 
     private fun downloadlCourses(lang:String?=null){
-            viewModel.loadData({loadState->
-                when(loadState) {
-                    ErrorEnum.SUCCESS -> {
-                        viewModel.checkSubscribesAndBuyCourse {checkState->
-                            when(checkState){
-                                ErrorEnum.NOTNETWORK -> {
-                                    requireActivity().runOnUiThread {
-                                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                                            downloadlCourses(lang)
-                                        }
-                                    }
-                                }
-                                ErrorEnum.ERROR -> {
-                                    requireActivity().runOnUiThread {
-                                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                            downloadlCourses(lang)
-                                        }
-                                    }
-                                }
-                                ErrorEnum.SUCCESS -> {
-                                    requireActivity().runOnUiThread {
-                                        ShowDialogHelper.closeDialogLoadData()
-                                        val action =
-                                            SignInFragmentDirections.actionSignInFragmentToPasswordRecoveryMethodFragment()
-                                        binding?.root.let { it1 ->
-                                            if (it1 != null) {
-                                                Navigation.findNavController(it1).navigate(action)
-                                            }
-                                        }
-                                    }
-                                }
-                                ErrorEnum.UNKNOWNERROR -> {
-                                    requireActivity().runOnUiThread {
-                                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                            downloadlCourses(lang)
-                                        }
-                                    }
-                                }
-                                ErrorEnum.TIMEOUTERROR -> {
-                                    requireActivity().runOnUiThread {
-                                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                                            downloadlCourses(lang)
-                                        }
-                                    }
-                                }
-                                ErrorEnum.NULLPOINTERROR -> {
-                                    requireActivity().runOnUiThread {
-                                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                            downloadlCourses(lang)
-                                        }
-                                    }
-                                }
-                                ErrorEnum.OFFLINEMODE -> {
-                                    requireActivity().runOnUiThread {
-                                        ShowDialogHelper.showDialogOffline(requireContext())
-                                    }
-                                }
-                                ErrorEnum.OFFLINETHEMEBUY -> {
-                                    requireActivity().runOnUiThread {
-                                        ShowDialogHelper.showDialogOffline(requireContext())
+        viewModel.loadData({loadState->
+            when(loadState) {
+                ErrorEnum.SUCCESS -> {
+                    viewModel.checkSubscribesAndBuyCourse {checkState->
+                        when(checkState){
+                            ErrorEnum.NOTNETWORK -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSignIng?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                        downloadlCourses(lang)
+                                    }) {
+                                        binding?.dimViewSignIng?.visibility = View.GONE
                                     }
                                 }
                             }
-                        }
-                        Log.d("LoadFragmState", "SUCCESS")
-
-                    }
-
-                    ErrorEnum.NOTNETWORK -> {
-                        requireActivity().runOnUiThread {
-                            ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                                downloadlCourses(lang)
+                            ErrorEnum.ERROR -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSignIng?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                        downloadlCourses(lang)
+                                    }) {
+                                        binding?.dimViewSignIng?.visibility = View.GONE
+                                    }
+                                }
+                            }
+                            ErrorEnum.SUCCESS -> {
+                                requireActivity().runOnUiThread {
+                                    ShowDialogHelper.closeDialogLoadData()
+                                    val action =
+                                        SignInFragmentDirections.actionSignInFragmentToPasswordRecoveryMethodFragment()
+                                    binding?.root.let { it1 ->
+                                        if (it1 != null) {
+                                            Navigation.findNavController(it1).navigate(action)
+                                        }
+                                    }
+                                }
+                            }
+                            ErrorEnum.UNKNOWNERROR -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSignIng?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                        downloadlCourses(lang)
+                                    }) {
+                                        binding?.dimViewSignIng?.visibility = View.GONE
+                                    }
+                                }
+                            }
+                            ErrorEnum.TIMEOUTERROR -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSignIng?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                        downloadlCourses(lang)
+                                    }) {
+                                        binding?.dimViewSignIng?.visibility = View.GONE
+                                    }
+                                }
+                            }
+                            ErrorEnum.NULLPOINTERROR -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSignIng?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                        downloadlCourses(lang)
+                                    }) {
+                                        binding?.dimViewSignIng?.visibility = View.GONE
+                                    }
+                                }
+                            }
+                            ErrorEnum.OFFLINEMODE -> {
+                                requireActivity().runOnUiThread {
+                                    ShowDialogHelper.showDialogOffline(requireContext())
+                                }
+                            }
+                            ErrorEnum.OFFLINETHEMEBUY -> {
+                                requireActivity().runOnUiThread {
+                                    ShowDialogHelper.showDialogOffline(requireContext())
+                                }
                             }
                         }
                     }
+                    Log.d("LoadFragmState", "SUCCESS")
 
-                    ErrorEnum.ERROR -> {
-                        requireActivity().runOnUiThread {
-                            ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                downloadlCourses(lang)
-                            }
-                        }
-                    }
+                }
 
-                    ErrorEnum.UNKNOWNERROR -> {
-                        requireActivity().runOnUiThread {
-                            ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                downloadlCourses(lang)
-                            }
-                        }
-                    }
-
-                    ErrorEnum.TIMEOUTERROR -> {
-                        requireActivity().runOnUiThread {
-                            ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                                downloadlCourses(lang)
-                            }
-                        }
-                    }
-
-                    ErrorEnum.NULLPOINTERROR -> {
-                        requireActivity().runOnUiThread {
-                            ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                downloadlCourses(lang)
-                            }
-                        }
-                    }
-
-                    ErrorEnum.OFFLINEMODE -> {
-                        requireActivity().runOnUiThread {
-                            ShowDialogHelper.showDialogOffline(requireContext())
-                        }
-                    }
-
-                    ErrorEnum.OFFLINETHEMEBUY -> {
-                        requireActivity().runOnUiThread {
-                            ShowDialogHelper.showDialogOffline(requireContext())
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            downloadlCourses(lang)
+                        }) {
+                            binding?.dimViewSignIng?.visibility = View.GONE
                         }
                     }
                 }
-            },lang)
+
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            downloadlCourses(lang)
+                        }) {
+                            binding?.dimViewSignIng?.visibility = View.GONE
+                        }
+                    }
+                }
+
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            downloadlCourses(lang)
+                        }) {
+                            binding?.dimViewSignIng?.visibility = View.GONE
+                        }
+                    }
+                }
+
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            downloadlCourses(lang)
+                        }) {
+                            binding?.dimViewSignIng?.visibility = View.GONE
+                        }
+                    }
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSignIng?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            downloadlCourses(lang)
+                        }) {
+                            binding?.dimViewSignIng?.visibility = View.GONE
+                        }
+                    }
+                }
+
+                ErrorEnum.OFFLINEMODE -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+            }
+        },lang)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -31,12 +31,42 @@ import workwork.test.andropediagits.domain.googbilling.PayState
 import workwork.test.andropediagits.presenter.reset.DatePickerFragment
 
 object ShowDialogHelper {
-   private var dialog: Dialog? = null
-   private var isDialogStrikeShow = false
+    private var dialog: Dialog? = null
+    private var isDialogStrikeShow = false
     private var isDialogSuccess = false
+
+    fun supportDialog(context: Context,clickClose:(()->Unit),clickTikTok:(()->Unit),clickYoutube:(()->Unit),clickTelegram:(()->Unit),dialogClose:(()->Unit)){
+        dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog?.setContentView(R.layout.social_network_dialog)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        val btnTelegram = dialog?.findViewById<ImageView>(R.id.btnTelegram)
+        val btnYoutube = dialog?.findViewById<ImageView>(R.id.btnYouTube)
+        val btnTiktok = dialog?.findViewById<ImageView>(R.id.btnTikTok)
+        btnTelegram?.setOnClickListener {
+            dialog?.dismiss()
+            dialog = null
+            clickTelegram.invoke()
+        }
+        btnYoutube?.setOnClickListener {
+            dialog?.dismiss()
+            dialog = null
+            clickYoutube.invoke()
+        }
+        btnTiktok?.setOnClickListener {
+            dialog?.dismiss()
+            dialog = null
+            clickTikTok.invoke()
+        }
+        dialog?.setOnDismissListener {
+            dialogClose.invoke()
+        }
+        dialog?.show()
+    }
+
     fun showDialogUnknownError(
         context: Context,
-        pressButton: (() -> Unit)
+        pressButton: (() -> Unit),
+        close: () -> Unit
     ) {
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.unknown_error_dialog)
@@ -49,11 +79,15 @@ object ShowDialogHelper {
             dialog=null
         }
         dialog?.show()
+        dialog?.setOnDismissListener {
+            close.invoke()
+        }
     }
 
     fun showDialogTimeOutError(
         context: Context,
-        pressButton: (() -> Unit)
+        pressButton: (() -> Unit),
+        close: () -> Unit
     ) {
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.time_out_error_dialog)
@@ -66,11 +100,15 @@ object ShowDialogHelper {
             dialog=null
         }
         dialog?.show()
+        dialog?.setOnDismissListener {
+            close.invoke()
+        }
     }
 
     fun showDialogNotNetworkError(
         context: Context,
-        pressButton: (() -> Unit)
+        pressButton: (() -> Unit),
+        dialogDissMiss: () -> Unit
     ) {
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.not_network_error_dialog)
@@ -83,6 +121,9 @@ object ShowDialogHelper {
             dialog = null
         }
         dialog?.show()
+        dialog?.setOnDismissListener {
+            dialogDissMiss.invoke()
+        }
     }  fun showDialogOffline(
         context: Context,
         okClick:(()->Unit)?=null,
@@ -364,7 +405,7 @@ object ShowDialogHelper {
     }
 
     fun showDialogFailTest(context: Context, correctTest:Int,mistakeTest: Int, size: Int, dateTerm: String,isClose:(()->Unit),isTimerOut:Boolean) {
-       dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.test_fail_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         val dialogCountMistakes = dialog?.findViewById<TextView>(R.id.tvCountMistake)
@@ -417,12 +458,13 @@ object ShowDialogHelper {
 
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun showDialogBuyAndropoints(
         context: Context,
         watchAd: () -> Unit,
         pay: () -> Unit,
         money: (Int) -> Unit,
-        andropoints: (Int) -> Unit
+        andropoints: (String) -> Unit
     ) {
         dialog = Dialog(context)
         dialog?.setContentView(R.layout.buy_andropoints_dialog)
@@ -443,35 +485,35 @@ object ShowDialogHelper {
         val tvCountAndropointsInfinityAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsInfinityAndropoint)
         val tvCountMoneyBuyInfinityAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyInfinityAndropoint)
         val btnWatchAd = dialog?.findViewById<CardView>(R.id.btnWatchAd)
-            cardBuyOneAndropoint?.setOnClickListener {
-                tvLastCountAndropoint?.text = tvCountAndropointsBuyOneAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text
-            }
-            cardBuyTenAndropoints?.setOnClickListener {
-                tvLastCountAndropoint?.text = tvCountAndropointsBuyTenAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text
-            }
-            cardBuyOneHundredAndropoints?.setOnClickListener {
-                tvLastCountAndropoint?.text = tvCountAndropointsOneHundredAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text
-            }
-            cardBuyInfinityAndropoints?.setOnClickListener {
-                tvLastCountAndropoint?.text = tvCountAndropointsInfinityAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
-            }
-            btnPay?.setOnClickListener {
-                money.invoke(tvLastPayCost?.text.toString().replace("₽", "").toInt())
-                andropoints.invoke(
-                    tvLastCountAndropoint?.text.toString().replace("₽", "").toInt()
-                )
-                pay.invoke()
-                dialog = null
-            }
-            btnWatchAd?.setOnClickListener {
-                dialog?.dismiss()
-                dialog = null
-                watchAd.invoke()
-            }
+        cardBuyOneAndropoint?.setOnClickListener {
+            tvLastCountAndropoint?.text = tvCountAndropointsBuyOneAndropoint?.text
+            tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text
+        }
+        cardBuyTenAndropoints?.setOnClickListener {
+            tvLastCountAndropoint?.text = tvCountAndropointsBuyTenAndropoint?.text
+            tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text
+        }
+        cardBuyOneHundredAndropoints?.setOnClickListener {
+            tvLastCountAndropoint?.text = tvCountAndropointsOneHundredAndropoint?.text
+            tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text
+        }
+        cardBuyInfinityAndropoints?.setOnClickListener {
+            tvLastCountAndropoint?.text = tvCountAndropointsInfinityAndropoint?.text
+            tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
+        }
+        btnPay?.setOnClickListener {
+            money.invoke(tvLastPayCost?.text.toString().replace("₽", "").toInt())
+            andropoints.invoke(
+                tvLastCountAndropoint?.text.toString().replace("₽", "")
+            )
+            pay.invoke()
+            dialog = null
+        }
+        btnWatchAd?.setOnClickListener {
+            dialog?.dismiss()
+            dialog = null
+            watchAd.invoke()
+        }
 
         dialog?.show()
     }
@@ -481,7 +523,7 @@ object ShowDialogHelper {
         dialog?.setContentView(R.layout.text_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         val dialogTermDescription = dialog?.findViewById<TextView>(R.id.tvClueDescription)
-         val btnClose = dialog?.findViewById<CardView>(R.id.btnCloseClueDialog)
+        val btnClose = dialog?.findViewById<CardView>(R.id.btnCloseClueDialog)
         btnClose?.setOnClickListener {
             dialog.dismiss()
             close?.invoke()
@@ -501,7 +543,7 @@ object ShowDialogHelper {
         themeBuy: Boolean = false,
         themeClose:Boolean = false
     ) {
-      dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.close_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         val dialogBuyCourse =  dialog?.findViewById<CardView>(R.id.btnBuyCourse)
@@ -546,7 +588,7 @@ object ShowDialogHelper {
         val btnGoogleBuy = dialog?.findViewById<LinearLayout>(R.id.btnGoogleBuy)
         val btnAndroBuy = dialog?.findViewById<TextView>(R.id.btnAndroBuy)
         val cardAndropointPossibly = dialog?.findViewById<LinearLayout>(R.id.cardAndropointPossibly)
-         val tvPriceToRub = dialog?.findViewById<TextView>(R.id.tvPriceToRub)
+        val tvPriceToRub = dialog?.findViewById<TextView>(R.id.tvPriceToRub)
         btnGoogleBuy?.setOnClickListener {
             pressGoogle.invoke()
             dialog?.dismiss()
@@ -647,42 +689,42 @@ object ShowDialogHelper {
             ContextCompat.getColor(context, R.color.black) // Замените R.color.black на ваш ресурс цвета для светлой темы
         }
         edClueDialog?.setTextColor(textColor)
-            btnReadyDialog?.setOnClickListener {
+        btnReadyDialog?.setOnClickListener {
 
 
-                if (edClueDialog?.text.toString().trim()!=""&& date!="02/02/2020") {
-                    val textTemp=edClueDialog?.text.toString().trimEnd()+"!!!TEMPWORD!!!"+date
-                    dialog?.dismiss()
-                    dialog = null
-                    isSelectDateAndClue.invoke(textTemp)
-                }else if(edClueDialog?.text.toString().trim()==""){
-                    if (edClueDialog != null) {
-                        ErrorHelper.showEmailErrorFeedback(
-                            context,
-                            edClueDialog,
-                            errorDrawable =R.drawable.ic_clue_error,
-                            oldDrawable=R.drawable.ic_clue_gray
-                        )
-                    }
-                    tvErrorClueDateDialog?.visibility = View.VISIBLE
-                    tvErrorClueDateDialog?.postDelayed({tvErrorClueDateDialog?.visibility = View.GONE }, 3000)
-                }else if( date=="02/02/2020"){
-                    Toast.makeText(context,context.getString(R.string.choose_another_date), Toast.LENGTH_SHORT).show()
+            if (edClueDialog?.text.toString().trim()!=""&& date!="02/02/2020") {
+                val textTemp=edClueDialog?.text.toString().trimEnd()+"!!!TEMPWORD!!!"+date
+                dialog?.dismiss()
+                dialog = null
+                isSelectDateAndClue.invoke(textTemp)
+            }else if(edClueDialog?.text.toString().trim()==""){
+                if (edClueDialog != null) {
+                    ErrorHelper.showEmailErrorFeedback(
+                        context,
+                        edClueDialog,
+                        errorDrawable =R.drawable.ic_clue_error,
+                        oldDrawable=R.drawable.ic_clue_gray
+                    )
+                }
+                tvErrorClueDateDialog?.visibility = View.VISIBLE
+                tvErrorClueDateDialog?.postDelayed({tvErrorClueDateDialog?.visibility = View.GONE }, 3000)
+            }else if( date=="02/02/2020"){
+                Toast.makeText(context,context.getString(R.string.choose_another_date), Toast.LENGTH_SHORT).show()
+            }
+        }
+        btnSelectDateDialog?.setOnClickListener {
+            if (tvSelectedDateDialog != null) {
+                datePicker(requireActivity,viewLifecycleOwner,tvSelectedDateDialog){
+                    date=it
                 }
             }
-            btnSelectDateDialog?.setOnClickListener {
-                if (tvSelectedDateDialog != null) {
-                    datePicker(requireActivity,viewLifecycleOwner,tvSelectedDateDialog){
-                        date=it
-                    }
-                }
-            }
+        }
 
 
         dialog?.show()
-       dialog?.setOnDismissListener {
-           dialogDissMiss.invoke()
-       }
+        dialog?.setOnDismissListener {
+            dialogDissMiss.invoke()
+        }
     }
 
     fun datePicker(
@@ -707,9 +749,9 @@ object ShowDialogHelper {
 
     @SuppressLint("ResourceAsColor")
     fun showDialogSelectKeywordForget(
-    context: Context,
-    textQuestion: String,
-    selectedKeyword: (String) -> Unit
+        context: Context,
+        textQuestion: String,
+        selectedKeyword: (String) -> Unit
     ) {
 
         val dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
@@ -745,7 +787,7 @@ object ShowDialogHelper {
 
         dialog?.setContentView(R.layout.select_keyword_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-      val btnSelectKeyword = dialog?.findViewById<CardView>(R.id.btnSelectKeyword)
+        val btnSelectKeyword = dialog?.findViewById<CardView>(R.id.btnSelectKeyword)
         var edKeywordDialog = dialog?.findViewById<EditText>(R.id.edKeywordDialog)
         val edClueDialogKeyword = dialog?.findViewById<EditText>(R.id.edClueDialogKeyword)
         val tvErrorKeyword = dialog?.findViewById<TextView>(R.id.tvErrorKeyword)
@@ -758,49 +800,49 @@ object ShowDialogHelper {
         }
         edKeywordDialog?.setTextColor(textColor)
         edClueDialogKeyword?.setTextColor(textColor)
-            btnSelectKeyword?.setOnClickListener {
-                if (edKeywordDialog?.text.toString().trim()!=""&& edClueDialogKeyword?.text.toString().trim()!=""){
-                    val textTemp=edClueDialogKeyword?.text.toString().trimEnd()+"!!!TEMPWORD!!!"+edKeywordDialog?.text.toString().trimEnd()
-                    isSelectKeywordAndClue.invoke(textTemp)
-                    dialog?.dismiss()
-                    dialog = null
-                }
-                if (edKeywordDialog?.text.toString().trim()==""){
-                    if (edKeywordDialog != null) {
-                        ErrorHelper.showEmailErrorFeedback(
-                            context,
-                            edKeywordDialog,
-                            errorDrawable =R.drawable.ic_key_error,
-                            oldDrawable=R.drawable.ic_key
-                        )
-                    }
-                    tvErrorKeyword?.visibility = View.VISIBLE
-                    tvErrorKeyword?.postDelayed({tvErrorKeyword?.visibility = View.GONE }, 3000)
-                }
-                if (edClueDialogKeyword?.text.toString().trim()==""){
-                    if (edClueDialogKeyword != null) {
-                        ErrorHelper.showEmailErrorFeedback(
-                            context,
-                            edClueDialogKeyword,
-                            errorDrawable =R.drawable.ic_clue_error,
-                            oldDrawable=R.drawable.ic_clue_gray
-                        )
-                    }
-                    tvErrorClueKeywordDialog?.visibility = View.VISIBLE
-                    tvErrorClueKeywordDialog?.postDelayed({tvErrorClueKeywordDialog?.visibility = View.GONE }, 3000)
-                }
+        btnSelectKeyword?.setOnClickListener {
+            if (edKeywordDialog?.text.toString().trim()!=""&& edClueDialogKeyword?.text.toString().trim()!=""){
+                val textTemp=edClueDialogKeyword?.text.toString().trimEnd()+"!!!TEMPWORD!!!"+edKeywordDialog?.text.toString().trimEnd()
+                isSelectKeywordAndClue.invoke(textTemp)
+                dialog?.dismiss()
+                dialog = null
             }
+            if (edKeywordDialog?.text.toString().trim()==""){
+                if (edKeywordDialog != null) {
+                    ErrorHelper.showEmailErrorFeedback(
+                        context,
+                        edKeywordDialog,
+                        errorDrawable =R.drawable.ic_key_error,
+                        oldDrawable=R.drawable.ic_key
+                    )
+                }
+                tvErrorKeyword?.visibility = View.VISIBLE
+                tvErrorKeyword?.postDelayed({tvErrorKeyword?.visibility = View.GONE }, 3000)
+            }
+            if (edClueDialogKeyword?.text.toString().trim()==""){
+                if (edClueDialogKeyword != null) {
+                    ErrorHelper.showEmailErrorFeedback(
+                        context,
+                        edClueDialogKeyword,
+                        errorDrawable =R.drawable.ic_clue_error,
+                        oldDrawable=R.drawable.ic_clue_gray
+                    )
+                }
+                tvErrorClueKeywordDialog?.visibility = View.VISIBLE
+                tvErrorClueKeywordDialog?.postDelayed({tvErrorClueKeywordDialog?.visibility = View.GONE }, 3000)
+            }
+        }
 
         dialog?.show()
         dialog?.setOnDismissListener {
             dialogDissMiss.invoke()
         }
     }
-     fun showDialogBuyAndropointsImplementation(
-         context: Context,
-         billingManager: BillingManager?,
-         ads: () -> Unit
-     ) {
+    fun showDialogBuyAndropointsImplementation(
+        context: Context,
+        billingManager: BillingManager?,
+        ads: () -> Unit
+    ) {
         ShowDialogHelper.showDialogBuyAndropoints(context, {
             ads.invoke()
         }, {
@@ -809,14 +851,17 @@ object ShowDialogHelper {
             Log.d("andropointsIeefffgbbCout", "moneyRub:${it}")
         }, {
             Log.d("andropointsIeefffgbbCout", "andropointsCount:${it}")
-            if (it == 1) {
+            if (it == "1") {
                 billingManager?.billingSetup(PayState.ONEANDROPOINTBUY)
             }
-            if (it == 10) {
+            if (it == "10") {
                 billingManager?.billingSetup(PayState.TENANDROPOINTBUY)
             }
-            if (it == 100) {
+            if (it == "100") {
                 billingManager?.billingSetup(PayState.HUNDREDANDROPOINTBUY)
+            }
+            if(it=="∞"){
+                billingManager?.billingSetup(PayState.THOUSANDANDROPOINTBUY)
             }
         })
     }

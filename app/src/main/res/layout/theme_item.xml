@@ -121,32 +121,30 @@
         android:id="@+id/btnFav"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         android:background="@null"
-        app:layout_constraintBottom_toBottomOf="@+id/tvTitleTheme"
+        android:theme="@style/bookmark"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTitleTheme"
-        app:layout_constraintVertical_bias="0.0"
-        android:theme="@style/bookmark"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/btnFavClicked"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         android:background="@null"
         android:src="@drawable/baseline_bookmark_24"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/tvTitleTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTitleTheme"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/cardCloseTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+
         android:background="@drawable/theme_close"
         android:orientation="horizontal"
         android:visibility="gone"

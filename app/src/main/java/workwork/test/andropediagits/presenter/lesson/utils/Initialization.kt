@@ -6,12 +6,17 @@ import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.text.Html
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import coil.load
 import workwork.test.andropediagits.presenter.lesson.utils.OptimizationText.setTextSize
@@ -19,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.utils.Constatns
 
 import workwork.test.andropediagits.data.local.entities.levels.ThemeLevelContentEntity
@@ -27,7 +33,54 @@ import workwork.test.andropediagits.databinding.FragmentLessonBinding
 object Initialization {
     private var pref: SharedPreferences?=null
 
-
+//    private fun processContent(    imageView: ImageView,
+//                                   textView: TextView,    card: CardView,
+//                                   textCode: TextView,    imageLoad: Bitmap?,
+//                                   text: String?,    CodeFragment: String?,
+//                                   binding: FragmentLessonBinding?,    context: Context
+//    ) {   CoroutineScope(Dispatchers.Main).launch {
+//        pref = PreferenceManager.getDefaultSharedPreferences(context)
+//        if (imageLoad != null) {
+//            imageView.visibility = View.VISIBLE
+//            imageView.load(imageLoad)        } else {
+//            imageView.visibility = View.GONE
+//            imageView.load("")
+//        }
+//        Log.d("inititnit39394949",text.toString())
+//        if (text != null) {            textView.visibility = View.VISIBLE
+//            textView.text = OptimizationText.searchTitles(text,binding)
+//            textView.setTextSize(pref?.getString(Constatns.TEXT_KEY, "30"))
+//        } else {            textView.visibility = View.GONE
+//            textView.text = ""        }
+//        if (CodeFragment != null) {
+//            card.visibility = View.VISIBLE
+//            val keywords = OptimizationText.optimizeCodeFragment(CodeFragment)
+//            val keywords1 = OptimizationText.colorizeElements(keywords,context)
+//            val keywords2 = OptimizationText.specialCharacterColoring(keywords1, context)
+//            val html = Html.fromHtml(keywords2.toString(), Html.FROM_HTML_MODE_LEGACY)
+//            val spannableString = SpannableString(html)
+//            val regex = Regex("(val|var|fun)\\s(\\w+)")
+//            val matches = regex.findAll(html)
+//            for (match in matches) {
+//                val start = match.range.first + 4
+//                val end = match.range.last
+//                val color = when (match.groupValues[1]) {
+//                    "val" -> ContextCompat.getColor(context, R.color.variable_code)
+//                    "var" -> ContextCompat.getColor(context, R.color.variable_code)
+//                    "fun" -> ContextCompat.getColor(context,R.color.function_code)
+//                    else ->ContextCompat.getColor(context, R.color.function_code)                }
+//                spannableString.setSpan(
+//                    ForegroundColorSpan(color),
+//                    start,                    end + 1,
+//                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE                )
+//            }
+////            colorizeNumbers(html,spannableString,context)
+//            textView.text = spannableString
+//            textCode.setTextSize(pref?.getString(Constatns.CODE_KEY, "30"))
+//        } else {            card.visibility = View.GONE
+//            textCode.text = ""        }
+//    }
+//    }
 
     private fun processContent(
         imageView: ImageView,
@@ -40,7 +93,7 @@ object Initialization {
         binding: FragmentLessonBinding?,
         context: Context
     ) {
-       CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             pref = PreferenceManager.getDefaultSharedPreferences(context)
 
             if (imageLoad != null) {
@@ -55,7 +108,7 @@ object Initialization {
                 textView.visibility = View.VISIBLE
                 textView.text = OptimizationText.searchTitles(text,binding)
 //                textView.text = text
-                textView.setTextSize(pref?.getString(Constatns.TEXT_KEY, "30"))
+                textView.setTextSize(pref?.getString(Constatns.TEXT_KEY, "20"))
             } else {
                 textView.visibility = View.GONE
                 textView.text = ""
@@ -64,10 +117,30 @@ object Initialization {
             if (CodeFragment != null) {
                 card.visibility = View.VISIBLE
                 val keywords = OptimizationText.optimizeCodeFragment(CodeFragment)
-                val keywords1 = OptimizationText.colorizeElements(keywords)
+                val keywords1 = OptimizationText.colorizeElements(keywords,context)
                 val keywords2 = OptimizationText.specialCharacterColoring(keywords1, context)
-                textCode.text = Html.fromHtml(keywords2.toString(), Html.FROM_HTML_MODE_LEGACY)
-                textCode.setTextSize(pref?.getString(Constatns.CODE_KEY, "30"))
+//                textCode.text = Html.fromHtml(keywords2.toString(), Html.FROM_HTML_MODE_LEGACY)
+                val html = Html.fromHtml(keywords2.toString(), Html.FROM_HTML_MODE_LEGACY)
+                val textViewTSec = colorizeNumbers(html,context)
+                val spannableString = SpannableString(textViewTSec)
+                val regex = Regex("(val|var|fun)\\s(\\w+)")
+                val matches = regex.findAll(textViewTSec)
+                for (match in matches) {
+                    val start = match.range.first + 4
+                    val end = match.range.last
+                    val color = when (match.groupValues[1]) {
+                        "val" -> ContextCompat.getColor(context, R.color.variable_code)
+                        "var" -> ContextCompat.getColor(context, R.color.variable_code)
+                        "fun" -> ContextCompat.getColor(context, R.color.function_code)
+                        else -> ContextCompat.getColor(context, R.color.function_code)                }
+                    spannableString.setSpan(
+                        ForegroundColorSpan(color),
+                        start,                    end + 1,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE                )
+                }
+                quotesColorize(textViewTSec,spannableString,context)
+                textCode.text = spannableString
+                textCode.setTextSize(pref?.getString(Constatns.CODE_KEY, "20"))
             } else {
                 card.visibility = View.GONE
                 textCode.text = ""
@@ -75,7 +148,54 @@ object Initialization {
 
         }
     }
-     fun initAllViews(content: ThemeLevelContentEntity, binding: FragmentLessonBinding?, context: Context) {
+
+    private fun quotesColorize(text: SpannableString, spannableString: SpannableString, context: Context) {
+        var startIndex = text.indexOf('"')
+        // Проверяем, что есть хотя бы одна открывающая кавычка
+        if (startIndex != -1) {        var endIndex = text.indexOf('"', startIndex + 1)
+            // Проверяем, что есть хотя бы одна закрывающая кавычка
+            if (endIndex != -1) {            while (startIndex in 0 until endIndex) {
+                spannableString.setSpan(
+                    ForegroundColorSpan(ContextCompat.getColor(context, R.color.text_code)),
+                    startIndex,                    startIndex + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE                )
+                spannableString.setSpan(                                      ForegroundColorSpan(
+                    ContextCompat.getColor(context, R.color.text_code)),
+                    endIndex,                    endIndex + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE                )
+                spannableString.setSpan(
+                    ForegroundColorSpan(ContextCompat.getColor(context, R.color.text_code)),                    startIndex + 1,
+                    endIndex,                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+                startIndex = text.indexOf('"', endIndex + 1)
+                endIndex = text.indexOf('"', startIndex + 1)
+            }        }
+        }}
+
+
+
+    private fun colorizeNumbers(html: Spanned, context: Context): SpannableString {    val spannableString = SpannableString(html)
+        val regex = Regex("[=+\\-*/(,.ln]\\s*(-?\\d+)(,?)")
+        val matcher = regex.toPattern().matcher(spannableString)
+        while (matcher.find()) {        val start = matcher.start(1)
+            val end = matcher.end(1)
+            spannableString.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.numbers_code)),
+                start,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            if (matcher.group(2)?.isNotEmpty() == true) {
+                spannableString.setSpan(
+                    ForegroundColorSpan(ContextCompat.getColor(context, R.color.numbers_code)),        end,
+                    end + 1,        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )}
+        }
+        return spannableString
+    }
+
+
+    fun initAllViews(content: ThemeLevelContentEntity, binding: FragmentLessonBinding?, context: Context) {
         binding?.apply {
             CoroutineScope(Dispatchers.Main).launch {
                 processContent(

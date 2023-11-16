@@ -90,8 +90,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             checkResetTextTreatmentResult(keyword)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -99,8 +103,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResetTextTreatmentResult(keyword)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -108,8 +116,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResetTextTreatmentResult(keyword)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -117,8 +129,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             checkResetTextTreatmentResult(keyword)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -126,8 +142,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResetTextTreatmentResult(keyword)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -176,8 +196,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             checkResetDateTreatmentResult(date, isCorrect)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
 
@@ -186,8 +210,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResetDateTreatmentResult(date, isCorrect)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
 
@@ -196,8 +224,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResetDateTreatmentResult(date, isCorrect)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
 
@@ -206,8 +238,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             checkResetDateTreatmentResult(date, isCorrect)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
 
@@ -216,8 +252,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkResetDateTreatmentResult(date, isCorrect)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -254,8 +294,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -263,8 +307,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -272,8 +320,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -281,8 +333,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -290,8 +346,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }
@@ -357,8 +417,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
 
@@ -367,8 +431,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
 
@@ -377,8 +445,11 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
 
@@ -387,8 +458,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
 
@@ -397,8 +472,12 @@ class ForgetFragment : Fragment() {
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimForget?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             getMethodUser(email, binding)
+                        }) {
+
+                            binding?.dimForget?.visibility = View.GONE
                         }
                     }
                 }

@@ -26,7 +26,7 @@
             android:layout_marginTop="100dp"
             android:gravity="center"
             android:theme="@style/Text_black_white"
-            android:text="Виды курсов"
+            android:text="@string/all_courses"
             android:textSize="20dp"
             android:textStyle="bold" />
 

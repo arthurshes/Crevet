@@ -188,7 +188,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                             }
 
                         } else {
-                            showRewardedVideo()
+                         showRewardedVideo()
                         }
                     } else {
                         requireActivity().runOnUiThread {
@@ -203,16 +203,20 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
@@ -220,24 +224,30 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkLimitActualTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
@@ -258,6 +268,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
             isActualNotTerm = it
         })
     }
+
 
     private fun loadRewardedAd() {
         if (rewardedAd == null) {
@@ -330,16 +341,20 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             adsViewTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             adsViewTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
@@ -347,24 +362,30 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             adsViewTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             adsViewTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             adsViewTreatmentResult()
+                        }) {
+
                         }
                     }
                 }
@@ -396,16 +417,20 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             minusTwoHoursTerm()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             minusTwoHoursTerm()
+                        }) {
+
                         }
                     }
                 }
@@ -413,24 +438,30 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             minusTwoHoursTerm()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             minusTwoHoursTerm()
+                        }) {
+
                         }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             minusTwoHoursTerm()
+                        }) {
+
                         }
                     }
                 }

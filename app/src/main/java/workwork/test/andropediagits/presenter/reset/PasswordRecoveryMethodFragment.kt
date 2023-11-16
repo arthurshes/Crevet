@@ -74,46 +74,68 @@ class PasswordRecoveryMethodFragment : Fragment() {
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             sendDateTreatmentResult(resetDateSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             sendDateTreatmentResult(resetDateSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             sendDateTreatmentResult(resetDateSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             sendDateTreatmentResult(resetDateSendModel)
+                        }) {
+                            binding?.dimView?.visibility = View.GONE
+
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             sendDateTreatmentResult(resetDateSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
                     requireActivity().runOnUiThread {
+
                         ShowDialogHelper.showDialogOffline(requireContext())
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
+
                         ShowDialogHelper.showDialogOffline(requireContext())
                     }
                 }
@@ -133,36 +155,56 @@ class PasswordRecoveryMethodFragment : Fragment() {
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             sendKeywordTreatmentResult(resetTextSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             sendKeywordTreatmentResult(resetTextSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             sendKeywordTreatmentResult(resetTextSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             sendKeywordTreatmentResult(resetTextSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimView?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             sendKeywordTreatmentResult(resetTextSendModel)
+                        }) {
+
+                            binding?.dimView?.visibility = View.GONE
                         }
                     }
                 }

@@ -9,7 +9,7 @@ class HeaderInterceptor(private val apiKey:String):Interceptor {
     @SuppressLint("SuspiciousIndentation")
     override fun intercept(chain: Interceptor.Chain): Response {
       val request = chain.request().newBuilder()
-          .addHeader("api_key",apiKey)
+          .addHeader("x-api-key",apiKey)
           .build()
         return chain.proceed(request)
     }

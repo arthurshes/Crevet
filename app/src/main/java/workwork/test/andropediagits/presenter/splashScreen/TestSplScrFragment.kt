@@ -42,190 +42,243 @@ class TestSplScrFragment : Fragment() {
     @SuppressLint("SuspiciousIndentation")
     private fun splashScreenTreatmentResult() {
 
-         viewModel.checkCacheActual { checkResult->
-             Log.d("sppspsp",checkResult.toString())
-             when(checkResult){
-                 ErrorEnum.SUCCESS -> {
-                     viewModel.checkSubscribeActual{state->
-                         when(state){
-                             ErrorEnum.NOTNETWORK -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
-                                 }
+        viewModel.checkCacheActual { checkResult->
+            Log.d("sppspsp",checkResult.toString())
+            when(checkResult){
+                ErrorEnum.SUCCESS -> {
+                    viewModel.checkSubscribeActual{state->
+                        when(state){
+                            ErrorEnum.NOTNETWORK -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSplash?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                        splashScreenTreatmentResult()
+                                    }) {
 
-                             }
-                             ErrorEnum.ERROR -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
-                                 }
-                             }
-                             ErrorEnum.SUCCESS -> {
-                                 viewModel.checkSplashScreen { resultSplashScreen->
+                                        binding?.dimViewSplash?.visibility = View.GONE
+                                    }
+                                }
 
-                                     when (resultSplashScreen) {
-                                         SplashActionEnum.SIGNINSCREEN -> {
-                                             requireActivity().runOnUiThread {
-                                                 val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToSignInFragment()
-                                                 binding?.root?.let { it1 ->
-                                                     Navigation.findNavController(it1).navigate(action)
-                                                 }
-                                             }
-                                         }
+                            }
+                            ErrorEnum.ERROR -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSplash?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                        splashScreenTreatmentResult()
+                                    }) {
+                                        binding?.dimViewSplash?.visibility = View.GONE
+                                    }
+                                }
+                            }
+                            ErrorEnum.SUCCESS -> {
+                                viewModel.checkSplashScreen { resultSplashScreen->
 
-                                         SplashActionEnum.RESETDATASCREEN ->{
-                                             requireActivity().runOnUiThread {
-                                                 val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToPasswordRecoveryMethodFragment()
-                                                 binding?.root.let { it1 ->
-                                                     if (it1 != null) {
-                                                         Navigation.findNavController(it1).navigate(action)
-                                                     }
-                                                 }
-                                             }
+                                    when (resultSplashScreen) {
+                                        SplashActionEnum.SIGNINSCREEN -> {
+                                            requireActivity().runOnUiThread {
+                                                val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToSignInFragment()
+                                                binding?.root?.let { it1 ->
+                                                    Navigation.findNavController(it1).navigate(action)
+                                                }
+                                            }
+                                        }
 
-                                         }
-                                         SplashActionEnum.HOMESCREEN -> {
-                                             requireActivity().runOnUiThread {
-                                                 val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
-                                                 binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
-                                             }
-                                         }
-                                         SplashActionEnum.OFFLINEMODE -> {
-                                             requireActivity().runOnUiThread {
-                                                 val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
-                                                 binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
-                                             }
-                                         }
-                                         SplashActionEnum.ERRORSCREEN -> {
-                                             requireActivity().runOnUiThread {
-                                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                                     splashScreenTreatmentResult()
-                                                 }
+                                        SplashActionEnum.RESETDATASCREEN ->{
+                                            requireActivity().runOnUiThread {
+                                                val action = TestSplScrFragmentDirections.actionTestSplScrFragmentToPasswordRecoveryMethodFragment()
+                                                binding?.root.let { it1 ->
+                                                    if (it1 != null) {
+                                                        Navigation.findNavController(it1).navigate(action)
+                                                    }
+                                                }
+                                            }
 
-                                             }
-                                         }
-                                         SplashActionEnum.LONGWAITSERVER -> {
-                                             requireActivity().runOnUiThread {
-                                                 ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                                                     splashScreenTreatmentResult()
-                                                 }
-                                             }
-                                         }
+                                        }
+                                        SplashActionEnum.HOMESCREEN -> {
+                                            requireActivity().runOnUiThread {
+                                                val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                                                binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+                                            }
+                                        }
+                                        SplashActionEnum.OFFLINEMODE -> {
+                                            requireActivity().runOnUiThread {
+                                                val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                                                binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+                                            }
+                                        }
+                                        SplashActionEnum.ERRORSCREEN -> {
+                                            requireActivity().runOnUiThread {
+                                                binding?.dimViewSplash?.visibility = View.VISIBLE
+                                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                    splashScreenTreatmentResult()
+                                                }) {
 
-                                         SplashActionEnum.TRYAGAINSNACk -> {
-                                             requireActivity().runOnUiThread {
-                                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                                     splashScreenTreatmentResult()
-                                                 }
+                                                    binding?.dimViewSplash?.visibility = View.GONE
+                                                }
 
-                                             }
-                                         }
-                                         ///
-                                         else -> {
-                                             requireActivity().runOnUiThread {
-                                                 ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                                     splashScreenTreatmentResult()
-                                                 }
-                                             }
-                                         }
-                                     }
-                                 }
-                             }
-                             ErrorEnum.UNKNOWNERROR -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
-                                 }
+                                            }
+                                        }
+                                        SplashActionEnum.LONGWAITSERVER -> {
+                                            requireActivity().runOnUiThread {
+                                                binding?.dimViewSplash?.visibility = View.VISIBLE
+                                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                                    splashScreenTreatmentResult()
+                                                }) {
 
-                             }
-                             ErrorEnum.TIMEOUTERROR -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
-                                 }
+                                                    binding?.dimViewSplash?.visibility = View.GONE
+                                                }
+                                            }
+                                        }
 
-                             }
-                             ErrorEnum.NULLPOINTERROR -> {
-                                 requireActivity().runOnUiThread {
-                                     ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                         splashScreenTreatmentResult()
-                                     }
-                                 }
+                                        SplashActionEnum.TRYAGAINSNACk -> {
+                                            requireActivity().runOnUiThread {
+                                                binding?.dimViewSplash?.visibility = View.VISIBLE
+                                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                    splashScreenTreatmentResult()
+                                                }) {
 
-                             }
-                             ErrorEnum.OFFLINEMODE -> {
-                                 requireActivity().runOnUiThread {
-                                     val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
-                                     binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
-                                 }
-                             }
-                             ErrorEnum.OFFLINETHEMEBUY -> {
-                                 requireActivity().runOnUiThread {
-                                     val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
-                                     binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
-                                 }
-                             }
-                         }
-                     }
-                 }
-                 ErrorEnum.NOTNETWORK -> {
-                     requireActivity().runOnUiThread {
-                         ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                             splashScreenTreatmentResult()
-                         }
-                     }
+                                                    binding?.dimViewSplash?.visibility = View.GONE
+                                                }
 
-                 }
-                 ErrorEnum.ERROR -> {
-                     requireActivity().runOnUiThread {
-                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                             splashScreenTreatmentResult()
-                         }
-                     }
-                 }
-                 ErrorEnum.UNKNOWNERROR -> {
-                     requireActivity().runOnUiThread {
-                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                             splashScreenTreatmentResult()
-                         }
-                     }
+                                            }
+                                        }
+                                        ///
+                                        else -> {
+                                            requireActivity().runOnUiThread {
+                                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                    splashScreenTreatmentResult()
+                                                }) {
+                                                    binding?.dimViewSplash?.visibility = View.GONE
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            ErrorEnum.UNKNOWNERROR -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSplash?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                        splashScreenTreatmentResult()
+                                    }) {
 
-                 }
-                 ErrorEnum.TIMEOUTERROR -> {
-                     requireActivity().runOnUiThread {
-                         ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                             splashScreenTreatmentResult()
-                         }
-                     }
+                                        binding?.dimViewSplash?.visibility = View.GONE
+                                    }
+                                }
 
-                 }
-                 ErrorEnum.NULLPOINTERROR -> {
-                     requireActivity().runOnUiThread {
-                         ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                             splashScreenTreatmentResult()
-                         }
-                     }
+                            }
+                            ErrorEnum.TIMEOUTERROR -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSplash?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                        splashScreenTreatmentResult()
+                                    }) {
 
-                 }
-                 ErrorEnum.OFFLINEMODE ->{
-                     requireActivity().runOnUiThread {
-                         val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
-                         binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
-                     }
-                 }
-                 ErrorEnum.OFFLINETHEMEBUY -> {
-                     requireActivity().runOnUiThread {
-                         val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
-                         binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
-                     }
-                 }
-             }
-         }
+                                        binding?.dimViewSplash?.visibility = View.GONE
+                                    }
+                                }
+
+                            }
+                            ErrorEnum.NULLPOINTERROR -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewSplash?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                        splashScreenTreatmentResult()
+                                    }) {
+
+                                        binding?.dimViewSplash?.visibility = View.GONE
+                                    }
+                                }
+
+                            }
+                            ErrorEnum.OFFLINEMODE -> {
+                                requireActivity().runOnUiThread {
+                                    val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                                    binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+                                }
+                            }
+                            ErrorEnum.OFFLINETHEMEBUY -> {
+                                requireActivity().runOnUiThread {
+                                    val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                                    binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+                                }
+                            }
+                        }
+                    }
+                }
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSplash?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            splashScreenTreatmentResult()
+                        }) {
+
+                            binding?.dimViewSplash?.visibility = View.GONE
+                        }
+                    }
+
+                }
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSplash?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            splashScreenTreatmentResult()
+                        }) {
+
+                            binding?.dimViewSplash?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSplash?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            splashScreenTreatmentResult()
+                        }) {
+
+                            binding?.dimViewSplash?.visibility = View.GONE
+                        }
+                    }
+
+                }
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSplash?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            splashScreenTreatmentResult()
+                        }) {
+
+                            binding?.dimViewSplash?.visibility = View.GONE
+                        }
+                    }
+
+                }
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewSplash?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            splashScreenTreatmentResult()
+                        }) {
+
+                            binding?.dimViewSplash?.visibility = View.GONE
+                        }
+                    }
+
+                }
+                ErrorEnum.OFFLINEMODE ->{
+                    requireActivity().runOnUiThread {
+                        val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                        binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+                    }
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        val action =TestSplScrFragmentDirections.actionTestSplScrFragmentToCoursesFragment(false)
+                        binding?.root?.let { it1 -> Navigation.findNavController(it1).navigate(action) }
+                    }
+                }
+            }
+        }
 
     }
     override fun onDestroy() {

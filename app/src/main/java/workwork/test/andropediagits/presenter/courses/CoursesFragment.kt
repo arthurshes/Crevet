@@ -168,45 +168,60 @@ class CoursesFragment (): Fragment(){
         viewModel.buyCourseForMoney({state->
             when(state){
                 ErrorEnum.SUCCESS -> {
-                    requireActivity().runOnUiThread {
-                        Toast.makeText(requireContext(),getString(R.string.course_was_successfully_purchased), Toast.LENGTH_SHORT).show()
-                    }
+//                    requireActivity().runOnUiThread {
+////                        Toast.makeText(requireContext(),getString(R.string.course_was_successfully_purchased), Toast.LENGTH_SHORT).show()
+//                    }
 
                     viewModel.initialCourse()
 
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             buyCourseForMoneyTreatmentResult(courseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyCourseForMoneyTreatmentResult(courseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyCourseForMoneyTreatmentResult(courseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             buyCourseForMoneyTreatmentResult(courseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyCourseForMoneyTreatmentResult(courseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
@@ -263,36 +278,51 @@ class CoursesFragment (): Fragment(){
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                            buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            buyCourseAndropointTreatmentResult(buyCourseNumber,price)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            buyCourseAndropointTreatmentResult(buyCourseNumber,price)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            buyCourseAndropointTreatmentResult(buyCourseNumber,price)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                            buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            buyCourseAndropointTreatmentResult(buyCourseNumber,price)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            buyCourseAndropointTreatmentResult(buyCourseNumber,price)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
@@ -337,37 +367,56 @@ class CoursesFragment (): Fragment(){
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
+
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
+
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        }) {
+
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             buyCourseAndropointOpenTreatmentResult(buyCourseNumber)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
+
                     }
                 }
                 ErrorEnum.OFFLINEMODE -> {
@@ -403,108 +452,133 @@ class CoursesFragment (): Fragment(){
     ) {
         var promoCodeState: PromoCodeState? = null
         lifecycleScope.launch {
-        viewModel.checkPromoCode(dialogPromoCode.text.toString(), { resultPromoCode ->
-            when (resultPromoCode) {
-                ErrorEnum.SUCCESS -> {
-                    when (promoCodeState) {
-                        PromoCodeState.PROMOEXISTSUCCESS -> {
-                            requireActivity().runOnUiThread {
-                                Toast.makeText(
-                                    context,
-                                    getString(R.string.promo_code_was_success_used),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                dialog.dismiss()
+            viewModel.checkPromoCode(dialogPromoCode.text.toString(), { resultPromoCode ->
+                when (resultPromoCode) {
+                    ErrorEnum.SUCCESS -> {
+                        when (promoCodeState) {
+                            PromoCodeState.PROMOEXISTSUCCESS -> {
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(
+                                        context,
+                                        getString(R.string.promo_code_was_success_used),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    dialog.dismiss()
+                                }
+
                             }
 
-                        }
-
-                        PromoCodeState.PROMOUSEREXIST ->{
-                            requireActivity().runOnUiThread {
-                                errorPromoCode(
-                                    dialogPromoCode,
-                                    dialogError,
-                                    getString(R.string.promo_code_already)
-                                )
+                            PromoCodeState.PROMOUSEREXIST ->{
+                                requireActivity().runOnUiThread {
+                                    errorPromoCode(
+                                        dialogPromoCode,
+                                        dialogError,
+                                        getString(R.string.promo_code_already)
+                                    )
+                                }
                             }
-                        }
 
 
-                        PromoCodeState.PROMONOTEXIST -> {
-                            requireActivity().runOnUiThread {
-                                errorPromoCode(
-                                    dialogPromoCode,
-                                    dialogError,
-                                    getString(R.string.promo_code_not_exist)
-                                )
+                            PromoCodeState.PROMONOTEXIST -> {
+                                requireActivity().runOnUiThread {
+                                    errorPromoCode(
+                                        dialogPromoCode,
+                                        dialogError,
+                                        getString(R.string.promo_code_not_exist)
+                                    )
+                                }
                             }
-                        }
 
 
-                        else -> {
-                            requireActivity().runOnUiThread {
-                                ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                                    promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                            else -> {
+                                requireActivity().runOnUiThread {
+                                    binding?.dimViewCourse?.visibility = View.VISIBLE
+                                    ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                        promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                                    }) {
+                                        binding?.dimViewCourse?.visibility = View.GONE
+                                    }
+                                    dialog.dismiss()
                                 }
                             }
                         }
                     }
-                }
 
-                ErrorEnum.NOTNETWORK -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                            promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                    ErrorEnum.NOTNETWORK -> {
+                        requireActivity().runOnUiThread {
+                            binding?.dimViewCourse?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                            }) {
+                                binding?.dimViewCourse?.visibility = View.GONE
+                            }
+                            dialog?.dismiss()
+                        }
+                    }
+
+                    ErrorEnum.TIMEOUTERROR -> {
+                        requireActivity().runOnUiThread {
+                            binding?.dimViewCourse?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                            }) {
+                                binding?.dimViewCourse?.visibility = View.GONE
+                            }
+                            dialog?.dismiss()
+                        }
+                    }
+
+                    ErrorEnum.ERROR -> {
+                        requireActivity().runOnUiThread {
+                            binding?.dimViewCourse?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                            }) {
+                                binding?.dimViewCourse?.visibility = View.GONE
+                            }
+                            dialog.dismiss()
+                        }
+                    }
+
+                    ErrorEnum.NULLPOINTERROR -> {
+                        requireActivity().runOnUiThread {
+                            binding?.dimViewCourse?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                            }) {
+                                binding?.dimViewCourse?.visibility = View.GONE
+                            }
+                            dialog.dismiss()
+                        }
+                    }
+
+                    ErrorEnum.UNKNOWNERROR -> {
+                        requireActivity().runOnUiThread {
+                            binding?.dimViewCourse?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                            }) {
+                                binding?.dimViewCourse?.visibility = View.GONE
+                            }
+                            dialog.dismiss()
+                        }
+                    }
+
+                    else -> {
+                        requireActivity().runOnUiThread {
+                            binding?.dimViewCourse?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                            }) {
+                                binding?.dimViewCourse?.visibility = View.GONE
+                            }
+                            dialog.dismiss()
                         }
                     }
                 }
-
-                ErrorEnum.TIMEOUTERROR -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                            promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
-                        }
-                    }
-                }
-
-                ErrorEnum.ERROR -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
-                        }
-                        dialog.dismiss()
-                    }
-                }
-
-                ErrorEnum.NULLPOINTERROR -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
-                        }
-                        dialog.dismiss()
-                    }
-                }
-
-                ErrorEnum.UNKNOWNERROR -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
-                        }
-                        dialog.dismiss()
-                    }
-                }
-
-                else -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                            promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
-                        }
-                    }
-                }
-            }
-            Log.d("promoDialdodod", resultPromoCode.toString())
-        }, { promoCodeState = it })
-    }
+                Log.d("promoDialdodod", resultPromoCode.toString())
+            }, { promoCodeState = it })
+        }
 
     }
 
@@ -540,36 +614,51 @@ class CoursesFragment (): Fragment(){
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             checkCoursesThemes(courseNumber,courseName)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkCoursesThemes(courseNumber,courseName)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkCoursesThemes(courseNumber,courseName)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             checkCoursesThemes(courseNumber,courseName)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {
+                        binding?.dimViewCourse?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             checkCoursesThemes(courseNumber,courseName)
+                        }) {
+                            binding?.dimViewCourse?.visibility = View.GONE
                         }
                     }
                 }

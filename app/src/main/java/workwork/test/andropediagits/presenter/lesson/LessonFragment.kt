@@ -33,7 +33,8 @@ class LessonFragment : Fragment() {
     private val args: LessonFragmentArgs by navArgs()
     private var next:Int = 0
     private var isTermExistButton = false
-
+    private var minNumber = 0
+    private var maxNumber = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +64,12 @@ class LessonFragment : Fragment() {
         next =  args.LevelNumber
 
         lifecycleScope.launch {
-            viewModel.putUniqueThemeIdForGetLevels(args.uniqueThemeId)
+            viewModel.putUniqueThemeIdForGetLevels(args.uniqueThemeId,{
+                minNumber = it
+            },{
+                maxNumber = it
+            })
+
 
             val tuhthughtu = viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,args.LevelNumber)?.textTitle ?: "gotkgotogktogktog"
             viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,args.LevelNumber, isText = {
@@ -100,8 +106,13 @@ class LessonFragment : Fragment() {
         }
         binding!!.apply {
             btnPrevious.setOnClickListener {
-                if(next>1) {
-                    next--
+                if(next>minNumber) {
+
+                    if(next==88&&minNumber==5){
+                        next = 8
+                    }else{
+                        next--
+                    }
                     lifecycleScope.launch {
 
                         val textTitle = viewModel.getPreviousContent(
@@ -128,6 +139,9 @@ class LessonFragment : Fragment() {
             btnNext.setOnClickListener {
                 Log.d("firjfirjfirjfijrfjri","nextLesson")
                 next++
+                if(next==9&&minNumber==5){
+                    next = 88
+                }
                 Log.d("firjfirjfirjfijrfjri","nextValue${next}")
                 lifecycleScope.launch {
                     val nexText =  viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,next ?: 1)?.textTitle
@@ -136,6 +150,7 @@ class LessonFragment : Fragment() {
                         Log.d("firjfirjfirjfijrfjri", "nextVictorine")
                         viewModel.checkVictorineExistTheme({
                             if(it){
+                               next = maxNumber
                                 ShowDialogHelper.showDialogAttention(requireContext()) {
                                     val action =
                                         LessonFragmentDirections.actionLessonFragmentToVictorineFragment(
@@ -184,41 +199,75 @@ class LessonFragment : Fragment() {
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext()) { howManyTermTreatmentResult() }
+                        binding?.dimViewLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            howManyTermTreatmentResult()
+                        }) {
+                            binding?.dimViewLesson?.visibility = View.GONE
+                        }
                     }
                 }
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {howManyTermTreatmentResult() }
+                        binding?.dimViewLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            howManyTermTreatmentResult()
+                        }) {
+                            binding?.dimViewLesson?.visibility = View.GONE
+                        }
                     }
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
-
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) {howManyTermTreatmentResult() }
+                        binding?.dimViewLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            howManyTermTreatmentResult()
+                        }) {
+                            binding?.dimViewLesson?.visibility = View.GONE
+                        }
                     }
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext()) {howManyTermTreatmentResult() }
+                        binding?.dimViewLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            howManyTermTreatmentResult()
+                        }) {
+                            binding?.dimViewLesson?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext()) { howManyTermTreatmentResult() }
+                        binding?.dimViewLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            howManyTermTreatmentResult()
+                        }) {
+                            binding?.dimViewLesson?.visibility = View.GONE
+                        }
                     }
                 }
                 ErrorEnum.OFFLINEMODE ->{
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewLesson?.visibility = View.GONE
+                        })
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
+                        binding?.dimViewLesson?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewLesson?.visibility = View.GONE
+                        })
                     }
                 }
             }
