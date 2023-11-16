@@ -27,6 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 
 import com.google.android.gms.ads.AdError
@@ -42,6 +43,7 @@ import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.utils.Constatns.AD_UNIT_ID
 import workwork.test.andropediagits.core.utils.GoogleAdManager
+import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.databinding.FragmentThemesBinding
 import workwork.test.andropediagits.domain.googbilling.BillingManager
 import workwork.test.andropediagits.domain.googbilling.PayState
@@ -81,30 +83,6 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
     private val russianText = "🇷🇺    Рус"
     private val englishText = "🇺🇸    Eng"
 
-
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.action_menu, menu)
-        val moreMenu = menu.findItem(R.id.action_more)
-        moreMenu.isVisible = googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("thisScreen", "ThemesFrag")
-        binding = FragmentThemesBinding.inflate(inflater, container, false)
-        googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
-        init()
-        billingManager = BillingManager(requireActivity() as AppCompatActivity)
-        return binding?.root
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-
     @SuppressLint("SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -114,41 +92,26 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 binding?.root?.let { Navigation.findNavController(it).navigate(action) }
             }
         }
+        // Добавьте обратный вызов для обработки нажатия на кнопку "назад"
         if (args.premiumVisible) {
-            val bs = BottomSheet()
-            val data = Bundle()
-            bs.arguments = data
-            bs.show(requireActivity().supportFragmentManager, "Tag")
-            binding?.drawerLayout?.closeDrawer(GravityCompat.START)
+            openBS()
         }
 
         viewModel.getCurrentLang { currentLang ->
-            if (currentLang == "rus") {
-                russianTextLang?.text = russianText
-                englishTextLang?.text = englishText
-            } else if (currentLang == "eng") {
-                russianTextLang?.text = englishText
-                englishTextLang?.text = russianText
-            }
+            russianTextLang?.text = if (currentLang == "rus") russianText else englishText
+            englishTextLang?.text = if (currentLang == "rus") englishText else russianText
         }
         val currentTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
-        if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-            parentLang?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_black))
-            russianTextLang?.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-        } else {
-            parentLang?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-            russianTextLang?.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-        }
+        val backgroundColorRes = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) R.color.light_black else R.color.white
+        val textColorRes = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) R.color.white else R.color.black
+        parentLang?.setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColorRes))
+        russianTextLang?.setTextColor(ContextCompat.getColor(requireContext(), textColorRes))
 
-        parentLang?.setOnClickListener {
-            chooseLangParent(currentTheme)
-        }
+        parentLang?.setOnClickListener { chooseLangParent(currentTheme) }
 
 
-        listLang?.setOnClickListener {
-            chooseLangParentList()
-        }
+        listLang?.setOnClickListener { chooseLangParentList() }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
@@ -244,54 +207,49 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
                 isThemesFavorite = false
             }
-            Log.d("themeTffrfrgt", "removeId:${uniqueThemeId}")
             viewModel.removeFavorite(uniqueThemeId)
         }
 
         adapter?.addFavorite = { uniqueThemeId ->
-            Log.d("themeTffrfrgt", "addId:${uniqueThemeId}")
             viewModel.addFavorite(uniqueThemeId)
         }
 
-        adapter?.checkThisThemeTerm = { uniqueId ->
-            adapter?.currentThemeName = { themeName ->
-                adapter?.currentThemePassed = { themePassed ->
-                    checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId,themeName,themePassed)
-                }
-            }
-        }
+        adapter?.checkThisThemeTerm = { uniqueId -> adapter?.currentThemeName = { themeName -> adapter?.currentThemePassed = { themePassed -> checkTermThemeListLessonsFragmentMoreOptionsTreatmentResult(uniqueId,themeName,themePassed) } } }
 
         binding?.included?.apply {
             tvNameCourse.text = args.courseName
+            initRcView(rcViewTheme) }
 
+        textAddAndropoint?.setOnClickListener { ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager) { checkLimitActualTreatmentResult() } }
 
-            rcViewTheme.layoutManager = LinearLayoutManager(requireContext())
-            rcViewTheme.adapter = adapter
-            viewModel.putCourseNumberLocal(args.courseNumber) {
-                val countThemePassed = it.filter { it.isThemePassed }
-                val progress = (countThemePassed.size.toFloat() / it.size.toFloat() * 100).toInt()
-                binding?.included?.tvNumberOfCompletedLevels?.text =
-                    "${countThemePassed.size}/${it.size}"
-                binding?.included?.pbTheme?.progress = progress
-                adapter?.diffList?.submitList(it)
-            }
-        }
+        btnPremiumDrawer?.setOnClickListener { openBS() }
 
-        textAddAndropoint?.setOnClickListener {
-            ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager) { checkLimitActualTreatmentResult() }
-        }
-        btnPremiumDrawer?.setOnClickListener {
-            val bs = BottomSheet()
-            val data = Bundle()
-            bs.arguments = data
-            bs.show(requireActivity().supportFragmentManager, "Tag")
-            binding?.drawerLayout?.closeDrawer(GravityCompat.START)
-        }
-        viewModel.getDataUser { userInfo ->
-            val andropointCount = userInfo.andropointCount.toString()
+        viewModel.getDataUser { userInfo -> getUserInfo(userInfo) }
+    }
 
-            countAndropoints?.text = andropointCount 
-            userNameHeader?.text = userInfo.name ?: "defaultName"
+    private fun getUserInfo(userInfo: UserInfoEntity) {
+        val andropointCount = userInfo.andropointCount.toString()
+        countAndropoints?.text = andropointCount
+        userNameHeader?.text = userInfo.name ?: "defaultName"
+    }
+
+    private fun openBS() {
+        val bs = BottomSheet()
+        val data = Bundle()
+        bs.arguments = data
+        bs.show(requireActivity().supportFragmentManager, "Tag")
+        binding?.drawerLayout?.closeDrawer(GravityCompat.START)
+    }
+
+    private fun initRcView(rcViewTheme: RecyclerView) {
+        rcViewTheme.layoutManager = LinearLayoutManager(requireContext())
+        rcViewTheme.adapter = adapter
+        viewModel.putCourseNumberLocal(args.courseNumber) {
+            val countThemePassed = it.filter { it.isThemePassed }
+            val progress = (countThemePassed.size.toFloat() / it.size.toFloat() * 100).toInt()
+            binding?.included?.tvNumberOfCompletedLevels?.text = "${countThemePassed.size}/${it.size}"
+            binding?.included?.pbTheme?.progress = progress
+            adapter?.diffList?.submitList(it)
         }
     }
 
@@ -921,9 +879,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
             R.id.id_about_Us -> {
                 binding?.dimViewTheme?.visibility = View.VISIBLE
-                ShowDialogHelper.supportDialog(requireContext(), clickClose = {
-
-                }, clickTelegram = {
+                ShowDialogHelper.supportDialog(requireContext(), clickTelegram = {
                     openUrl("https://t.me/+HbIdITeaOsU3YzMy")
                 }, clickTikTok = {
                     openUrl("https://www.tiktok.com/@andropedia.app?_t=8hP78QdSnpO&_r=1")
@@ -1254,62 +1210,27 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
             )
         }
-
     }
-    /* private fun buyThemeTreatmentResult() {
-       var resultCourseBuy: ErrorEnum? = null
-       var isHaveMoneyResult: BuyForAndropointStates? = null
-       viewModel.buyTheme({ resultCourseBuy = it }, { isHaveMoneyResult = it }, 900)
-       when (resultCourseBuy) {
-           ErrorEnum.SUCCESS -> {
-               if (isHaveMoneyResult == BuyForAndropointStates.YESMONEY) {
-                   Toast.makeText(
-                       requireContext(),
-                       getString(R.string.theme_buy_success),
-                       Toast.LENGTH_SHORT
-                   ).show()
-               } else {
-                   //показ окна покупки
-               }
-           }
 
-           ErrorEnum.NOTNETWORK -> {
-               ShowDialogHelper.showDialogNotNetworkError(requireContext()) {
-                   buyThemeTreatmentResult()
-               }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.action_menu, menu)
+        val moreMenu = menu.findItem(R.id.action_more)
+        moreMenu.isVisible = googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
-           }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("thisScreen", "ThemesFrag")
+        binding = FragmentThemesBinding.inflate(inflater, container, false)
+        googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
+        init()
+        billingManager = BillingManager(requireActivity() as AppCompatActivity)
+        return binding?.root
+    }
 
-           ErrorEnum.TIMEOUTERROR -> {
-               ShowDialogHelper.showDialogTimeOutError(requireContext()) {
-                   buyThemeTreatmentResult()
-               }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
-           }
-
-           ErrorEnum.ERROR -> {
-               ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                   buyThemeTreatmentResult()
-               }
-           }
-
-           ErrorEnum.NULLPOINTERROR -> {
-               ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                   buyThemeTreatmentResult()
-               }
-           }
-
-           ErrorEnum.UNKNOWNERROR -> {
-               ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                   buyThemeTreatmentResult()
-               }
-           }
-
-           else -> {
-               ShowDialogHelper.showDialogUnknownError(requireContext()) {
-                   buyThemeTreatmentResult()
-               }
-           }
-       }
-   }*/
 }

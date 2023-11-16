@@ -1,29 +1,40 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="tiktok">    <item name="srcCompat">@drawable/tiktokcircle</item>
-    </style><style name="telegram">
-    <item name="srcCompat">@drawable/telegram_circle_light</item></style>
-    <style name="youTube">    <item name="srcCompat">@drawable/youtube_circle</item>
+    <style name="tiktok">
+        <item name="srcCompat">@drawable/tiktokcircle</item>
+    </style>
+
+    <style name="telegram">
+        <item name="srcCompat">@drawable/telegram_circle_light</item>
+    </style>
+
+    <style name="youTube">
+        <item name="srcCompat">@drawable/youtube_circle</item>
     </style>
 
     <style name="editText_text" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/white</item>
     </style>
+
     <style name="dialogCloseCre">
         <item name="srcCompat">@drawable/dialog_close_cre_night</item>
     </style>
+
     <style name="Base.Theme.AndroPediaGits" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
-    <style name="ConstraintLightAndBlackReverse" >    <item name="android:background">@color/white</item>
+
+    <style name="ConstraintLightAndBlackReverse">
+        <item name="android:background">@color/white</item>
     </style>
 
     <style name="forget_fragment_background">
         <item name="android:background">@drawable/course_back_black</item>
     </style>
 
-    <style name="CardViewWithSubscriptionStyle" parent="CardView">    <item name="cardBackgroundColor">@style/subscription</item>
+    <style name="CardViewWithSubscriptionStyle" parent="CardView">
+        <item name="cardBackgroundColor">@style/subscription</item>
     </style>
 
     <style name="copy">
@@ -31,11 +42,13 @@
     </style>
     .
 
-    <style name="btnGoogle" >    <item name="android:background">@drawable/button_edges_background_night</item>
+    <style name="btnGoogle">
+        <item name="android:background">@drawable/button_edges_background_night</item>
     </style>
 
-    <style name="subscription" >
-        <item name="android:background">@color/subscriptionNight</item></style>
+    <style name="subscription">
+        <item name="android:background">@color/subscriptionNight</item>
+    </style>
 
     <!--    <style name="arrow_up">    <item name="srcCompat">@drawable/ic_arrow_up_light</item>-->
     <!--    </style><style name="arrow_down">-->
@@ -46,19 +59,24 @@
     </style>
 
 
-    <style name="arrow_up">    <item name="srcCompat">@drawable/ic_arrow_up_light</item>
+    <style name="arrow_up">
+        <item name="srcCompat">@drawable/ic_arrow_up_light</item>
     </style>
-    <style name="arrow_down">    <item name="srcCompat">@drawable/ic_arrow_down_light</item>
-    </style><style name="bookmark">
-    <item name="srcCompat">@drawable/ic_bookmark_not_pressed_white</item></style>
+
+    <style name="arrow_down">
+        <item name="srcCompat">@drawable/ic_arrow_down_light</item>
+    </style>
+
+    <style name="bookmark">
+        <item name="srcCompat">@drawable/ic_bookmark_not_pressed_white</item>
+    </style>
 
 
-
-    <style name="courses_background" >
+    <style name="courses_background">
         <item name="android:background">@drawable/course_back_black</item>
     </style>
 
-    <style name="victorine_background" >
+    <style name="victorine_background">
         <item name="android:background">@drawable/victorine_backgroun_night</item>
     </style>
 
@@ -85,19 +103,24 @@
     <style name="text_color_theme" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
     </style>
+
     <style name="github_logo">
         <item name="srcCompat">@drawable/github</item>
     </style>
+
     <style name="code_text_color" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
     </style>
+
     <style name="card_fragment_code_color" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/card_fragment_code_color_night_theme</item>
     </style>
-    <style name="card_strike_mod_color" >
+
+    <style name="card_strike_mod_color">
         <item name="android:background">#393939</item>
     </style>
-    <style name="card_strike_mod_color_past" >
+
+    <style name="card_strike_mod_color_past">
         <item name="android:background">#43A047</item>
     </style>
 

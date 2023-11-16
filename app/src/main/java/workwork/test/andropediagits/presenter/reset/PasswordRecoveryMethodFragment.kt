@@ -35,7 +35,7 @@ class PasswordRecoveryMethodFragment : Fragment() {
         binding?.apply {
             btnSelectDate.setOnClickListener {
                 dimView.visibility = View.VISIBLE
-                ShowDialogHelper.showDialogSelectDate(requireContext(),requireActivity(),viewLifecycleOwner,layoutInflater,{text->
+                ShowDialogHelper.showDialogSelectDate(requireContext(),requireActivity(),viewLifecycleOwner,{text->
                     val (textClue, textDate) = removeSpecialWord(text)
                     viewModel.getEmail { email ->
                         val resetDateSendModel = ResetDateSendModel(email = email, questionAnswerReset = textClue, correctDate = textDate)

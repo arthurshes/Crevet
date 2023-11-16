@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.databinding.FragmentBottomSheetBinding
@@ -20,7 +21,7 @@ import workwork.test.andropediagits.domain.googbilling.PayState
 import workwork.test.andropediagits.presenter.bottomSheet.viewModels.PremiumBottomSheetViewModel
 import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
 
-
+@AndroidEntryPoint
 class BottomSheet : BottomSheetDialogFragment() {
     private val viewModel: PremiumBottomSheetViewModel by viewModels()
     private var binding: FragmentBottomSheetBinding?=null
@@ -159,6 +160,7 @@ class BottomSheet : BottomSheetDialogFragment() {
             }
         },subscribeTerm)
     }
+
     fun setSubscriptionOnClickListeners(selectedView: View, termPremium: Int, currentTheme: Int,textView: TextView,text2:TextView,t3:TextView) {
         selectedView.setOnClickListener {
             when(selectedTermPremium){

@@ -35,7 +35,7 @@ object ShowDialogHelper {
     private var isDialogStrikeShow = false
     private var isDialogSuccess = false
 
-    fun supportDialog(context: Context,clickClose:(()->Unit),clickTikTok:(()->Unit),clickYoutube:(()->Unit),clickTelegram:(()->Unit),dialogClose:(()->Unit)){
+    fun supportDialog(context: Context,clickTikTok:(()->Unit),clickYoutube:(()->Unit),clickTelegram:(()->Unit),dialogClose:(()->Unit)){
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.social_network_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -584,7 +584,6 @@ object ShowDialogHelper {
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.buy_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-//        val btnTinkoffBuy = dialog?.findViewById<ImageView>(R.id.btnTinkoffBuy)
         val btnGoogleBuy = dialog?.findViewById<LinearLayout>(R.id.btnGoogleBuy)
         val btnAndroBuy = dialog?.findViewById<TextView>(R.id.btnAndroBuy)
         val cardAndropointPossibly = dialog?.findViewById<LinearLayout>(R.id.cardAndropointPossibly)
@@ -594,11 +593,6 @@ object ShowDialogHelper {
             dialog?.dismiss()
             dialog = null
         }
-//        btnAndroBuy
-//        btnTinkoffBuy?.setOnClickListener {
-//            pressTinkoff.invoke()
-//            dialog = null
-//        }
         if (priceAndropoint==null) {
             cardAndropointPossibly?.visibility = View.GONE
         }
@@ -666,7 +660,6 @@ object ShowDialogHelper {
         context: Context,
         requireActivity: FragmentActivity,
         viewLifecycleOwner: LifecycleOwner,
-        layoutInflater: LayoutInflater,
         isSelectDateAndClue: (String) -> Unit,
         dialogDissMiss:(()->Unit)
     ) {
@@ -684,9 +677,9 @@ object ShowDialogHelper {
         val tvSelectedDateDialog = dialog?.findViewById<TextView>(R.id.tvSelectedDateDialog)
         val currentTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val textColor: Int = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-            ContextCompat.getColor(context, R.color.white) // Замените R.color.white на ваш ресурс цвета для темной темы
+            ContextCompat.getColor(context, R.color.white)
         } else {
-            ContextCompat.getColor(context, R.color.black) // Замените R.color.black на ваш ресурс цвета для светлой темы
+            ContextCompat.getColor(context, R.color.black)
         }
         edClueDialog?.setTextColor(textColor)
         btnReadyDialog?.setOnClickListener {
@@ -753,9 +746,7 @@ object ShowDialogHelper {
         textQuestion: String,
         selectedKeyword: (String) -> Unit
     ) {
-
         val dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-
         dialog?.setContentView(R.layout.forget_keyword_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         val tvQuestionKeywordForgetDialog = dialog?.findViewById<TextView>(R.id.tvQuestionKeywordForgetDialog)
@@ -763,9 +754,9 @@ object ShowDialogHelper {
         val btnReadyKeywordForgetDialog = dialog?.findViewById<CardView>(R.id.btnReadyKeywordForgetDialog)
         val currentTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val textColor: Int = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-            ContextCompat.getColor(context, R.color.white) // Замените R.color.white на ваш ресурс цвета для темной темы
+            ContextCompat.getColor(context, R.color.white)
         } else {
-            ContextCompat.getColor(context, R.color.black) // Замените R.color.black на ваш ресурс цвета для светлой темы
+            ContextCompat.getColor(context, R.color.black)
         }
 
         edKeywordForgetDialog?.setTextColor(textColor)
@@ -843,7 +834,7 @@ object ShowDialogHelper {
         billingManager: BillingManager?,
         ads: () -> Unit
     ) {
-        ShowDialogHelper.showDialogBuyAndropoints(context, {
+        showDialogBuyAndropoints(context, {
             ads.invoke()
         }, {
 

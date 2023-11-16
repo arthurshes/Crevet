@@ -13,7 +13,6 @@
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         style="@style/ConstraintLightAndBlack"
-
         android:layout_height="match_parent">
 
         <LinearLayout
