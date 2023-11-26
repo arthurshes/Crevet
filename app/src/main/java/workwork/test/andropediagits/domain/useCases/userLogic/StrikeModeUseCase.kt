@@ -36,9 +36,15 @@ class StrikeModeUseCase @Inject constructor(private val repo: UserLogicRepo, pri
 //                lastDateApi = userInfoLocal?.lastOnlineDate ?: currentDateApi.datetime ,
 //                currentDateApi = currentDateApi.datetime
 //            )
-                        val userStrikeModel = StrikeModeSendModel(
+
+//                        val userStrikeModel = StrikeModeSendModel(
+//                token = userInfoLocal?.token ?: "",
+//                lastDateApi = userInfoLocal.lastOnlineDate ?: "" ,
+//                currentDateApi = currentDateApi.datetime
+//            )
+                                    val userStrikeModel = StrikeModeSendModel(
                 token = userInfoLocal?.token ?: "",
-                lastDateApi = userInfoLocal.lastOnlineDate ?: "" ,
+                lastDateApi = userInfoLocal?.lastOnlineDate ?: "" ,
                 currentDateApi = currentDateApi.datetime
             )
             val strikeModeResponse = repo.getMyStrikeModeInfo(userStrikeModel)

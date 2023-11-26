@@ -619,6 +619,10 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
             isActual.invoke(response.subscribeIsActual)
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
+            Log.d(
+                "victorineTestResultStateStrikeResultTreaAndropoint",
+                e.toString()
+            )
             if(checkSubscibe()){
                 isActual.invoke(true)
                 isSuccess.invoke(ErrorEnum.OFFLINEMODE)
@@ -627,9 +631,17 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
             e.printStackTrace()
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
+            Log.d(
+                "victorineTestResultStateStrikeResultTreaAndropoint",
+                e.toString()
+            )
             e.printStackTrace()
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:Exception){
+            Log.d(
+                "victorineTestResultStateStrikeResultTreaAndropoint",
+                e.toString()
+            )
             e.printStackTrace()
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }

@@ -232,8 +232,8 @@ class CourseRepoImpl @Inject constructor(val mainDb: MainDb, val logicUserApiSer
         return victorineDao.searchVictorineAnswerVariantWithVictorineAnswerId(victorineAnswerId)
     }
 
-    override suspend fun searchVictorineAnswerVariantsWithQuestionId(questionId: Int): List<VictorineAnswerVariantEntity> {
-       return victorineDao.searchVictorineAnswerVariantsWithQuestionId(questionId)
+    override suspend fun searchVictorineAnswerVariantsWithQuestionId(questionId: Int,vicotineTestId:Int): List<VictorineAnswerVariantEntity> {
+       return victorineDao.searchVictorineAnswerVariantsWithQuestionId(questionId,vicotineTestId)
     }
 
     override suspend fun deleteAllVictorineVariants() {

@@ -9,6 +9,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
@@ -19,16 +20,14 @@ import workwork.test.andropediagits.databinding.FragmentLessonBinding
 object OptimizationText {
 
 
-
-
     fun specialCharacterColoring(inputText: String,context: Context): String {
         var result = inputText
-        var coloredText=""
-
-        val codeColor = ContextCompat.getColor(context,R.color.white)
+//        var coloredText = ""
+//
+//        val codeColor = ContextCompat.getColor(context,R.color.white)
         val keywordsColor = ContextCompat.getColor(context, R.color.keywords_color) .toString()
         val manifestColor = ContextCompat.getColor(context, R.color.manifest_keywords_color).toString()
-        val annotationColor = ContextCompat.getColor(context,R.color.annotationColor)
+        val annotationColor = ContextCompat.getColor(context,R.color.annotationColor).toString()
         val customColors = mapOf(
             "data" to keywordsColor,
             "void" to keywordsColor,
@@ -82,45 +81,23 @@ object OptimizationText {
         return text.replace("##", "<br>").replace(",,,", "\t")
     }
 
-    fun searchTitles(text: String,binding: FragmentLessonBinding?): String {
+    fun searchTitles(inputText: String): String {
         val pattern = "=([^=]*)="
-        val matcher = pattern.toRegex().findAll(text)
-        val extractedList = matcher.map { it.groupValues[1] }.toList()
-        binding?.apply {
 
-            if (extractedList.size >= 1) {
-                includedFirst.tvTitleSmall.text = extractedList[0]
+        // Используем регулярное выражение для поиска всех вхождений
+        val result = Regex(pattern).replace(inputText) {
+            val foundText = it.groups[1]?.value ?: ""
+            val needsColon = !foundText.endsWith(':')
+            val processedText = if (needsColon) {
+                foundText + ":"
+            } else {
+                foundText
             }
-            if (extractedList.size >= 2) {
-                includedSecond.tvTitleSmall.text = extractedList[1]
-            }
-            if (extractedList.size >= 3) {
-                includedThird.tvTitleSmall.text = extractedList[2]
-            }
-            if (extractedList.size >= 4) {
-                includedFourth.tvTitleSmall.text = extractedList[3]
-            }
-            if (extractedList.size >= 5) {
-                includedFifth.tvTitleSmall.text = extractedList[4]
-            }
-            if (extractedList.size >= 6) {
-                includedSixth.tvTitleSmall.text = extractedList[5]
-            }
-            if (extractedList.size >= 7) {
-                includedSeventh.tvTitleSmall.text = extractedList[6]
-            }
-            if (extractedList.size >= 8) {
-                includedEighth.tvTitleSmall.text = extractedList[7]
-            }
-            if (extractedList.size >= 9) {
-                includedNinth.tvTitleSmall.text = extractedList[8]
-            }
-            if (extractedList.size >= 10) {
-                includedTenth.tvTitleSmall.text = extractedList[9]
-            }
+            "\n\t$processedText\n".toUpperCase()
         }
-        val formattedText = text.replace(pattern.toRegex(), "")
-        return Html.fromHtml(formattedText, Html.FROM_HTML_MODE_COMPACT).toString()
+
+        // Удаляем символы "=" вокруг найденного текста
+        return "\n$result\n"
     }
 
 

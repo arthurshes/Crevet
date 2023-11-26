@@ -59,8 +59,8 @@ interface VictorineDao {
     @Query("SELECT * FROM victorineAnswerVariantEntityTable WHERE victorineAnswerId = :victorineAnswerId")
     fun searchVictorineAnswerVariantWithVictorineAnswerId(victorineAnswerId: Int): List<VictorineAnswerVariantEntity>
     //withTest
-    @Query("SELECT * FROM victorineAnswerVariantEntityTable WHERE questionId = :questionId")
-    suspend fun searchVictorineAnswerVariantsWithQuestionId(questionId: Int): List<VictorineAnswerVariantEntity>
+    @Query("SELECT * FROM victorineAnswerVariantEntityTable WHERE questionId = :questionId AND vicotineTestId = :vicotineTestId")
+    suspend fun searchVictorineAnswerVariantsWithQuestionId(questionId: Int,vicotineTestId:Int): List<VictorineAnswerVariantEntity>
     //withTest
     @Query("DELETE FROM victorineAnswerVariantEntityTable")
     suspend fun deleteAllVictorineVariants()

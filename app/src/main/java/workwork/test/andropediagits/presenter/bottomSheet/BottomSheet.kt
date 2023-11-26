@@ -43,15 +43,11 @@ class BottomSheet : BottomSheetDialogFragment() {
            buySubscribeTreatmentResult(subscribeTerm)
        }
         val currentTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if(currentTheme==Configuration.UI_MODE_NIGHT_YES){
-            binding?.tvOneMonthMonth?.setTextColor(requireContext().getColor(R.color.black))
-            binding?.tvOneMonthPeriod?.setTextColor(requireContext().getColor(R.color.black))
-            binding?.tvOnePrice?.setTextColor(requireContext().getColor(R.color.black))
-        }else{
+
             binding?.tvOneMonthMonth?.setTextColor(requireContext().getColor(R.color.white))
             binding?.tvOneMonthPeriod?.setTextColor(requireContext().getColor(R.color.white))
             binding?.tvOnePrice?.setTextColor(requireContext().getColor(R.color.white))
-        }
+
 
         binding?.oneMonthSubscription?.let { binding?.tvOneMonthMonth?.let { it1 ->
             binding?.tvOneMonthPeriod?.let { it2 ->

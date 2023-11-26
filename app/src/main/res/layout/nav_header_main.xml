@@ -95,6 +95,7 @@
         android:id="@+id/im_user"
         android:layout_width="110dp"
         android:layout_height="110dp"
+        android:layout_marginStart="16dp"
         android:src="@drawable/user_default"
         app:civ_border_color="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -114,27 +115,29 @@
         app:layout_constraintTop_toTopOf="@+id/im_user" />
 
     <LinearLayout
-
         android:id="@+id/btnPremiumDrawer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/custom_card_course_premium"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="@+id/imageView8"
-        app:layout_constraintTop_toBottomOf="@+id/imageView8">
+        android:background="@drawable/rounded_victorine_bottom_sheet_premiumt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageViewAndropointNAv"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewAndropointNAv">
+
 
         <TextView
+            android:id="@+id/tvGradientnavu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="Premium"
-            android:textColor="#CDAD00"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:text="PREMIUM"
+            android:textColor="#FFFFFF"
+            android:textSize="13dp"
             android:textStyle="bold" />
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/imageViewAndropointNAv"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="12dp"
@@ -151,10 +154,10 @@
         android:text="0"
         android:textColor="#FFD703"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView8"
-        app:layout_constraintStart_toEndOf="@+id/imageView8"
+        app:layout_constraintBottom_toBottomOf="@+id/imageViewAndropointNAv"
+        app:layout_constraintStart_toEndOf="@+id/imageViewAndropointNAv"
 
-        app:layout_constraintTop_toTopOf="@+id/imageView8"
+        app:layout_constraintTop_toTopOf="@+id/imageViewAndropointNAv"
         app:layout_constraintVertical_bias="0.3" />
 
     <TextView

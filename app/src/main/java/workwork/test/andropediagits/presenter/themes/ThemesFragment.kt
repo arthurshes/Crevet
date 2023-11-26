@@ -3,6 +3,8 @@ package workwork.test.andropediagits.presenter.themes
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -69,10 +71,12 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
     private val viewModel: ThemeViewModel by viewModels()
     private var btnPremiumDrawer: LinearLayout? = null
     private var isLoading = false
+    private var tvGradient:TextView?=null
     private var userNameHeader: TextView? = null
     private var countAndropoints: TextView? = null
     private var textAddAndropoint: TextView? = null
     private var parentLang: LinearLayout? = null
+    private var andropointIcon:ImageView?=null
     private var listLang: LinearLayout? = null
     private var russianTextLang: TextView? = null
     private var englishTextLang: TextView? = null
@@ -117,6 +121,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 binding?.root?.let { Navigation.findNavController(it).navigate(action) }
             }
         }
+
         if(args.feedbackVisible){
             showFeedbackDialog()
         }
@@ -167,13 +172,43 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
         billingManager?.addAndropointsCount = {
             when (it) {
-                1 -> buyAndropointsTreatmentResult(AddAndropoints.BUYONEANDROPOINT)
-                10 -> buyAndropointsTreatmentResult(AddAndropoints.BUYTENANDROPOINT)
-                100 ->buyAndropointsTreatmentResult(AddAndropoints.BUYHUNDREDANDROPOINT)
+                1 -> {
+                    val currentAndropointCount = countAndropoints?.text?.toString()?.toInt()
+                    val plusAddAndropoint = currentAndropointCount?.plus(1)
+                    requireActivity().runOnUiThread {
+                        countAndropoints?.text = plusAddAndropoint?.toString()
+                    }
+                        buyAndropointsTreatmentResult(AddAndropoints.BUYONEANDROPOINT)
+                }
+                10 -> {
+                    val currentAndropointCount = countAndropoints?.text?.toString()?.toInt()
+                    val plusAddAndropoint = currentAndropointCount?.plus(10)
+                    requireActivity().runOnUiThread {
+                        countAndropoints?.text = plusAddAndropoint?.toString()
+                    }
+                    buyAndropointsTreatmentResult(AddAndropoints.BUYTENANDROPOINT)
+                }
+
+                100 ->{
+                    val currentAndropointCount = countAndropoints?.text?.toString()?.toInt()
+                    val plusAddAndropoint = currentAndropointCount?.plus(100)
+                    requireActivity().runOnUiThread {
+                        countAndropoints?.text = plusAddAndropoint?.toString()
+                    }
+                    buyAndropointsTreatmentResult(AddAndropoints.BUYHUNDREDANDROPOINT)
+                }
             }
         }
 
+        countAndropoints?.setOnClickListener {
+            ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager)
+            { checkLimitActualTreatmentResult() }
+        }
+
         billingManager?.infinityAndropoints = {
+            requireActivity().runOnUiThread {
+                countAndropoints?.text = "∞"
+            }
             buyAndropointsTreatmentResult(AddAndropoints.INFINITYANDROPOINTS)
         }
 
@@ -223,6 +258,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             }
         }
 
+        andropointIcon?.setOnClickListener {
+            ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager)
+            { checkLimitActualTreatmentResult() }
+        }
+
         adapter?.checkTermThemeUniqueThemeId = { uniqueThemeID ->
             checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeID)
         }
@@ -247,7 +287,9 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             tvNameCourse.text = args.courseName
             initRcView(rcViewTheme) }
 
-        textAddAndropoint?.setOnClickListener { ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager) { checkLimitActualTreatmentResult() } }
+        textAddAndropoint?.setOnClickListener {
+            ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager)
+            { checkLimitActualTreatmentResult() } }
 
         btnPremiumDrawer?.setOnClickListener { openBS() }
 
@@ -255,6 +297,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
     }
 
     private fun getUserInfo(userInfo: UserInfoEntity) {
+        if(userInfo.isInfinity == true){
+            countAndropoints?.text = "∞"
+            userNameHeader?.text = userInfo.name ?: "defaultName"
+            return
+        }
         val andropointCount = userInfo.andropointCount.toString()
         countAndropoints?.text = andropointCount
         userNameHeader?.text = userInfo.name ?: "defaultName"
@@ -874,6 +921,8 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             )
             drawerLayout.addDrawerListener(toggle)
             toggle.syncState()
+            tvGradient = navView.getHeaderView(0).findViewById(R.id.tvGradientnavu)
+            andropointIcon = navView.getHeaderView(0).findViewById(R.id.imageViewAndropointNAv)
             navView.setNavigationItemSelectedListener(this@ThemesFragment)
             textAddAndropoint = navView.getHeaderView(0).findViewById(R.id.textViewAddAndropoints2)
             btnPremiumDrawer = navView.getHeaderView(0).findViewById(R.id.btnPremiumDrawer)
@@ -917,7 +966,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             R.id.id_about_Us -> {
                 binding?.dimViewTheme?.visibility = View.VISIBLE
                 ShowDialogHelper.supportDialog(requireContext(), clickTelegram = {
-                    openUrl("https://t.me/+HbIdITeaOsU3YzMy")
+                    openUrl("https://t.me/andropedia_official")
                 }, clickTikTok = {
                     openUrl("https://www.tiktok.com/@andropedia.app?_t=8hP78QdSnpO&_r=1")
                 }, clickYoutube = {

@@ -143,7 +143,7 @@ interface CourseRepo {
 
     suspend fun searchVictorineAnswerVariantWithVictorineAnswerId(victorineAnswerId:Int):List<VictorineAnswerVariantEntity>
 
-   suspend fun searchVictorineAnswerVariantsWithQuestionId(questionId:Int):List<VictorineAnswerVariantEntity>
+     suspend fun searchVictorineAnswerVariantsWithQuestionId(questionId: Int,vicotineTestId:Int): List<VictorineAnswerVariantEntity>
 
     suspend fun deleteAllVictorineVariants()
 

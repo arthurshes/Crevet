@@ -6,7 +6,7 @@
 
                 <ListPreference
                     android:id="@+id/text_size_pref_id"
-                    android:defaultValue="30"
+                    android:defaultValue="20"
                     android:key="text_size_key"
                     android:entries="@array/text_size_array"
                     android:entryValues="@array/text_size_values"
@@ -14,7 +14,7 @@
                     app:useSimpleSummaryProvider="true" />
                 <ListPreference
                     android:id="@+id/code_size_pref_id"
-                    android:defaultValue="30"
+                    android:defaultValue="20"
                     android:entries="@array/text_size_array"
                     android:entryValues="@array/text_size_values"
                     android:key="code_size_key"

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Typeface
+import android.media.Image
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -23,6 +24,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
+import org.w3c.dom.Text
 
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.databinding.StrikeModeDialogBinding
@@ -34,6 +36,7 @@ object ShowDialogHelper {
     private var dialog: Dialog? = null
     private var isDialogStrikeShow = false
     private var isDialogSuccess = false
+    private var isDialogReplay = false
 
     fun supportDialog(context: Context,clickTikTok:(()->Unit),clickYoutube:(()->Unit),clickTelegram:(()->Unit),dialogClose:(()->Unit)){
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
@@ -180,27 +183,35 @@ object ShowDialogHelper {
         isPremium:(()->Unit)
     ) {
 
+
         if(!isDialogStrikeShow) {
-            isDialogStrikeShow = true
-            dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
             var binding = StrikeModeDialogBinding.inflate(layoutInflater)
-            dialog?.setContentView(binding.root)
-            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-            strikeModeDayTreatmentResult(resultStrikeModeDay, binding, context,isSubscribe)
-            binding?.closeStrikeBtn?.setOnClickListener {
+            val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+            dialog.setContentView(R.layout.strike_mode_dialog)
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val closeStrikeBtn = dialog.findViewById<ImageView>(R.id.closeStrikeBtn)
+            val btnPremiumStrikeMode = dialog.findViewById<LinearLayout>(R.id.btnPremiumStrikeMode)
+
+
+            isDialogStrikeShow = true
+
+            strikeModeDayTreatmentResult(resultStrikeModeDay,dialog ,context,isSubscribe)
+
+            dialog.show()
+            closeStrikeBtn.setOnClickListener {
                 isDialogStrikeShow = false
-                dialog?.dismiss()
-                dialog = null
+                dialog.dismiss()
+
                 isClose.invoke()
             }
-            binding?.btnPremiumStrikeMode?.setOnClickListener {
+            btnPremiumStrikeMode.setOnClickListener {
                 isDialogStrikeShow = false
-                dialog?.dismiss()
-                dialog = null
-                isPremium?.invoke()
+                dialog.dismiss()
+
+                isPremium.invoke()
             }
-            dialog?.show()
         }
+
     }
 
     fun showDialogLoadData(
@@ -217,14 +228,55 @@ object ShowDialogHelper {
         dialog=null
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun strikeModeDayTreatmentResult(
         resultStrikeModeDay: Int,
-        binding: StrikeModeDialogBinding,
+        dialog:Dialog,
         context: Context,
         isSubscribe:Boolean
     ) {
+
         val drawableCurrentDay = AppCompatResources.getDrawable(context, R.drawable.border_current_day)
-        binding.apply {
+        val oneDayAndropointsText = dialog.findViewById<TextView>(R.id.oneDayAndropointsText)
+        val twoDayAndropointsText = dialog.findViewById<TextView>(R.id.twoDayAndropointsText)
+        val threeDayAndropointsText = dialog.findViewById<TextView>(R.id.threeDayAndropointsText)
+        val fourDayAndropointsText = dialog.findViewById<TextView>(R.id.fourDayAndropointsText)
+        val fiveDayAndropointsText = dialog.findViewById<TextView>(R.id.fiveDayAndropointsText)
+        val sixDayAndropointsText = dialog.findViewById<TextView>(R.id.sixDayAndropointsText)
+        val sevenDayAndropointsText = dialog.findViewById<TextView>(R.id.sevenDayAndropointsText)
+        val currentDayOne = dialog.findViewById<LinearLayout>(R.id.currentDayOne)
+        val currentDayTwo = dialog.findViewById<LinearLayout>(R.id.currentDayTwo)
+        val currentDayThree = dialog.findViewById<LinearLayout>(R.id.currentDayThree)
+        val currentDayFour = dialog.findViewById<LinearLayout>(R.id.currentDayFour)
+        val currentDayFive = dialog.findViewById<LinearLayout>(R.id.currentDayFive)
+        val currentDaySix = dialog.findViewById<LinearLayout>(R.id.currentDaySix)
+        val currentDaySeven = dialog.findViewById<LinearLayout>(R.id.currentDaySeven)
+        val cardDayOne = dialog.findViewById<CardView>(R.id.cardDayOne)
+        val cardDayTwo = dialog.findViewById<CardView>(R.id.cardDayTwo)
+        val cardDayThree = dialog.findViewById<CardView>(R.id.cardDayThree)
+        val cardDayFour = dialog.findViewById<CardView>(R.id.cardDayFour)
+        val cardDayFive = dialog.findViewById<CardView>(R.id.cardDayFive)
+        val cardDaySix = dialog.findViewById<CardView>(R.id.cardDaySix)
+        val cardDaySeven = dialog.findViewById<CardView>(R.id.cardDaySeven)
+
+        val cardPastDayOne = dialog.findViewById<CardView>(R.id.pastDayOne)
+        val cardPastDayTwo = dialog.findViewById<CardView>(R.id.pastDayTwo)
+        val cardPastDayThree = dialog.findViewById<CardView>(R.id.pastDayThree)
+        val cardPastDayFour = dialog.findViewById<CardView>(R.id.pastDayFour)
+        val cardPastDayFive = dialog.findViewById<CardView>(R.id.pastDayFive)
+        val cardPastDaySix = dialog.findViewById<CardView>(R.id.pastDaysix)
+        val cardPastDaySeven = dialog.findViewById<CardView>(R.id.pastDaySeven)
+        ////TextPast
+        val tvPastDayOne = cardPastDayOne.findViewById<TextView>(R.id.tvPastDay)
+        val tvPastDayTwo = cardPastDayTwo.findViewById<TextView>(R.id.tvPastDay)
+        val tvPastDayThree = cardPastDayThree.findViewById<TextView>(R.id.tvPastDay)
+        val tvPastDayFour = cardPastDayFour.findViewById<TextView>(R.id.tvPastDay)
+        val tvPastDayFive = cardPastDayFive.findViewById<TextView>(R.id.tvPastDay)
+        val tvPastDaySix = cardPastDaySix.findViewById<TextView>(R.id.tvPastDay)
+        val tvPastDaySeven = cardPastDaySeven.findViewById<TextView>(R.id.tvPastDay)
+
+
+
             if(isSubscribe){
                 oneDayAndropointsText.text = "+2"
                 twoDayAndropointsText.text = "+4"
@@ -250,96 +302,97 @@ object ShowDialogHelper {
                 2 -> {
                     currentDayTwo.background = drawableCurrentDay
                     cardDayOne.visibility = View.GONE
-                    pastDayOne.cardPastDay.visibility = View.VISIBLE
-                    pastDayOne.tvPastDay.text=context.getString(R.string.day_one)
+                    cardPastDayOne.visibility = View.VISIBLE
+                    tvPastDayOne.text=context.getString(R.string.day_one)
                 }
 
                 3 -> {
                     currentDayThree.background = drawableCurrentDay
                     cardDayOne.visibility = View.GONE
-                    pastDayOne.cardPastDay.visibility = View.VISIBLE
-                    pastDayOne.tvPastDay.text=context.getString(R.string.day_one)
+                    cardPastDayOne.visibility = View.VISIBLE
+                     tvPastDayOne.text=context.getString(R.string.day_one)
                     cardDayTwo.visibility = View.GONE
-                    pastDayTwo.cardPastDay.visibility = View.VISIBLE
-                    pastDayTwo.tvPastDay.text=context.getString(R.string.day_two)
+                    cardPastDayTwo.visibility = View.VISIBLE
+                   tvPastDayTwo.text=context.getString(R.string.day_two)
                 }
 
                 4 -> {
                     currentDayFour.background = drawableCurrentDay
                     cardDayOne.visibility = View.GONE
-                    pastDayOne.cardPastDay.visibility = View.VISIBLE
-                    pastDayOne.tvPastDay.text=context.getString(R.string.day_one)
+                    cardPastDayOne.visibility = View.VISIBLE
+                    tvPastDayOne.text=context.getString(R.string.day_one)
                     cardDayTwo.visibility = View.GONE
-                    pastDayTwo.cardPastDay.visibility = View.VISIBLE
-                    pastDayTwo.tvPastDay.text=context.getString(R.string.day_two)
+                    cardPastDayTwo.visibility = View.VISIBLE
+                    tvPastDayTwo.text=context.getString(R.string.day_two)
                     cardDayThree.visibility = View.GONE
-                    pastDayThree.cardPastDay.visibility = View.VISIBLE
-                    pastDayThree.tvPastDay.text=context.getString(R.string.day_three)
+                    cardPastDayThree.visibility = View.VISIBLE
+                    tvPastDayThree.text=context.getString(R.string.day_three)
                 }
 
                 5 -> {
                     currentDayFive.background = drawableCurrentDay
                     cardDayOne.visibility = View.GONE
-                    pastDayOne.cardPastDay.visibility = View.VISIBLE
-                    pastDayOne.tvPastDay.text=context.getString(R.string.day_one)
+                    cardPastDayOne.visibility = View.VISIBLE
+                    tvPastDayOne.text=context.getString(R.string.day_one)
                     cardDayTwo.visibility = View.GONE
-                    pastDayTwo.cardPastDay.visibility = View.VISIBLE
-                    pastDayTwo.tvPastDay.text=context.getString(R.string.day_two)
+                    cardPastDayTwo.visibility = View.VISIBLE
+                    tvPastDayTwo.text=context.getString(R.string.day_two)
                     cardDayThree.visibility = View.GONE
-                    pastDayThree.cardPastDay.visibility = View.VISIBLE
-                    pastDayThree.tvPastDay.text=context.getString(R.string.day_three)
+                    cardPastDayThree.visibility = View.VISIBLE
+                    tvPastDayThree.text=context.getString(R.string.day_three)
                     cardDayFour.visibility = View.GONE
-                    pastDayFour.cardPastDay.visibility = View.VISIBLE
-                    pastDayFour.tvPastDay.text=context.getString(R.string.day_four)
+                    cardPastDayFour.visibility = View.VISIBLE
+                    tvPastDayFour.text=context.getString(R.string.day_four)
                 }
 
                 6 -> {
                     currentDaySix.background = drawableCurrentDay
                     cardDayOne.visibility = View.GONE
-                    pastDayOne.cardPastDay.visibility = View.VISIBLE
-                    pastDayOne.tvPastDay.text=context.getString(R.string.day_one)
+                    cardPastDayOne.visibility = View.VISIBLE
+                    tvPastDayOne.text=context.getString(R.string.day_one)
                     cardDayTwo.visibility = View.GONE
-                    pastDayTwo.cardPastDay.visibility = View.VISIBLE
-                    pastDayTwo.tvPastDay.text=context.getString(R.string.day_two)
+                    cardPastDayTwo.visibility = View.VISIBLE
+                    tvPastDayTwo.text=context.getString(R.string.day_two)
                     cardDayThree.visibility = View.GONE
-                    pastDayThree.cardPastDay.visibility = View.VISIBLE
-                    pastDayThree.tvPastDay.text=context.getString(R.string.day_three)
+                    cardPastDayThree.visibility = View.VISIBLE
+                    tvPastDayThree.text=context.getString(R.string.day_three)
                     cardDayFour.visibility = View.GONE
-                    pastDayFour.cardPastDay.visibility = View.VISIBLE
-                    pastDayFour.tvPastDay.text=context.getString(R.string.day_four)
+                    cardPastDayFour.visibility = View.VISIBLE
+                    tvPastDayFour.text=context.getString(R.string.day_four)
                     cardDayFive.visibility = View.GONE
-                    pastDayFive.cardPastDay.visibility = View.VISIBLE
-                    pastDayFive.tvPastDay.text=context.getString(R.string.day_five)
+                    cardPastDayFive.visibility = View.VISIBLE
+                    tvPastDayFive.text=context.getString(R.string.day_five)
+
                 }
 
                 7 -> {
                     currentDaySeven.background = drawableCurrentDay
                     cardDayOne.visibility = View.GONE
-                    pastDayOne.cardPastDay.visibility = View.VISIBLE
-                    pastDayOne.tvPastDay.text=context.getString(R.string.day_one)
+                    cardPastDayOne.visibility = View.VISIBLE
+                    tvPastDayOne.text=context.getString(R.string.day_one)
                     cardDayTwo.visibility = View.GONE
-                    pastDayTwo.cardPastDay.visibility = View.VISIBLE
-                    pastDayTwo.tvPastDay.text=context.getString(R.string.day_two)
+                    cardPastDayTwo.visibility = View.VISIBLE
+                    tvPastDayTwo.text=context.getString(R.string.day_two)
                     cardDayThree.visibility = View.GONE
-                    pastDayThree.cardPastDay.visibility = View.VISIBLE
-                    pastDayThree.tvPastDay.text=context.getString(R.string.day_three)
+                    cardPastDayThree.visibility = View.VISIBLE
+                    tvPastDayThree.text=context.getString(R.string.day_three)
                     cardDayFour.visibility = View.GONE
-                    pastDayFour.cardPastDay.visibility = View.VISIBLE
-                    pastDayFour.tvPastDay.text=context.getString(R.string.day_four)
+                    cardPastDayFour.visibility = View.VISIBLE
+                    tvPastDayFour.text=context.getString(R.string.day_four)
                     cardDayFive.visibility = View.GONE
-                    pastDayFive.cardPastDay.visibility = View.VISIBLE
-                    pastDayFive.tvPastDay.text=context.getString(R.string.day_five)
+                    cardPastDayFive.visibility = View.VISIBLE
+                    tvPastDayFive.text=context.getString(R.string.day_five)
                     cardDaySix.visibility = View.GONE
-                    pastDaysix.cardPastDay.visibility = View.VISIBLE
-                    pastDaysix.tvPastDay.text=context.getString(R.string.day_six)
+                    cardPastDaySix.visibility = View.VISIBLE
+                    tvPastDaySix.text=context.getString(R.string.day_six)
                 }
-            }
+
         }
 
     }
 
 
-    fun showDialogAttention(context: Context, pressButton: () -> Unit) {
+    fun showDialogAttention(context: Context, pressButton: () -> Unit,close: () -> Unit) {
         dialog = Dialog(context)
         dialog?.setContentView(R.layout.attention_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -350,6 +403,9 @@ object ShowDialogHelper {
             dialog = null
         }
         dialog?.show()
+        dialog?.setOnDismissListener {
+            close.invoke()
+        }
     }
 
     fun showDialogAttentionStrikeMode(context: Context, pressButton: (() -> Unit),isClose:(()->Unit)) {
@@ -372,14 +428,34 @@ object ShowDialogHelper {
 
     }
 
-    fun showDialogSuccessTest(context: Context, close: () -> Unit) {
+    fun showDialogReplayTest(context: Context,close: () -> Unit,mistakeTest: Int,size: Int){
+        if (!isDialogReplay){
+            isDialogReplay = true
+            dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+            dialog?.setContentView(R.layout.test_replay_dialog_result)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val dialogButton = dialog?.findViewById<CardView>(R.id.btnContinueReplay)
+            val success_text_result = dialog?.findViewById<TextView>(R.id.success_text_result_replay)
+            success_text_result?.text = context.getString(R.string.count_mistake).replace("6", (size - mistakeTest).toString()).replace("10", size.toString())
+            dialogButton?.setOnClickListener {
+                    dialog?.dismiss()
+                    dialog = null
+                    close.invoke()
+            }
+            dialog?.show()
+        }
+    }
+
+    fun showDialogSuccessTest(context: Context, close: () -> Unit,mistakeTest: Int, size: Int) {
         if(!isDialogSuccess){
             isDialogSuccess = true
             dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
             dialog?.setContentView(R.layout.test_success_dialog)
             dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
             val dialogButton = dialog?.findViewById<CardView>(R.id.btnContinue)
+            val success_text_result = dialog?.findViewById<TextView>(R.id.success_text_result)
             val addTextAndropoints = dialog?.findViewById<TextView>(R.id.textViewAddAndropointsSuccess)
+            success_text_result?.text = context.getString(R.string.count_mistake).replace("6", (size - mistakeTest).toString()).replace("10", size.toString())
             dialogButton?.isClickable = false
             var buttonEnable = false
             var buttonClick = false
@@ -408,6 +484,7 @@ object ShowDialogHelper {
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.test_fail_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog?.setCancelable(false)
         val dialogCountMistakes = dialog?.findViewById<TextView>(R.id.tvCountMistake)
         val dialogTerm = dialog?.findViewById<TextView>(R.id.term_fail_test)
         val dialogClose = dialog?.findViewById<ImageButton>(R.id.buttonLockFailDialog)
@@ -423,20 +500,14 @@ object ShowDialogHelper {
         }else{
             mistakeTest
         }
+
         Log.d("misstakeDialog","size:${size} mistakeTest:${misstakes} dateTerm:${dateTerm}")
-        val replacementMap = mapOf(
-            "6" to (size - misstakes).toString(),
-            "10" to size.toString()
-        )
-        val replacementDatesMap = mapOf(
-            "DATA" to dateTerm
-        )
-        Log.d("misstakeDialog","replacementMap:${replacementMap}")
-        dialogCountMistakes?.text = replaceNumbersWithStrings(context.getString(R.string.count_mistake), replacementMap)
-        dialogTerm?.text = replaceNumbersWithStrings(
-            context.getString(R.string.term_before_fail_test),
-            replacementDatesMap
-        )
+        val test=context.getString(R.string.count_mistake).replace("6", (size - misstakes).toString())
+        dialogCountMistakes?.text = test.replace("10", size.toString())
+//        dialogCountMistakes?.text = context.getString(R.string.count_mistake).replace("6", (size - misstakes).toString())
+//        dialogCountMistakes?.text = context.getString(R.string.count_mistake).replace("10", size.toString())
+//        dialogCountMistakes?.text = context.getString(R.string.count_mistake).replace("6", (size - misstakes).toString()).replace("10", size.toString())
+        dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA",dateTerm.toString())
         dialog?.show()
 
     }
@@ -446,14 +517,8 @@ object ShowDialogHelper {
         dialog?.setContentView(R.layout.text_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         val dialogTermDescription = dialog?.findViewById<TextView>(R.id.tvTermDescription)
-        val replacementMap = mapOf(
-            "DATA" to dateTerm,
-        )
         dialogTermDescription?.text =
-            replaceNumbersWithStrings(
-                context.getString(R.string.term_description),
-                replacementMap
-            )
+            context.getString(R.string.term_description).replace("DATA",dateTerm.toString())
         dialog?.show()
 
     }
@@ -463,7 +528,7 @@ object ShowDialogHelper {
         context: Context,
         watchAd: () -> Unit,
         pay: () -> Unit,
-        money: (Int) -> Unit,
+        money: (String) -> Unit,
         andropoints: (String) -> Unit
     ) {
         dialog = Dialog(context)
@@ -502,9 +567,9 @@ object ShowDialogHelper {
             tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
         }
         btnPay?.setOnClickListener {
-            money.invoke(tvLastPayCost?.text.toString().replace("₽", "").toInt())
+            money.invoke(tvLastPayCost?.text.toString().replace("$", ""))
             andropoints.invoke(
-                tvLastCountAndropoint?.text.toString().replace("₽", "")
+                tvLastCountAndropoint?.text.toString().replace("$", "")
             )
             pay.invoke()
             dialog = null
@@ -596,7 +661,7 @@ object ShowDialogHelper {
         if (priceAndropoint==null) {
             cardAndropointPossibly?.visibility = View.GONE
         }
-        tvPriceToRub?.text = priceRub.toString()+"₽"
+        tvPriceToRub?.text = priceRub.toString()+"$"
         btnAndroBuy?.text = priceAndropoint.toString()
         btnAndroBuy?.setOnClickListener {
             pressAndro.invoke()
@@ -609,13 +674,7 @@ object ShowDialogHelper {
         dialog?.show()
     }
 
-    private fun replaceNumbersWithStrings(text: String, replacements: Map<String, String>): String {
-        var modifiedText = text
-        for ((num, replacement) in replacements) {
-            modifiedText = modifiedText.replace(num, replacement)
-        }
-        return modifiedText
-    }
+
 
     fun showDialogSelectDateForget(
         context: Context,

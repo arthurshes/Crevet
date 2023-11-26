@@ -329,23 +329,13 @@ class ListLessonsFragment : Fragment() {
                 ErrorEnum.OFFLINEMODE ->{
 
                     requireActivity().runOnUiThread {
-                        binding?.dimViewListLesson?.visibility = View.VISIBLE
-                        ShowDialogHelper.showDialogOffline(requireContext(),{
-
-                        },{
-                            binding?.dimViewListLesson?.visibility = View.GONE
-                        })
+                        showDialogOffline()
                     }
                 }
                 ErrorEnum.OFFLINETHEMEBUY -> {
 
                     requireActivity().runOnUiThread {
-                        binding?.dimViewListLesson?.visibility = View.VISIBLE
-                        ShowDialogHelper.showDialogOffline(requireContext(),{
-
-                        },{
-                            binding?.dimViewListLesson?.visibility = View.GONE
-                        })
+                        showDialogOffline()
                     }
                 }
             }
@@ -363,6 +353,9 @@ class ListLessonsFragment : Fragment() {
         super.onDestroy()
         binding = null
     }
+
+
+
     @SuppressLint("SuspiciousIndentation")
     private fun buyThemeTreatmentResult() {
 

@@ -5,6 +5,6 @@ data class UpdateAnswerModel(
 //    val updateInteractiveResult:List<UpdateInteractiveResultModel>?=null,
     val updateCourses:UpdateCourseModel?=null,
 //    val updateVictorineResult:List<UpdateVictorineResultModel>?=null,
-    val AndropointCount:Int?=null,
+    val AndropointCount:Int?=0,
     val token:String
 )

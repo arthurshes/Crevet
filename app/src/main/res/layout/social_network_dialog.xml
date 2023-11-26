@@ -33,6 +33,7 @@
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
                     android:gravity="center"
                     android:text="@string/social_network_description"
                     android:textSize="20dp"
@@ -53,7 +54,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/btnTikTok"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView6"
-                 android:src="@drawable/telegram_circle_light" />
+                    android:src="@drawable/telegram_circle_light" />
 
                 <ImageView
                     android:id="@+id/btnTikTok"
@@ -65,7 +66,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView6"
                     app:layout_constraintVertical_bias="0.52"
-                   android:src="@drawable/tiktokcircle"/>
+                    android:src="@drawable/tiktokcircle"/>
 
                 <ImageView
                     android:id="@+id/btnYouTube"
@@ -78,7 +79,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/btnTikTok"
                     app:layout_constraintTop_toBottomOf="@+id/textView6"
-                   android:src="@drawable/youtube_circle" />
+                    android:src="@drawable/youtube_circle" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 

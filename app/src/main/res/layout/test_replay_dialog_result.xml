@@ -43,8 +43,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
-                    android:text="@string/end_theme"
+                    android:text="@string/test_replay_results"
                     android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:theme="@style/Text_black_white" />
+
+                <TextView
+                    android:id="@+id/success_text_result_replay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:textSize="16dp"
                     android:textStyle="bold"
                     android:theme="@style/Text_black_white" />
 
@@ -57,48 +67,19 @@
                     android:textSize="16dp"
                     android:textStyle="bold"
                     android:theme="@style/Text_black_white" />
-                <TextView
-                    android:id="@+id/success_text_result"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:theme="@style/Text_black_white" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/textViewAddAndropointsSuccess"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="+25"
-                        android:textSize="30dp"
-                        android:textStyle="bold"
-                        android:theme="@style/Text_black_white" />
-                    <ImageView
-                        android:id="@+id/imageView5"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                       android:src="@drawable/andropoint"
-                       />
-                </LinearLayout>
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/btnContinue"
+                    android:id="@+id/btnContinueReplay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginStart="70dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="70dp"
-                    android:alpha="-1"
+
                     android:padding="8dp"
+                    android:visibility="visible"
                     app:cardBackgroundColor="#1F71D0">
 
 

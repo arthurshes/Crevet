@@ -10,10 +10,18 @@ import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.AdsUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.AndropointUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.ThemeUseCase
+import workwork.test.andropediagits.domain.useCases.userLogic.state.BuyForAndropointStates
+import workwork.test.andropediagits.domain.useCases.userLogic.state.SpendAndropointState
 import javax.inject.Inject
 
 @HiltViewModel
-class VictorineBottomSheetViewModel @Inject constructor( private val themeUseCase: ThemeUseCase, private val adsUseCase: AdsUseCase): ViewModel() {
+class VictorineBottomSheetViewModel @Inject constructor(private val andropointUseCase: AndropointUseCase,private val themeUseCase: ThemeUseCase, private val adsUseCase: AdsUseCase): ViewModel() {
+
+    fun spendAndropoints(minusAndropoint:Int,isSucces: (ErrorEnum) -> Unit,isAndropointState:((BuyForAndropointStates)->Unit)){
+        viewModelScope.launch {
+            andropointUseCase.spendAndropoints(SpendAndropointState.SKIPDELAY,isSucces,isAndropointState, andropointMinusCount = minusAndropoint)
+        }
+    }
 
     fun adsView(isSuccess: ((ErrorEnum) -> Unit), isVictorine:Boolean){
         viewModelScope.launch {

@@ -278,7 +278,7 @@ class ForgetFragment : Fragment() {
     }
     private fun newPasswordTreatmentResult(email: String, newPassword: String) {
         ShowDialogHelper.showDialogLoadData(requireContext())
-        viewModel.sendNewPassword(email, newPassword) {
+        viewModel.sendNewPassword(email, newPassword.trimEnd()) {
             when (it) {
                 ErrorEnum.SUCCESS -> {
                     requireActivity().runOnUiThread {

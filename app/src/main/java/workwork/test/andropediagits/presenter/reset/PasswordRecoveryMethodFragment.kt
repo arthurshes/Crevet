@@ -7,6 +7,7 @@ import android.view.View
 
 
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +33,11 @@ class PasswordRecoveryMethodFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Ваш код для обработки нажатия на кнопку "назад"        // Например, закрытие фрагмента или выполнение определенного действия
+            }}
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         binding?.apply {
             btnSelectDate.setOnClickListener {
                 dimView.visibility = View.VISIBLE

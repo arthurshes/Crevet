@@ -35,6 +35,7 @@ class LessonFragment : Fragment() {
     private var isTermExistButton = false
     private var minNumber = 0
     private var maxNumber = 0
+    private var isDialogOpen = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,24 +75,33 @@ class LessonFragment : Fragment() {
             val tuhthughtu = viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,args.LevelNumber)?.textTitle ?: "gotkgotogktogktog"
             viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,args.LevelNumber, isText = {
                 Log.d("firjfirjfirjfijrfjri","ttitleStart:${tuhthughtu}")
-                binding!!.tvTitleLesson.text = tuhthughtu
+                binding!!.tvTitleLesson.text = tuhthughtu?.trim('=')
             }, LastLesson = {
                 howManyTermTreatmentResult()
             }, isVictorine = {
                 viewModel.checkVictorineExistTheme({
                     if(it){
-                        ShowDialogHelper.showDialogAttention(requireContext()) {
-                            val action =
-                                LessonFragmentDirections.actionLessonFragmentToVictorineFragment(
-                                    args.uniqueThemeId,
-                                    args.courseName,
-                                    args.CourseNumber,
-                                    args.courseNameReal
-                                )
-                            binding?.root?.let { it1 ->
-                                Navigation.findNavController(it1).navigate(action)
+                        next = maxNumber
+
+                        if(!isDialogOpen) {
+                            ShowDialogHelper.showDialogAttention(requireContext(), {
+
+                                val action =
+                                    LessonFragmentDirections.actionLessonFragmentToVictorineFragment(
+                                        args.uniqueThemeId,
+                                        args.courseName,
+                                        args.CourseNumber,
+                                        args.courseNameReal
+                                    )
+                                binding?.root?.let { it1 ->
+                                    Navigation.findNavController(it1).navigate(action)
+                                }
+                            }) {
+                                isDialogOpen = false
+
                             }
                         }
+                        isDialogOpen = true
                     }else{
                         Toast.makeText(requireContext(),getString(R.string.there_is_no_quiz_in_this_theme),Toast.LENGTH_LONG).show()
                         val action = LessonFragmentDirections.actionLessonFragmentToThemesFragment(args.CourseNumber, args.courseName)
@@ -130,7 +140,7 @@ class LessonFragment : Fragment() {
                                 binding?.btnNext?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.btnNextColor))
                                 binding?.btnNext?.text = getString(R.string.next)
                             }
-                            binding!!.tvTitleLesson.text = textTitle
+                            binding!!.tvTitleLesson.text = textTitle?.trim('=')
                         }
                     }
                 }
@@ -151,18 +161,24 @@ class LessonFragment : Fragment() {
                         viewModel.checkVictorineExistTheme({
                             if(it){
                                next = maxNumber
-                                ShowDialogHelper.showDialogAttention(requireContext()) {
-                                    val action =
-                                        LessonFragmentDirections.actionLessonFragmentToVictorineFragment(
-                                            args.uniqueThemeId,
-                                            args.courseName,
-                                            args.CourseNumber,
-                                            args.courseNameReal
-                                        )
-                                    binding?.root?.let { it1 ->
-                                        Navigation.findNavController(it1).navigate(action)
+                                if(!isDialogOpen) {
+                                    ShowDialogHelper.showDialogAttention(requireContext(), {
+                                        val action =
+                                            LessonFragmentDirections.actionLessonFragmentToVictorineFragment(
+                                                args.uniqueThemeId,
+                                                args.courseName,
+                                                args.CourseNumber,
+                                                args.courseNameReal
+                                            )
+                                        binding?.root?.let { it1 ->
+                                            Navigation.findNavController(it1).navigate(action)
+                                        }
+                                    }) {
+                                        isDialogOpen = false
+
                                     }
                                 }
+                                isDialogOpen = true
                             }else{
                                 Toast.makeText(requireContext(),getString(R.string.there_is_no_quiz_in_this_theme),Toast.LENGTH_LONG).show()
                                 val action = LessonFragmentDirections.actionLessonFragmentToThemesFragment(args.CourseNumber, args.courseName)
@@ -173,7 +189,7 @@ class LessonFragment : Fragment() {
                         },args.uniqueThemeId) }
                         ,{
                             requireActivity().runOnUiThread {
-                                binding!!.tvTitleLesson.text = nexText
+                                binding!!.tvTitleLesson.text = nexText?.trim('=')
                             }
                         },{
                             howManyTermTreatmentResult()

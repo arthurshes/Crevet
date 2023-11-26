@@ -156,6 +156,10 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         }
                         isSuccess.invoke(ErrorEnum.SUCCESS)
                     }catch (e:IOException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         if(checkSubscibe()){
                             isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                             return
@@ -173,10 +177,22 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         })
                         isSuccess.invoke(ErrorEnum.NOTNETWORK)
                     }catch (e:HttpException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                     }catch (e: TimeoutException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
                     }
                 }
@@ -208,6 +224,10 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         }
                         isSuccess.invoke(ErrorEnum.SUCCESS)
                     }catch (e:IOException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         if(checkSubscibe()){
                             isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                             return
@@ -225,10 +245,22 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         })
                         isSuccess.invoke(ErrorEnum.NOTNETWORK)
                     }catch (e:HttpException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                     }catch (e: TimeoutException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
                     }
                 }
@@ -258,6 +290,10 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         }
                         isSuccess.invoke(ErrorEnum.SUCCESS)
                     }catch (e:IOException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         if(checkSubscibe()){
                             isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                             return
@@ -275,10 +311,22 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         })
                         isSuccess.invoke(ErrorEnum.NOTNETWORK)
                     }catch (e:HttpException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                     }catch (e: TimeoutException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
                     }
                 }
@@ -299,6 +347,10 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         }
                         isSuccess.invoke(ErrorEnum.SUCCESS)
                     }catch (e:IOException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         if(checkSubscibe()){
                             isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                             return
@@ -316,10 +368,22 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         })
                         isSuccess.invoke(ErrorEnum.NOTNETWORK)
                     }catch (e:HttpException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                     }catch (e: TimeoutException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
                     }
                 }
@@ -340,6 +404,10 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         }
                         isSuccess.invoke(ErrorEnum.SUCCESS)
                     }catch (e:IOException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         if(checkSubscibe()){
                             isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                             return
@@ -357,10 +425,22 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         })
                         isSuccess.invoke(ErrorEnum.NOTNETWORK)
                     }catch (e:HttpException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                     }catch (e: TimeoutException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
                     }
                 }
@@ -381,6 +461,10 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         }
                         isSuccess.invoke(ErrorEnum.SUCCESS)
                     }catch (e:IOException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         if(checkSubscibe()){
                             isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                             return
@@ -398,10 +482,22 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         })
                         isSuccess.invoke(ErrorEnum.NOTNETWORK)
                     }catch (e:HttpException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                     }catch (e: TimeoutException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
                     }
                 }
@@ -437,12 +533,28 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                                 isSuccess.invoke(ErrorEnum.OFFLINETHEMEBUY)
                             }
                         })
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.NOTNETWORK)
                     }catch (e:HttpException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                     }catch (e: TimeoutException){
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropoint",
+                            e.toString()
+                        )
                         isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
                     }
                 }
@@ -455,6 +567,12 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
         when (spendAndropointState) {
             SpendAndropointState.SKIPDELAY -> {
                 try {
+                    val isInfinity = userLogicRepo.getUserInfoLocal().isInfinity
+                    if(isInfinity == true){
+                        isAndropointState.invoke(BuyForAndropointStates.YESMONEY)
+                        isSuccess.invoke(ErrorEnum.SUCCESS)
+                        return
+                    }
                     updateAndropointMinus(andropointMinusCount,{
                         when(it){
                             BuyForAndropointStates.YESMONEY ->           isAndropointState.invoke(BuyForAndropointStates.YESMONEY)
@@ -489,6 +607,12 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
             }
             SpendAndropointState.COURSEOPENING -> {
                 try {
+                    val isInfinity = userLogicRepo.getUserInfoLocal().isInfinity
+                    if(isInfinity == true){
+                        isAndropointState.invoke(BuyForAndropointStates.YESMONEY)
+                        isSuccess.invoke(ErrorEnum.SUCCESS)
+                        return
+                    }
                     updateAndropointMinus(andropointMinusCount,{
                         when(it){
                             BuyForAndropointStates.YESMONEY ->           isAndropointState.invoke(BuyForAndropointStates.YESMONEY)
@@ -523,6 +647,12 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
             }
             SpendAndropointState.THEMEOPENING -> {
                 try {
+                    val isInfinity = userLogicRepo.getUserInfoLocal().isInfinity
+                    if(isInfinity == true){
+                        isAndropointState.invoke(BuyForAndropointStates.YESMONEY)
+                        isSuccess.invoke(ErrorEnum.SUCCESS)
+                        return
+                    }
                     updateAndropointMinus(andropointMinusCount,{
                         when(it){
                             BuyForAndropointStates.YESMONEY ->           isAndropointState.invoke(BuyForAndropointStates.YESMONEY)
@@ -598,7 +728,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
         return false
     }
 
-    private suspend fun updateAndropointPlus(andropointCount:Int) {
+    private suspend fun updateAndropointPlus(andropointCount:Int,isInfinity:Boolean = false) {
         val userInfoLocal = userLogicRepo.getUserInfoLocal()
         userInfoLocal?.let { myInfo ->
             updateUserInfoUseCase.updateUserInfo(andropointCount = myInfo.andropointCount?.plus(andropointCount))

@@ -6,12 +6,13 @@ import okhttp3.Response
 
 class HeaderInterceptor(private val apiKey:String):Interceptor {
 
-    @SuppressLint("SuspiciousIndentation")
-    override fun intercept(chain: Interceptor.Chain): Response {
-      val request = chain.request().newBuilder()
-          .addHeader("x-api-key",apiKey)
-          .build()
-        return chain.proceed(request)
-    }
-
+ @SuppressLint("SuspiciousIndentation")
+   override fun intercept(chain: Interceptor.Chain): Response {
+     val request = chain.request().newBuilder() //kckkccfc
+//        .addHeader("x-api-key",apiKey)
+         .addHeader("api_key",apiKey)
+        .build()
+       return chain.proceed(request)
+  }
+//test sss
 }

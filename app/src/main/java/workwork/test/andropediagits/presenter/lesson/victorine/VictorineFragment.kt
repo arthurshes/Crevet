@@ -2,6 +2,7 @@ package workwork.test.andropediagits.presenter.lesson.victorine
 
 import android.animation.ObjectAnimator
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -64,6 +65,7 @@ class VictorineFragment : Fragment() {
     private var animatedCircleViewFifth: AnimatedCircleView? = null
     private var currentIndex = 0
     private var progress = 0
+    private var victorinesQuestionsCount:Int = 0
     private var victorinesQuestions: List<VictorineEntity>? = null
     private var victorineAnswerVariants: List<VictorineAnswerVariantEntity>? = null
     private var correctAnswers = 0
@@ -88,6 +90,16 @@ class VictorineFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initCircleView(binding!!)
+        val nightDrawle = ContextCompat.getDrawable(requireContext(), R.drawable.progress_bar_custom_night)
+        val lightDrawle = ContextCompat.getDrawable(requireContext(), R.drawable.progress_bar_custom)
+        val currentTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+            binding?.progressBar?.progressDrawable = nightDrawle
+        }else{
+            binding?.progressBar?.progressDrawable = lightDrawle
+        }
+
+
 
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
         timerObser = Observer {
@@ -119,17 +131,24 @@ class VictorineFragment : Fragment() {
                 "vicotinresViewModel4",
                 victorineEntities.toString()
             )
+            victorinesQuestionsCount = victorineEntities.size
             victorinesQuestions = victorineEntities
             victorinesQuestions?.shuffled()
-            binding?.tvQuestion?.text = victorinesQuestions?.get(currentIndex)?.questionText ?: ""
-            viewModel.getAllQuestionAnswerVariants(victorineEntities[0].questionId) { victorineAnswerVariantEntities ->
+            binding?.tvQuestion?.text = victorinesQuestions?.get(currentIndex)?.questionText?.trimEnd()
+            viewModel.getAllQuestionAnswerVariants(victorineEntities[0].questionId,victorineEntities[0].vicotineTestId) { victorineAnswerVariantEntities ->
                 Log.d("showShowShow200",victorineAnswerVariantEntities.toString())
-                showFirstElement(victorineAnswerVariantEntities, binding)
-                victorineAnswerVariants = victorineAnswerVariantEntities
-                Log.d(
-                    "vicotinresViewModel4",
-                    victorineAnswerVariantEntities.toString()
-                )
+                if(!victorineAnswerVariantEntities.isNullOrEmpty()){
+                    showFirstElement(victorineAnswerVariantEntities, binding)
+                    victorineAnswerVariants = victorineAnswerVariantEntities
+                    Log.d(
+                        "vicotinresViewModel4",
+                        victorineAnswerVariantEntities.toString()
+                    )
+                }else{
+                    victorinesQuestionsCount--
+                    showNextElement()
+                }
+
             }
         }
 
@@ -139,15 +158,11 @@ class VictorineFragment : Fragment() {
                 if(!isFirstItemSelected&&!isSecondItemSelected&&!isThirdItemSelected&&!isForthItemSelected&&!isFifthItemSelected){
 
                 }else{
-                    animatedCircleViewFifth?.isAnimating = false
-                    animatedCircleViewFirst?.isAnimating = false
-                    animatedCircleViewFourth?.isAnimating = false
-                    animatedCircleViewThird?.isAnimating = false
-                    animatedCircleViewSecond?.isAnimating = false
+
                     Log.d("victorineGrhtut", currentIndex.toString())
                     Log.d("victorineGrhtut", progress.toString())
                     checkAnswer(victorineAnswerVariants)
-                    tvQuestion.text = victorinesQuestions?.get(currentIndex)?.questionText ?: ""
+                    tvQuestion.text = victorinesQuestions?.get(currentIndex)?.questionText?.trimEnd()
                     if (progress < (victorinesQuestions?.size ?: 0)) {
                         updateProgressBarWithAnimation(victorinesQuestions ?: emptyList())
                     }
@@ -389,10 +404,16 @@ class VictorineFragment : Fragment() {
         Log.d("victorineGrhtut", "currentIndex:${currentIndex}")
         binding?.tvQuestion?.text = victorinesQuestions?.get(currentIndex)?.questionText ?: ""
         victorinesQuestions?.get(currentIndex)?.let {
-            viewModel.getAllQuestionAnswerVariants(it.questionId) { victorineAnswerVariantEntities ->
-                showFirstElement(victorineAnswerVariantEntities, binding)
-                victorineAnswerVariants = victorineAnswerVariantEntities
-                Log.d("vicotinresViewModel4", victorineAnswerVariantEntities.toString())
+            viewModel.getAllQuestionAnswerVariants(it.questionId,victorinesQuestions?.get(0)?.vicotineTestId ?: 2006) { victorineAnswerVariantEntities ->
+                if(!victorineAnswerVariantEntities.isNullOrEmpty()){
+                    showFirstElement(victorineAnswerVariantEntities, binding)
+                    victorineAnswerVariants = victorineAnswerVariantEntities
+                    Log.d("vicotinresViewModel4", victorineAnswerVariantEntities.toString())
+                }else{
+                    victorinesQuestionsCount--
+                    showNextElement()
+                }
+
             }
         }
     }
@@ -419,6 +440,26 @@ class VictorineFragment : Fragment() {
         numberItem: Int,
         item: List<VictorineAnswerVariantEntity>?
     ) {
+        if(isFirstItemSelected){
+            isFirstItemSelected = false
+            animatedCircleViewFirst!!.startReverseAnimation()
+        }
+        if(isSecondItemSelected){
+            isSecondItemSelected = false
+            animatedCircleViewSecond!!.startReverseAnimation()
+        }
+        if(isThirdItemSelected){
+            isThirdItemSelected = false
+            animatedCircleViewThird!!.startReverseAnimation()
+        }
+        if(isFifthItemSelected){
+            isFifthItemSelected = false
+            animatedCircleViewFifth!!.startReverseAnimation()
+        }
+        if(isForthItemSelected){
+            isForthItemSelected = false
+            animatedCircleViewFourth!!.startReverseAnimation()
+        }
 //        var isClueExist = false
         val currentAnswer = item?.get(numberItem)
         if (currentAnswer?.isCorrectAnswer == true) {
@@ -430,6 +471,7 @@ class VictorineFragment : Fragment() {
             Log.d("checkAnswerState", resultAnswer.toString())
             when (resultAnswer) {
                 ErrorEnum.SUCCESS -> {
+
                     Log.d("succsNextVictQuestCo", "victorines:${victorinesQuestions}")
                     Log.d("succsNextVictQuestCo", "currentIndex:${currentIndex}")
                     Log.d("succsNextVictQuestCo", (victorinesQuestions?.size ?: 0).toString())
@@ -609,12 +651,16 @@ class VictorineFragment : Fragment() {
                     if (!testCheckResultFlag) {
                         testCheckResultFlag = true
                         if (isThemePassed) {
-                            strikeModeTreatmentResult()
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogReplayTest(requireContext(), {
+                                    strikeModeTreatmentResult()
+                                }, misstakeAnswers, victorinesQuestionsCount)
+                            }
                         } else {
                             requireActivity().runOnUiThread {
-                                ShowDialogHelper.showDialogSuccessTest(requireContext()) {
+                                ShowDialogHelper.showDialogSuccessTest(requireContext(), {
                                     strikeModeTreatmentResult()
-                                }
+                                },misstakeAnswers,victorinesQuestionsCount)
                             }
 //                            showFeedbackDialog()
                             IsFeedback = true
@@ -625,7 +671,7 @@ class VictorineFragment : Fragment() {
 
                 ErrorStateView.OFFLINE -> {
                     requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogSuccessTest(requireContext()) {
+                        ShowDialogHelper.showDialogSuccessTest(requireContext(),{
 
                             val action =
                                 VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
@@ -634,19 +680,20 @@ class VictorineFragment : Fragment() {
                                 )
                             binding?.root?.let { Navigation.findNavController(it).navigate(action) }
 
-                        }
+                        },misstakeAnswers,victorinesQuestionsCount)
                     }
                 }
 
                 ErrorStateView.TERM -> {
                     dateUnlockTheme = { dateUnlockTheme ->
+                        IsFeedback = true
                         Log.d("victorineTestResultState", "term tw")
                         requireActivity().runOnUiThread {
                             ShowDialogHelper.showDialogFailTest(
                                 requireContext(),
                                 correctAnswers,
                                 misstakeAnswers,
-                                victorines.size,
+                                victorinesQuestionsCount,
                                 dateUnlockTheme,
                                 {
                                     strikeModeTreatmentResult()
@@ -923,6 +970,10 @@ class VictorineFragment : Fragment() {
             Log.d(
                 "victorineTestResultStateStrikeResultTreaAndropoint",
                 resultStrikeModeAndropoints.toString()
+            )
+            Log.d(
+                "victorineTestResultStateStrikeResultTreaAndropoint",
+                resultStrikeModeDay.toString()
             )
             var subscribeActual = false
             when (resultStrikeModeAndropoints) {

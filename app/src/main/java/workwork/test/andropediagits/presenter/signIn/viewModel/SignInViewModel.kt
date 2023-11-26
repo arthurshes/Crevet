@@ -18,6 +18,8 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCase, private val cacheUseCase: CacheUseCase, private val userLogicRepo: UserLogicRepo) : ViewModel() {
     var currentState: String = ""
 
+
+
     fun getCurrentTime(currentTime:((String)->Unit)){
         viewModelScope.launch {
             currentTime.invoke(userLogicRepo.getCurrentTime().datetime)

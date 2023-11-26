@@ -34,8 +34,8 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
         return courseRepo.searchAllVictorinesWithUniqueThemeId(uniqueThemeId)
     }
     //with test
-    suspend fun getVictoineAnswerVariantsWithQuestionId(questionId:Int):List<VictorineAnswerVariantEntity>{
-        return courseRepo.searchVictorineAnswerVariantsWithQuestionId(questionId)
+    suspend fun getVictoineAnswerVariantsWithQuestionId(questionId:Int,victorineTestId:Int):List<VictorineAnswerVariantEntity>{
+        return courseRepo.searchVictorineAnswerVariantsWithQuestionId(questionId,victorineTestId)
     }
     //with test
      suspend fun getVictorineQuestWithQuestionId(questionId: Int): VictorineEntity {

@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -53,7 +54,7 @@ class SignInFragment : Fragment() {
                         saveUserInfoTreatmentResult(userLocal)
                     }
                     ShowDialogHelper.showDialogLoadData(requireContext())
-                    downloadlCourses(chooseLang)
+
                 }
             } catch (e: ApiException) {
                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
@@ -70,7 +71,9 @@ class SignInFragment : Fragment() {
     private fun saveUserInfoTreatmentResult(userLocal: UserInfoEntity) {
         viewModel.saveUserInfo(userLocal) {
             when(it){
-                ErrorEnum.SUCCESS -> {}
+                ErrorEnum.SUCCESS -> {
+                    downloadlCourses(chooseLang)
+                }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
                         binding?.dimViewSignIng?.visibility = View.VISIBLE
@@ -134,6 +137,11 @@ class SignInFragment : Fragment() {
     @SuppressLint("ResourceType", "SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Ваш код для обработки нажатия на кнопку "назад"        // Например, закрытие фрагмента или выполнение определенного действия
+            }}
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         if (savedInstanceState != null) {
             viewModel.currentState = savedInstanceState.getString("state_key_signIn", "")
         }
@@ -195,7 +203,7 @@ class SignInFragment : Fragment() {
         var isRegisters = false
         binding?.apply {
 
-            viewModel.signInEmail(edEmail.text.toString(), edPassword.text.toString(),lang = chooseLang,{ isRegister->
+            viewModel.signInEmail(edEmail.text.toString(), edPassword.text.toString().trimEnd(),lang = chooseLang,{ isRegister->
                 isRegisters = isRegister
             }) {
 

@@ -1,5 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+    <style name="victorine_answer">
+        <item name="cardBackgroundColor">#D8D8D8</item>
+    </style>
+    <style name="option_variant_radius">       <item name="android:background">@drawable/option_variant_radius_light</item>
+    </style>
     <style name="tiktok">
         <item name="srcCompat">@drawable/tiktokcircle</item>
     </style>
@@ -50,7 +55,7 @@
     </style>
 
     <style name="victorine_background">
-        <item name="android:background">@drawable/victorine_background_light</item>
+        <item name="android:background">@drawable/course_backgrou_light_new</item>
     </style>
 
     <style name="lang_choose">
@@ -81,7 +86,7 @@
     </style>
 
     <style name="courses_background">
-        <item name="android:background">@drawable/course_back_light</item>
+        <item name="android:background">@drawable/course_backgrou_light_new</item>
     </style>
 
 

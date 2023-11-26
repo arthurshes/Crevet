@@ -107,6 +107,8 @@ class ThemeUseCase @Inject constructor(
         }
     }
 
+
+
     suspend fun thisThemeVictorineYes(victorineYes:((Boolean)->Unit),uniqueThemeId: Int){
         val currentTheme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
         victorineYes.invoke(currentTheme.victorineQuestionCount != 0 && currentTheme.victorineQuestionCount != null)

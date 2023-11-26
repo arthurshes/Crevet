@@ -27,7 +27,7 @@ class ListLessonsAdapter(
     var removeFavLevel: ((Int) -> Unit)? = null
     var addFavLevel: ((Int) -> Unit)? = null
     var buyThemeClick: (() -> Unit)? = null
-
+    private var isDialogOpen = false
     inner class LessonsHolder(val binding: LessonItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -82,17 +82,22 @@ class ListLessonsAdapter(
 
 
                 if (position == diffList.currentList.size) {
+                      if(!isDialogOpen){
 
-                        ShowDialogHelper.showDialogAttention(context) {
-                            val action =
-                                ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(
-                                    args.ThemeId,
-                                    args.courseName,
-                                    currentLesson.courseNumber,
-                                    args.courseNameReal
-                                )
-                            Navigation.findNavController(root).navigate(action)
-                        }
+                          ShowDialogHelper.showDialogAttention(context,{
+                              val action =
+                                  ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(
+                                      args.ThemeId,
+                                      args.courseName,
+                                      currentLesson.courseNumber,
+                                      args.courseNameReal
+                                  )
+                              Navigation.findNavController(root).navigate(action)
+                          }) {
+                              isDialogOpen = false
+                          }
+                      }
+                    isDialogOpen = true
                 } else {
                     val action =
                         ListLessonsFragmentDirections.actionListLessonsFragmentToLessonFragment(

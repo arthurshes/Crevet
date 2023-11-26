@@ -281,7 +281,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="840₽"
+                        android:text="11$"
                         android:textSize="10dp"
                         android:textStyle="bold"
                         android:theme="@style/Text_black_white" />
@@ -364,7 +364,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="280₽"
+                        android:text="2$"
                         android:textColor="@color/white"
                         android:textSize="10dp"
                         android:textStyle="bold"
@@ -445,7 +445,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="3360₽"
+                        android:text="19$"
                         android:textSize="10dp"
                         android:textStyle="bold"
                         android:theme="@style/Text_black_white" />

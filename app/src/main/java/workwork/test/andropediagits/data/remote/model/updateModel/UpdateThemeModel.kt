@@ -8,8 +8,8 @@ data class UpdateThemeModel(
     val interactiveId:Int,
     val token:String,
     val dateApi:String,
-    val termHourse:Int?=null,
+    val termHourse:Int?=0,
     val isOpenTheme:Boolean,
-    val termDateApi:String?=null,
+    val termDateApi:String?="",
     val lasThemePassed:Boolean
 )

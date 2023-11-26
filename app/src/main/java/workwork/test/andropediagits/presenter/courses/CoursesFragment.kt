@@ -117,23 +117,44 @@ class CoursesFragment (): Fragment(){
                     binding?.dimViewCourse?.visibility = View.VISIBLE
                     ShowDialogHelper.showDialogClose(requireContext(),{
                         isOpenDialogBuy = true
-                        ShowDialogHelper.showDialogBuy(requireContext(),rubPrice,androPrice,{
-                            if(rubPrice==150){
-                              billingManager?.billingSetup(PayState.COURSEBUYADVANCED,buyCourseNumber)
-                            }
-                            if(rubPrice==600){
-                                billingManager?.billingSetup(PayState.COURSEBUYINDEPTH,buyCourseNumber)
-                            }
-                        },{
-                            if(rubPrice==150){
-                                buyCourseAndropointTreatmentResult(buyCourseNumber,300)
-                            }
-                            if(rubPrice==600){
-                                buyCourseAndropointTreatmentResult(buyCourseNumber,600)
-                            }
-                        },{
-                            binding?.dimViewCourse?.visibility = View.GONE
-                        })
+                        if(rubPrice==600){
+                            ShowDialogHelper.showDialogBuy(requireContext(),6,androPrice,{
+                                if(rubPrice==150){
+                                    billingManager?.billingSetup(PayState.COURSEBUYADVANCED,buyCourseNumber)
+                                }
+                                if(rubPrice==600){
+                                    billingManager?.billingSetup(PayState.COURSEBUYINDEPTH,buyCourseNumber)
+                                }
+                            },{
+                                if(rubPrice==150){
+                                    buyCourseAndropointTreatmentResult(buyCourseNumber,300)
+                                }
+                                if(rubPrice==600){
+                                    buyCourseAndropointTreatmentResult(buyCourseNumber,600)
+                                }
+                            },{
+                                binding?.dimViewCourse?.visibility = View.GONE
+                            })
+                        }
+                     if(rubPrice==150){
+                         ShowDialogHelper.showDialogBuy(requireContext(),2,androPrice,{
+                             if(rubPrice==150){
+                                 billingManager?.billingSetup(PayState.COURSEBUYADVANCED,buyCourseNumber)
+                             }
+                             if(rubPrice==600){
+                                 billingManager?.billingSetup(PayState.COURSEBUYINDEPTH,buyCourseNumber)
+                             }
+                         },{
+                             if(rubPrice==150){
+                                 buyCourseAndropointTreatmentResult(buyCourseNumber,300)
+                             }
+                             if(rubPrice==600){
+                                 buyCourseAndropointTreatmentResult(buyCourseNumber,600)
+                             }
+                         },{
+                             binding?.dimViewCourse?.visibility = View.GONE
+                         })
+                     }
                     },{
                         if(!isOpenDialogBuy){
                             binding?.dimViewCourse?.visibility = View.GONE

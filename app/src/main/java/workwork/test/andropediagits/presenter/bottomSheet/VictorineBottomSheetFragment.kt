@@ -29,6 +29,7 @@ import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.utils.Constatns
 import workwork.test.andropediagits.core.utils.GoogleAdManager
 import workwork.test.andropediagits.databinding.FragmentVictorineBottomSheetBinding
+import workwork.test.andropediagits.domain.useCases.userLogic.state.BuyForAndropointStates
 import workwork.test.andropediagits.presenter.bottomSheet.viewModels.VictorineBottomSheetViewModel
 import workwork.test.andropediagits.presenter.lesson.ListLessonsFragmentDirections
 import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
@@ -38,7 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
-
+    private var isDialogOpen = false
     private var googleMobileAdsConsentManager: GoogleAdManager? = null
     private var rewardedAd: RewardedAd? = null
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
@@ -111,6 +112,15 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
             }
         }
+
+        binding?.btnPassDelayForAndropointBS?.setOnClickListener {
+            if (!isTermVictorine) {
+                Toast.makeText(requireContext(), getString(R.string.delay_andropoint_victorine_aviable), Toast.LENGTH_SHORT).show()
+            } else {
+                delayAndropoint()
+            }
+        }
+
         binding?.btnWatchAdBS?.setOnClickListener {
             if (!isTermVictorine) {
                 Toast.makeText(requireContext(), getString(R.string.advertising_is_only_available_when_there_delay), Toast.LENGTH_SHORT).show()
@@ -134,24 +144,138 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
     }
 
+    private fun delayAndropoint(){
+        var buyForAndropointStates:BuyForAndropointStates?=null
+        viewModel.spendAndropoints(4,{
+            when(it){
+                ErrorEnum.SUCCESS -> {
+                     when(buyForAndropointStates){
+                         BuyForAndropointStates.YESMONEY -> {
+                           minusTwoHoursTerm()
+                         }
+                         BuyForAndropointStates.NOMONEY -> {
+                             requireActivity().runOnUiThread {
+                                 Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                             }
+                         }
+                         null -> {
+                             requireActivity().runOnUiThread {
+                                 Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                             }
+                         }
+                     }
+                }
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            delayAndropoint()
+                        }) {
+
+                        }
+                    }
+                }
+
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            delayAndropoint()
+                        }) {
+
+                        }
+                    }
+                }
+
+
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            delayAndropoint()
+                        }) {
+
+                        }
+                    }
+                }
+
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            delayAndropoint()
+                        }) {
+
+                        }
+                    }
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            delayAndropoint()
+                        }) {
+
+                        }
+                    }
+                }
+
+                ErrorEnum.OFFLINEMODE -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogOffline(requireContext())
+                    }
+                }
+            }
+        },{
+           buyForAndropointStates = it
+        })
+    }
+
     private fun inVictorine(uniqueCurrentThemeId: Int?, isThemePassed: Boolean, courseName: String?, courseNameReal: String?, courseNumber: Int?) {
         if (isTermVictorine) {
             if (!isThemePassed) {
                 Toast.makeText(requireContext(), "${getString(R.string.victorine_is_closed_for_delay_until)}${terString}", Toast.LENGTH_LONG).show()
             } else {
-                ShowDialogHelper.showDialogAttention(requireContext()) {
-                    dismiss()
-                    val action = ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(uniqueCurrentThemeId ?: 2, courseName ?: "defaultTest", courseNumber ?: 1, courseNameReal ?: "")
-                    navController.navigate(action)
+                if(!isDialogOpen) {
+                    ShowDialogHelper.showDialogAttention(requireContext(), {
+                        dismiss()
+                        val action =
+                            ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(
+                                uniqueCurrentThemeId ?: 2,
+                                courseName ?: "defaultTest",
+                                courseNumber ?: 1,
+                                courseNameReal ?: ""
+                            )
+                        navController.navigate(action)
+
+                    }) {
+                        isDialogOpen = false
+                    }
                 }
+                isDialogOpen = true
             }
 
         } else {
-            ShowDialogHelper.showDialogAttention(requireContext()) {
-                dismiss()
-                val action = ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(uniqueCurrentThemeId ?: 2, courseName ?: "defaultTest", courseNumber ?: 1, courseNameReal ?: "")
-                navController.navigate(action)
+            if(!isDialogOpen) {
+                ShowDialogHelper.showDialogAttention(requireContext(), {
+
+                    dismiss()
+                    val action =
+                        ListLessonsFragmentDirections.actionListLessonsFragmentToVictorineFragment(
+                            uniqueCurrentThemeId ?: 2,
+                            courseName ?: "defaultTest",
+                            courseNumber ?: 1,
+                            courseNameReal ?: ""
+                        )
+                    navController.navigate(action)
+
+                }) {
+                    isDialogOpen = false
+                }
             }
+            isDialogOpen = true
         }
     }
 
@@ -165,9 +289,9 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                 initializeMobileAdsSdk()
             }
 
-            if (googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true) {
-                requireActivity().invalidateOptionsMenu()
-            }
+//            if (googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true) {
+//                requireActivity().invalidateOptionsMenu()
+//            }
         }
     }
     private fun checkLimitActualTreatmentResult() {
@@ -411,6 +535,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                 ErrorEnum.SUCCESS -> {
                     requireActivity().runOnUiThread {
                         Toast.makeText(requireContext(),getString(R.string.delay_was_successfully_reset), Toast.LENGTH_SHORT).show()
+                        dismiss()
                     }
 
                 }

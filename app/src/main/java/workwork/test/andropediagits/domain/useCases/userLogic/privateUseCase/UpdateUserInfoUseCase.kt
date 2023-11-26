@@ -18,36 +18,68 @@ class UpdateUserInfoUseCase @Inject constructor(private val userLogicRepo: UserL
         }
     }
 
-    suspend fun updateUserInfo(name:String?=null,andropointCount:Int?=null,image:Bitmap?=null,strikeModeDay:Int?=null,lastOnlineDate:String?=null,lang:String?=null,phoneName:String?=null,token:String?=null){
+    suspend fun updateUserInfo(name:String?=null,andropointCount:Int?=null,image:Bitmap?=null,strikeModeDay:Int?=null,lastOnlineDate:String?=null,lang:String?=null,phoneName:String?=null,token:String?=null,andropointInfinity:Boolean=false){
         val userInfoLocal = userLogicRepo.getUserInfoLocal()
       if(userInfoLocal!=null){
-           val updateUserEntity = UserInfoEntity(
-               name = name ?: userInfoLocal?.name ?: "",
-               andropointCount = andropointCount ?: userInfoLocal?.andropointCount ?: 0,
-               image = image ?: userInfoLocal?.image,
-               token = userInfoLocal?.token ?: "",
-               lastOnlineDate = lastOnlineDate ?: userInfoLocal?.lastOnlineDate ?: "",
-               strikeModeDay = strikeModeDay ?: userInfoLocal?.strikeModeDay ?: 0,
-               lastOpenTheme = userInfoLocal?.lastOpenTheme ?: 0,
-               lastOpenCourse = userInfoLocal?.lastOpenCourse ?: 0,
-               userLanguage = lang ?: userInfoLocal?.userLanguage,
-               phoneBrand = phoneName ?: userInfoLocal?.phoneBrand ?: "Xiaomi"
-           )
-           Log.d("andropointCount",andropointCount.toString())
-           userLogicRepo.updateUserInfoLocal(updateUserEntity)
-           if (phoneName.isNullOrEmpty()) {
-               val userUpdateBackend = UserSignInModel(
-                   token = userInfoLocal?.token ?: "",
-                   name = name ?: userInfoLocal?.name,
-                   image = image ?: userInfoLocal?.image,
-                   andropointCount = andropointCount ?: userInfoLocal?.andropointCount,
-                   strikeModeDay = strikeModeDay ?: userInfoLocal?.strikeModeDay,
-                   lastCourseNumber = userInfoLocal?.lastOpenCourse,
-                   lastThemeNumber = userInfoLocal?.lastOpenTheme,
-                   isInfinity = infinityToInt(userInfoLocal.isInfinity ?: false)
-               )
-               userLogicRepo.updateUserInfo(userUpdateBackend)
-           }
+          if(andropointInfinity){
+              val updateUserEntity = UserInfoEntity(
+                  name = name ?: userInfoLocal?.name ?: "",
+                  andropointCount = andropointCount ?: userInfoLocal?.andropointCount ?: 0,
+                  image = image ?: userInfoLocal?.image,
+                  isInfinity = true,
+                  token = userInfoLocal?.token ?: "",
+                  lastOnlineDate = lastOnlineDate ?: userInfoLocal?.lastOnlineDate ?: "",
+                  strikeModeDay = strikeModeDay ?: userInfoLocal?.strikeModeDay ?: 0,
+                  lastOpenTheme = userInfoLocal?.lastOpenTheme ?: 0,
+                  lastOpenCourse = userInfoLocal?.lastOpenCourse ?: 0,
+                  userLanguage = lang ?: userInfoLocal?.userLanguage,
+                  phoneBrand = phoneName ?: userInfoLocal?.phoneBrand ?: "Xiaomi"
+              )
+              Log.d("andropointCount",andropointCount.toString())
+              userLogicRepo.updateUserInfoLocal(updateUserEntity)
+              if (phoneName.isNullOrEmpty()) {
+                  val userUpdateBackend = UserSignInModel(
+                      token = userInfoLocal?.token ?: "",
+                      name = name ?: userInfoLocal?.name,
+                      image = image ?: userInfoLocal?.image,
+                      andropointCount = andropointCount ?: userInfoLocal?.andropointCount,
+                      strikeModeDay = strikeModeDay ?: userInfoLocal?.strikeModeDay,
+                      lastCourseNumber = userInfoLocal?.lastOpenCourse,
+                      lastThemeNumber = userInfoLocal?.lastOpenTheme,
+                      isInfinity = 1
+                  )
+                  userLogicRepo.updateUserInfo(userUpdateBackend)
+              }
+              return
+          }
+          val updateUserEntity = UserInfoEntity(
+              name = name ?: userInfoLocal?.name ?: "",
+              andropointCount = andropointCount ?: userInfoLocal?.andropointCount ?: 0,
+              image = image ?: userInfoLocal?.image,
+              token = userInfoLocal?.token ?: "",
+              lastOnlineDate = lastOnlineDate ?: userInfoLocal?.lastOnlineDate ?: "",
+              strikeModeDay = strikeModeDay ?: userInfoLocal?.strikeModeDay ?: 0,
+              lastOpenTheme = userInfoLocal?.lastOpenTheme ?: 0,
+              lastOpenCourse = userInfoLocal?.lastOpenCourse ?: 0,
+              userLanguage = lang ?: userInfoLocal?.userLanguage,
+              phoneBrand = phoneName ?: userInfoLocal?.phoneBrand ?: "Xiaomi"
+          )
+          Log.d("andropointCount",andropointCount.toString())
+          userLogicRepo.updateUserInfoLocal(updateUserEntity)
+          if (phoneName.isNullOrEmpty()) {
+              val userUpdateBackend = UserSignInModel(
+                  token = userInfoLocal?.token ?: "",
+                  name = name ?: userInfoLocal?.name,
+                  image = image ?: userInfoLocal?.image,
+                  andropointCount = andropointCount ?: userInfoLocal?.andropointCount,
+                  strikeModeDay = strikeModeDay ?: userInfoLocal?.strikeModeDay,
+                  lastCourseNumber = userInfoLocal?.lastOpenCourse,
+                  lastThemeNumber = userInfoLocal?.lastOpenTheme,
+                  isInfinity = infinityToInt(userInfoLocal.isInfinity ?: false)
+              )
+              userLogicRepo.updateUserInfo(userUpdateBackend)
+          }
+
        }
         if(userInfoLocal==null) {
             val userEntity = UserInfoEntity(

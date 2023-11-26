@@ -19,6 +19,8 @@ import workwork.test.andropediagits.domain.useCases.userLogic.StrikeModeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.ThemeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.VictorineUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.TryAgainUseCase
+import workwork.test.andropediagits.domain.useCases.userLogic.state.BuyForAndropointStates
+import workwork.test.andropediagits.domain.useCases.userLogic.state.SpendAndropointState
 import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeState
 import javax.inject.Inject
 
@@ -29,6 +31,9 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 //    private var _timerValue: MutableLiveData<Long> = MutableLiveData()
 //    var timerValue:LiveData<Long>?=null
 //     var _allVictorineAnswerVariantByTheme: List<VictorineAnswerVariantEntity>?=null
+
+
+
 
     fun victorineExit(uniqueThemeId: Int,isTerm:((Boolean)->Unit),isDateUnlock:((String)->Unit),isSucces: ((ErrorEnum) -> Unit)){
         viewModelScope.launch {
@@ -80,9 +85,9 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 
     }
 
-     fun getAllQuestionAnswerVariants(questionId:Int,allVictorinesAnswer:((List<VictorineAnswerVariantEntity>)->Unit)){
+     fun getAllQuestionAnswerVariants(questionId:Int,victorineTestId:Int,allVictorinesAnswer:((List<VictorineAnswerVariantEntity>)->Unit)){
         viewModelScope.launch {
-            allVictorinesAnswer.invoke(coursesRepo.searchVictorineAnswerVariantsWithQuestionId(questionId))
+            allVictorinesAnswer.invoke(coursesRepo.searchVictorineAnswerVariantsWithQuestionId(questionId,victorineTestId))
         }
 
     }
