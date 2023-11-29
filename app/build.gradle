@@ -17,8 +17,8 @@ android {
         applicationId "workwork.test.andropediagits"
         minSdk 26
         targetSdk 33
-        versionCode 14
-        versionName "2.3"
+        versionCode 15
+        versionName "2.4"
 
         testInstrumentationRunner "workwork.test.andropediagits.HiltTestRunner"
 

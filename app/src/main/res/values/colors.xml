@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="timer_deafult">#404040</color>
     <color name="comment_code">#7F7F7F</color><color name="function_code">#F7C067</color>
     <color name="numbers_code">#5C92BA</color><color name="variable_code">#9573A6</color>
     <color name="text_code">#56864E</color>

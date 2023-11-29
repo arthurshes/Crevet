@@ -46,6 +46,12 @@ class ThemeViewModel @Inject constructor(
     private var courseNumberKey = "countKey"
      var courseNumber = savedStateHandle.getLiveData<Int>(courseNumberKey, -1)
 
+    fun exitCurrentAccount( result: (ErrorEnum) -> Unit){
+        viewModelScope.launch {
+            signInUseCase.exitCurrentAccount(result)
+        }
+    }
+
     fun downloadUpdateLang( result: (ErrorEnum) -> Unit){
         viewModelScope.launch(Dispatchers.IO) {
             cacheUseCase.downloadUpdateLang { result(it) }

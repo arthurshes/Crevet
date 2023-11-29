@@ -37,6 +37,11 @@ object ShowDialogHelper {
     private var isDialogStrikeShow = false
     private var isDialogSuccess = false
     private var isDialogReplay = false
+    private var isAndropointShow = false
+    private var isClueShow = false
+   private var isShowDialogBuy = false
+    private var isCloseDialog = false
+
 
     fun supportDialog(context: Context,clickTikTok:(()->Unit),clickYoutube:(()->Unit),clickTelegram:(()->Unit),dialogClose:(()->Unit)){
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
@@ -444,6 +449,9 @@ object ShowDialogHelper {
             }
             dialog?.show()
         }
+        dialog?.setOnDismissListener {
+            isDialogReplay = false
+        }
     }
 
     fun showDialogSuccessTest(context: Context, close: () -> Unit,mistakeTest: Int, size: Int) {
@@ -477,7 +485,9 @@ object ShowDialogHelper {
             }
             dialog?.show()
         }
-
+        dialog?.setOnDismissListener {
+            isDialogSuccess = false
+        }
     }
 
     fun showDialogFailTest(context: Context, correctTest:Int,mistakeTest: Int, size: Int, dateTerm: String,isClose:(()->Unit),isTimerOut:Boolean) {
@@ -531,71 +541,93 @@ object ShowDialogHelper {
         money: (String) -> Unit,
         andropoints: (String) -> Unit
     ) {
-        dialog = Dialog(context)
-        dialog?.setContentView(R.layout.buy_andropoints_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val btnPay = dialog?.findViewById<CardView>(R.id.btnPay)
-        val tvLastPayCost = dialog?.findViewById<TextView>(R.id.tvLastPayCost)
-        val cardBuyOneAndropoint = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneAndropoint)
-        val cardBuyTenAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyTenAndropoints)
-        val cardBuyOneHundredAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneHundredAndropoints)
-        val cardBuyInfinityAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyInfinityAndropoints)
-        val tvLastCountAndropoint = dialog?.findViewById<TextView>(R.id.tvLastCountAndropoint)
-        val tvCountAndropointsBuyOneAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyOneAndropoint)
-        val tvCountMoneyBuyOneAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneAndropoint)
-        val tvCountAndropointsBuyTenAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyTenAndropoint)
-        val tvCountMoneyBuyTenAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyTenAndropoint)
-        val tvCountAndropointsOneHundredAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsOneHundredAndropoint)
-        val tvCountMoneyBuyOneHundredAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneHundredAndropoint)
-        val tvCountAndropointsInfinityAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsInfinityAndropoint)
-        val tvCountMoneyBuyInfinityAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyInfinityAndropoint)
-        val btnWatchAd = dialog?.findViewById<CardView>(R.id.btnWatchAd)
-        cardBuyOneAndropoint?.setOnClickListener {
-            tvLastCountAndropoint?.text = tvCountAndropointsBuyOneAndropoint?.text
-            tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text
-        }
-        cardBuyTenAndropoints?.setOnClickListener {
-            tvLastCountAndropoint?.text = tvCountAndropointsBuyTenAndropoint?.text
-            tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text
-        }
-        cardBuyOneHundredAndropoints?.setOnClickListener {
-            tvLastCountAndropoint?.text = tvCountAndropointsOneHundredAndropoint?.text
-            tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text
-        }
-        cardBuyInfinityAndropoints?.setOnClickListener {
-            tvLastCountAndropoint?.text = tvCountAndropointsInfinityAndropoint?.text
-            tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
-        }
-        btnPay?.setOnClickListener {
-            money.invoke(tvLastPayCost?.text.toString().replace("$", ""))
-            andropoints.invoke(
-                tvLastCountAndropoint?.text.toString().replace("$", "")
-            )
-            pay.invoke()
-            dialog = null
-        }
-        btnWatchAd?.setOnClickListener {
-            dialog?.dismiss()
-            dialog = null
-            watchAd.invoke()
-        }
+        if(!isAndropointShow) {
+            dialog = Dialog(context)
+            isAndropointShow = true
+            dialog?.setContentView(R.layout.buy_andropoints_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val btnPay = dialog?.findViewById<CardView>(R.id.btnPay)
+            val tvLastPayCost = dialog?.findViewById<TextView>(R.id.tvLastPayCost)
+            val cardBuyOneAndropoint = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneAndropoint)
+            val cardBuyTenAndropoints =
+                dialog?.findViewById<LinearLayout>(R.id.cardBuyTenAndropoints)
+            val cardBuyOneHundredAndropoints =
+                dialog?.findViewById<LinearLayout>(R.id.cardBuyOneHundredAndropoints)
+            val cardBuyInfinityAndropoints =
+                dialog?.findViewById<LinearLayout>(R.id.cardBuyInfinityAndropoints)
+            val tvLastCountAndropoint = dialog?.findViewById<TextView>(R.id.tvLastCountAndropoint)
+            val tvCountAndropointsBuyOneAndropoint =
+                dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyOneAndropoint)
+            val tvCountMoneyBuyOneAndropoint =
+                dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneAndropoint)
+            val tvCountAndropointsBuyTenAndropoint =
+                dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyTenAndropoint)
+            val tvCountMoneyBuyTenAndropoint =
+                dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyTenAndropoint)
+            val tvCountAndropointsOneHundredAndropoint =
+                dialog?.findViewById<TextView>(R.id.tvCountAndropointsOneHundredAndropoint)
+            val tvCountMoneyBuyOneHundredAndropoint =
+                dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneHundredAndropoint)
+            val tvCountAndropointsInfinityAndropoint =
+                dialog?.findViewById<TextView>(R.id.tvCountAndropointsInfinityAndropoint)
+            val tvCountMoneyBuyInfinityAndropoint =
+                dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyInfinityAndropoint)
+            val btnWatchAd = dialog?.findViewById<CardView>(R.id.btnWatchAd)
+            cardBuyOneAndropoint?.setOnClickListener {
+                tvLastCountAndropoint?.text = tvCountAndropointsBuyOneAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text
+            }
+            cardBuyTenAndropoints?.setOnClickListener {
+                tvLastCountAndropoint?.text = tvCountAndropointsBuyTenAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text
+            }
+            cardBuyOneHundredAndropoints?.setOnClickListener {
+                tvLastCountAndropoint?.text = tvCountAndropointsOneHundredAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text
+            }
+            cardBuyInfinityAndropoints?.setOnClickListener {
+                tvLastCountAndropoint?.text = tvCountAndropointsInfinityAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
+            }
+            btnPay?.setOnClickListener {
+                money.invoke(tvLastPayCost?.text.toString().replace("$", ""))
+                andropoints.invoke(
+                    tvLastCountAndropoint?.text.toString().replace("$", "")
+                )
+                pay.invoke()
+                dialog = null
+            }
+            btnWatchAd?.setOnClickListener {
+                dialog?.dismiss()
+                dialog = null
+                watchAd.invoke()
+            }
 
-        dialog?.show()
+            dialog?.show()
+        }
+        dialog?.setOnDismissListener {
+            isAndropointShow = false
+        }
     }
 
     fun showDialogClue(context: Context, text: String,close:(()->Unit)) {
-        val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.text_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val dialogTermDescription = dialog?.findViewById<TextView>(R.id.tvClueDescription)
-        val btnClose = dialog?.findViewById<CardView>(R.id.btnCloseClueDialog)
-        btnClose?.setOnClickListener {
-            dialog.dismiss()
-            close?.invoke()
+        if(!isClueShow){
+            isClueShow = true
+            val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+            dialog?.setContentView(R.layout.text_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val dialogTermDescription = dialog?.findViewById<TextView>(R.id.tvClueDescription)
+            val btnClose = dialog?.findViewById<CardView>(R.id.btnCloseClueDialog)
+            btnClose?.setOnClickListener {
+                dialog.dismiss()
+                close?.invoke()
+            }
+            dialogTermDescription?.text = text
+            dialog?.show()
         }
-        dialogTermDescription?.text = text
-        dialog?.show()
+
         dialog?.setOnDismissListener {
+            isClueShow = false
             close?.invoke()
         }
     }
@@ -608,34 +640,39 @@ object ShowDialogHelper {
         themeBuy: Boolean = false,
         themeClose:Boolean = false
     ) {
-        dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.close_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val dialogBuyCourse =  dialog?.findViewById<CardView>(R.id.btnBuyCourse)
-        val tvCloseText =  dialog?.findViewById<TextView>(R.id.tvCloseText)
-        val tvBuy =  dialog?.findViewById<TextView>(R.id.tvBuy)
+        if(!isCloseDialog) {
+            isCloseDialog = true
+            dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+            dialog?.setContentView(R.layout.close_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val dialogBuyCourse = dialog?.findViewById<CardView>(R.id.btnBuyCourse)
+            val tvCloseText = dialog?.findViewById<TextView>(R.id.tvCloseText)
+            val tvBuy = dialog?.findViewById<TextView>(R.id.tvBuy)
 
-        if (themeClose) {
-            dialogBuyCourse?.visibility=View.GONE
-            tvCloseText?.text = context.getString(R.string.theme_close_entirely)
-        }
-        if (themeBuy) {
-            tvBuy?.text = context.getString(R.string.buy_theme)
-            tvCloseText?.text = context.getString(R.string.theme_close)
-        }else{
-            tvBuy?.text = context.getString(R.string.buy_course)
-            tvCloseText?.text = context.getString(R.string.course_close)
-        }
+            if (themeClose) {
+                dialogBuyCourse?.visibility = View.GONE
+                tvCloseText?.text = context.getString(R.string.theme_close_entirely)
+            }
+            if (themeBuy) {
+                tvBuy?.text = context.getString(R.string.buy_theme)
+                tvCloseText?.text = context.getString(R.string.theme_close)
+            } else {
+                tvBuy?.text = context.getString(R.string.buy_course)
+                tvCloseText?.text = context.getString(R.string.course_close)
+            }
 
-        dialogBuyCourse?.setOnClickListener {
-            dialog?.dismiss()
-            dialog = null
-            buyCourse?.invoke()
+            dialogBuyCourse?.setOnClickListener {
+                dialog?.dismiss()
+                dialog = null
+                buyCourse?.invoke()
+            }
+            dialog?.show()
         }
         dialog?.setOnDismissListener {
             dialogDissMiss?.invoke()
+            isCloseDialog = false
         }
-        dialog?.show()
+
     }
 
     fun showDialogBuy(
@@ -646,32 +683,38 @@ object ShowDialogHelper {
         pressAndro: () -> Unit,
         dialogDissMiss:(()->Unit)
     ) {
-        dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.buy_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val btnGoogleBuy = dialog?.findViewById<LinearLayout>(R.id.btnGoogleBuy)
-        val btnAndroBuy = dialog?.findViewById<TextView>(R.id.btnAndroBuy)
-        val cardAndropointPossibly = dialog?.findViewById<LinearLayout>(R.id.cardAndropointPossibly)
-        val tvPriceToRub = dialog?.findViewById<TextView>(R.id.tvPriceToRub)
-        btnGoogleBuy?.setOnClickListener {
-            pressGoogle.invoke()
-            dialog?.dismiss()
-            dialog = null
+        if(!isShowDialogBuy){
+            isShowDialogBuy = true
+            dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+            dialog?.setContentView(R.layout.buy_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val btnGoogleBuy = dialog?.findViewById<LinearLayout>(R.id.btnGoogleBuy)
+            val btnAndroBuy = dialog?.findViewById<TextView>(R.id.btnAndroBuy)
+            val cardAndropointPossibly = dialog?.findViewById<LinearLayout>(R.id.cardAndropointPossibly)
+            val tvPriceToRub = dialog?.findViewById<TextView>(R.id.tvPriceToRub)
+            btnGoogleBuy?.setOnClickListener {
+                pressGoogle.invoke()
+                dialog?.dismiss()
+                dialog = null
+            }
+            if (priceAndropoint==null) {
+                cardAndropointPossibly?.visibility = View.GONE
+            }
+            tvPriceToRub?.text = priceRub.toString()+"$"
+            btnAndroBuy?.text = priceAndropoint.toString()
+            btnAndroBuy?.setOnClickListener {
+                pressAndro.invoke()
+                dialog?.dismiss()
+                dialog = null
+            }
+            dialog?.show()
         }
-        if (priceAndropoint==null) {
-            cardAndropointPossibly?.visibility = View.GONE
-        }
-        tvPriceToRub?.text = priceRub.toString()+"$"
-        btnAndroBuy?.text = priceAndropoint.toString()
-        btnAndroBuy?.setOnClickListener {
-            pressAndro.invoke()
-            dialog?.dismiss()
-            dialog = null
-        }
+
         dialog?.setOnDismissListener {
+            isShowDialogBuy = false
             dialogDissMiss?.invoke()
         }
-        dialog?.show()
+
     }
 
 

@@ -975,6 +975,42 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                     binding?.dimViewTheme?.visibility = View.GONE
                 })
             }
+            R.id.id_exit_account ->{
+                ShowDialogHelper.showDialogLoadData(requireContext())
+                viewModel.exitCurrentAccount({ state->
+                    Log.d("fuhruigvhewiurhb444viuewrh",state.toString())
+                    when(state){
+                        ErrorEnum.NOTNETWORK -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.ERROR -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.SUCCESS -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                            val action = ThemesFragmentDirections.actionThemesFragmentToSignInFragment()
+                            binding?.root?.let {
+                                Navigation.findNavController(it).navigate(action)
+                            }
+                        }
+                        ErrorEnum.UNKNOWNERROR -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.TIMEOUTERROR -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.NULLPOINTERROR -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.OFFLINEMODE -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.OFFLINETHEMEBUY -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                    }
+                })
+            }
         }
         return true
     }

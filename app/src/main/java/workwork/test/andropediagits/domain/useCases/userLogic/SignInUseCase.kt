@@ -20,6 +20,7 @@ import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.data.remote.model.UserSignInModel
 import workwork.test.andropediagits.data.remote.model.email.EmailRecoverModel
 import workwork.test.andropediagits.data.remote.model.email.RecoverPassState
+import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.UpdateUserInfoUseCase
@@ -34,7 +35,49 @@ import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import kotlin.Exception
 
-class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo, private val updateUserInfoUseCase: UpdateUserInfoUseCase, private val emailValidator: EmailValidator, private val transactionRepo: TransactionRepo, private  val userInfoValidator: UserInfoValidator){
+class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo, private val updateUserInfoUseCase: UpdateUserInfoUseCase, private val emailValidator: EmailValidator, private val transactionRepo: TransactionRepo, private  val userInfoValidator: UserInfoValidator,private val courseRepo: CourseRepo){
+
+    suspend fun exitCurrentAccount(isSuccess: (ErrorEnum) -> Unit){
+        try{
+            val current = userLogicRepo.getUserInfoLocal()
+            val promo = userLogicRepo.getAllMyPromo()
+            userLogicRepo.deleteAllUserAds()
+            userLogicRepo.deleteAllReset()
+            userLogicRepo.deleteUserInfoLocal(current)
+            if(promo!=null){
+                userLogicRepo.deletePromoCode(promo)
+            }
+            transactionRepo.deleteAllBuyThemes()
+            val courseBuy = transactionRepo.getAllMyCourseBuy()
+            if(!courseBuy.isNullOrEmpty()){
+                courseBuy.forEach { oneCourse->
+                    transactionRepo.deleteBuyCourse(oneCourse)
+                }
+            }
+            val subs = transactionRepo.getSubscribe()
+            if(subs!=null){
+                transactionRepo.deleteSubscribe(subs)
+            }
+            courseRepo.deleteAllCourse()
+            courseRepo.deleteAllThemes()
+            courseRepo.deleteAllLevels()
+            courseRepo.deleteAllLevelsContent()
+            courseRepo.deleteAllVictorineClue()
+            courseRepo.deleteAllVictorines()
+            courseRepo.deleteAllVictorineVariants()
+            isSuccess.invoke(ErrorEnum.SUCCESS)
+        }catch (e:IOException){
+            isSuccess.invoke(ErrorEnum.NOTNETWORK)
+        }catch (e:TimeoutException){
+            isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
+        }catch (e:HttpException){
+            isSuccess.invoke(ErrorEnum.ERROR)
+        }catch (e:NullPointerException){
+            isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
+        }catch (e:Exception){
+            isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
+        }
+    }
 
     suspend fun insertUserInfo(userInfoEntity: UserInfoEntity, isSuccess: ((ErrorEnum) -> Unit)){
         try {

@@ -3,6 +3,7 @@ package workwork.test.andropediagits.presenter.lesson.victorine
 import android.animation.ObjectAnimator
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -99,9 +100,14 @@ class VictorineFragment : Fragment() {
             binding?.progressBar?.progressDrawable = lightDrawle
         }
 
+//        val color = binding?.cardVictTimer?.background as ColorDrawable
+//        val colorInt =
+        val color = binding?.cardVictTimer?.cardBackgroundColor?.defaultColor
 
+        val colorInt = R.color.error
 
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
         timerObser = Observer {
 
             if (10 >= it) {
@@ -112,6 +118,15 @@ class VictorineFragment : Fragment() {
                     )
                 )
             }
+          if(it>10&&color==colorInt){
+              binding?.cardVictTimer?.setCardBackgroundColor(
+                  ContextCompat.getColor(
+                      requireContext(),
+                      R.color.timer_deafult
+                  )
+              )
+          }
+
             binding?.tvTimer?.text = it.toString()
             Log.d("fkprkfprpfkrpkfprkfprkf", it.toString())
         }
@@ -1370,6 +1385,7 @@ class VictorineFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+        testCheckResultFlag = false
         CustomTimerUtil.stopTimer()
         timerObser?.let { CustomTimerUtil.timerValue.removeObserver(it) }
         if (!victorineEnded) {

@@ -22,6 +22,10 @@
             android:title="@string/about_Us"
             android:icon="@drawable/ic_info"
         />
+        <item
+            android:id="@+id/id_exit_account"
+            android:title="@string/exit_account_menu"
+            android:icon="@drawable/baseline_exit_to_app_24"/>
     </group>
 
  <!--   <item

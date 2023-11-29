@@ -143,7 +143,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            app:cardBackgroundColor="#404040"
+            app:cardBackgroundColor="@color/timer_deafult"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
