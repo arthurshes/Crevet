@@ -1113,26 +1113,6 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 })
             }
 
-            R.id.id_way_ad->{
-              viewModel.getAdProvider({ currentProviderAds->
-                  ShowDialogHelper.showDialogChooseWay(requireContext(),{
-                    val adsProviderEntity = AdsProviderEntity(
-                        id = currentProviderAds.id,
-                        selectedGoogle = true,
-                        selectedLMyTarger = false
-                    )
-                      viewModel.selectAdsProvider(adsProviderEntity)
-                  },{
-                      val adsProviderEntity = AdsProviderEntity(
-                          id = currentProviderAds.id,
-                          selectedGoogle = false,
-                          selectedLMyTarger = true
-                      )
-                      viewModel.selectAdsProvider(adsProviderEntity)
-                  }, choiceAd = true, currentGoogleSelect = currentProviderAds.selectedGoogle)
-              })
-            }
-
             R.id.id_reminder_schedule -> {
                 Toast.makeText(requireContext(), getString(R.string.in_developing), Toast.LENGTH_SHORT).show()
             }
@@ -1193,6 +1173,27 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                     }
                 })
             }
+
+            R.id.id_way_ad->{
+                viewModel.getAdProvider({ currentProviderAds->
+                    ShowDialogHelper.showDialogChooseWay(requireContext(),{
+                        val adsProviderEntity = AdsProviderEntity(
+                            id = currentProviderAds.id,
+                            selectedGoogle = true,
+                            selectedLMyTarger = false
+                        )
+                        viewModel.selectAdsProvider(adsProviderEntity)
+                    },{
+                        val adsProviderEntity = AdsProviderEntity(
+                            id = currentProviderAds.id,
+                            selectedGoogle = false,
+                            selectedLMyTarger = true
+                        )
+                        viewModel.selectAdsProvider(adsProviderEntity)
+                    }, choiceAd = true, currentGoogleSelect = currentProviderAds.selectedGoogle)
+                })
+            }
+
         }
         return true
     }

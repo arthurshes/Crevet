@@ -36,6 +36,7 @@ object ShowDialogHelper {
     private var dialog: Dialog? = null
     private var isDialogStrikeShow = false
     private var isDialogSuccess = false
+    private var dialogChooseWay = false
     private var isDialogReplay = false
     private var isAndropointShow = false
     private var isClueShow = false
@@ -43,102 +44,272 @@ object ShowDialogHelper {
     private var isCloseDialog = false
     private var isFailDialog = false
 
-
     fun showDialogChooseWay(    context: Context,
-                                googleAd: () -> Unit,    ruAd: () -> Unit,
-                                googlePay: (() -> Unit)?=null,
-                                ruPay:( () -> Unit)?=null,
-                                choiceAd: Boolean,currentGoogleSelect:Boolean?=null)
-
-    {
-        if (!isDialogSuccess) {
-            val currentTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-            isDialogSuccess = true
+                                googleAd: () -> Unit, ruAd: () -> Unit,    googlePay: (() -> Unit)? = null,
+                                ruPay: (() -> Unit)? = null,    choiceAd: Boolean, currentGoogleSelect: Boolean? = false
+    ) {
+        if (!dialogChooseWay) {
+        val currentTheme =
+            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            dialogChooseWay = true
             var isGoogleWay = false
-            dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-            dialog?.setContentView(R.layout.choose_way_dialog)
-            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-            dialog?.setCancelable(false)
-
-            val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
-            val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
-            val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
-            val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
+        dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog?.setContentView(R.layout.choose_way_dialog)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog?.setCancelable(false)
+        val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
+        val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
+        val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
+        val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
             val tvRu = dialog?.findViewById<TextView>(R.id.tvRu)
-            val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
-            if(currentGoogleSelect == true){
-                if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
-                    btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
-                }else{
-                    btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
-                }
-                btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
-            }else{
-                if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
-                    btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
-                }else{
-                    btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
-                }
-                btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
+        val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
+            if (currentGoogleSelect == true) {
+            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+            } else {                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
             }
-            if (choiceAd) {
-                btnGoogleChoice?.setOnClickListener {
-                    if(!isGoogleWay){
-                        if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
-                            btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
-                        }else{
-                            btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
-                        }
-                        btnGoogleChoice.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
-                    }
-                    btnContinueChooseWay?.alpha= 1.0F
-                    btnContinueChooseWay?.isClickable= true
-                    isGoogleWay = true
-                }
-                btnRuChoice?.setOnClickListener {
-                    if(isGoogleWay){
-                        if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
-                            btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
-                        }else{
-                            btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
-                        }
-                        btnRuChoice.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
-                    }
-                    btnContinueChooseWay?.alpha= 1.0F
-                    btnContinueChooseWay?.isClickable= true
-                    isGoogleWay = false
+            btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+        } else {
+            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+            btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+            btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+        } else {                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background) }
+            btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)        }
+        if (choiceAd) {            btnGoogleChoice?.setOnClickListener {
+            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {                        btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+            }                    else {
 
-                }
-                btnContinueChooseWay?.setOnClickListener {
-                    dialog?.dismiss()
-                    dialog = null
-                    if (isGoogleWay) {
-                        googleAd.invoke()                }
-                    else {
-                        ruAd.invoke()
-                    }
-                }
-            }else{
-                tvWay?.text = context.getString(R.string.select_pay_type)
-                tvGoogle?.text = "Google pay"
-                tvRu?.text = context.getString(R.string.yukassa)
-                btnGoogleChoice?.setOnClickListener {
-                    btnContinueChooseWay?.alpha= 1.0F
-                    btnContinueChooseWay?.isClickable= true
-                    isGoogleWay = true            }
-                btnRuChoice?.setOnClickListener {                btnContinueChooseWay?.alpha= 1.0F
-                    btnContinueChooseWay?.isClickable= true
-                    isGoogleWay = false
-                }
-                btnContinueChooseWay?.setOnClickListener {
-                    dialog?.dismiss()
-                    dialog = null
-                    if (isGoogleWay) {
-                        googlePay?.invoke()
-                    }else {                    ruPay?.invoke()
-                    }            }
-            }    }
-        dialog?.show()}
+                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)                    }
+            btnGoogleChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+            btnContinueChooseWay?.alpha = 1.0F
+            btnContinueChooseWay?.isClickable = true
+            isGoogleWay = true
+        }
+            btnRuChoice?.setOnClickListener {
+            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+            } else {
+                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
+            }
+            btnRuChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+            btnContinueChooseWay?.alpha = 1.0F
+            btnContinueChooseWay?.isClickable = true
+            isGoogleWay = false            }
+            btnContinueChooseWay?.setOnClickListener {                dialog?.dismiss()
+                dialog = null
+                if (isGoogleWay) {
+                    googleAd.invoke()                } else {
+                    ruAd.invoke()                }
+            }        } else {
+            tvWay?.text = context.getString(R.string.select_pay_type)
+            tvGoogle?.text = "Google pay"
+            tvRu?.text = context.getString(R.string.yukassa)
+            btnGoogleChoice?.setOnClickListener {
+                btnContinueChooseWay?.alpha = 1.0F
+                btnContinueChooseWay?.isClickable = true
+                isGoogleWay = true            }
+            btnRuChoice?.setOnClickListener {                btnContinueChooseWay?.alpha = 1.0F
+                btnContinueChooseWay?.isClickable = true
+                isGoogleWay = false
+            }
+            btnContinueChooseWay?.setOnClickListener {
+                dialog?.dismiss()
+                dialog = null
+                if (isGoogleWay) {                    googlePay?.invoke()
+                } else {                    ruPay?.invoke()
+                }            }
+        }    }
+        dialog?.show()
+        dialog?.setOnDismissListener {
+            dialogChooseWay = false
+        }
+    }
+
+
+
+//    fun showDialogChooseWay(    context: Context,
+//                                googleAd: () -> Unit, ruAd: () -> Unit,    googlePay: (() -> Unit)? = null,
+//                                ruPay: (() -> Unit)? = null,    choiceAd: Boolean, currentGoogleSelect: Boolean?=false
+//    ) {
+//        if (!isDialogSuccess) {
+//        val currentTheme =  context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+//        isDialogSuccess = true
+//        var isGoogleWay = false
+//        dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+//        dialog?.setContentView(R.layout.choose_way_dialog)
+//        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+//        dialog?.setCancelable(false)
+//        val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
+//        val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
+//        val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
+//        val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
+//        val tvRu = dialog?.findViewById<TextView>(R.id.tvRu)
+//        val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
+//        if (currentGoogleSelect == true) {
+//            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+//                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+//            } else {
+//                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
+//            }
+//            btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+//        } else {
+//            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+//                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+//            } else {
+//                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
+//            }
+//            btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+//        }
+//        if (choiceAd) {
+//            btnGoogleChoice?.setOnClickListener {
+//            if (!isGoogleWay) {
+//
+//                if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+//                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+//                } else { btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background) }
+//                btnGoogleChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)                }
+//            btnContinueChooseWay?.alpha = 1.0F
+//            btnContinueChooseWay?.isClickable = true
+//            isGoogleWay = true            }
+//            btnRuChoice?.setOnClickListener {
+//                if (isGoogleWay) {
+//                if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+//                    btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+//                } else {
+//                    btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
+//                }
+//                    btnRuChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+//            }
+//                btnContinueChooseWay?.alpha = 1.0F
+//                btnContinueChooseWay?.isClickable = true
+//                isGoogleWay = false
+//            }
+//            btnContinueChooseWay?.setOnClickListener {                dialog?.dismiss()
+//                dialog = null
+//                if (isGoogleWay) {
+//                    googleAd.invoke()
+//                } else {
+//                    ruAd.invoke()
+//                }
+//            }        } else {
+//            tvWay?.text = context.getString(R.string.select_pay_type)
+//            tvGoogle?.text = "Google pay"
+//            tvRu?.text = context.getString(R.string.yukassa)
+//            btnGoogleChoice?.setOnClickListener {
+//                btnContinueChooseWay?.alpha = 1.0F
+//                btnContinueChooseWay?.isClickable = true
+//                isGoogleWay = true            }
+//            btnRuChoice?.setOnClickListener {                btnContinueChooseWay?.alpha = 1.0F
+//                btnContinueChooseWay?.isClickable = true
+//                isGoogleWay = false
+//            }
+//            btnContinueChooseWay?.setOnClickListener {
+//                dialog?.dismiss()
+//                dialog = null
+//                if (isGoogleWay) {
+//                    googlePay?.invoke()
+//                } else {
+//                    ruPay?.invoke()                }
+//            }        }
+//    }
+//        dialog?.show()
+//    }
+
+
+//    fun showDialogChooseWay(    context: Context,
+//                                googleAd: () -> Unit,    ruAd: () -> Unit,
+//                                googlePay: (() -> Unit)?=null,
+//                                ruPay:( () -> Unit)?=null,
+//                                choiceAd: Boolean,currentGoogleSelect:Boolean?=null)
+//
+//    {
+//        if (!isDialogSuccess) {
+//            val currentTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+//            isDialogSuccess = true
+//            var isGoogleWay = false
+//            dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+//            dialog?.setContentView(R.layout.choose_way_dialog)
+//            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+//            dialog?.setCancelable(false)
+//
+//            val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
+//            val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
+//            val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
+//            val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
+//            val tvRu = dialog?.findViewById<TextView>(R.id.tvRu)
+//            val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
+//            if(currentGoogleSelect == true){
+//                if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
+//                    btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
+//                }else{
+//                    btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
+//                }
+//                btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
+//            }else{
+//                if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
+//                    btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
+//                }else{
+//                    btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
+//                }
+//                btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
+//            }
+//            if (choiceAd) {
+//                btnGoogleChoice?.setOnClickListener {
+//                    if(!isGoogleWay){
+//                        if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
+//                            btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
+//                        }else{
+//                            btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
+//                        }
+//                        btnGoogleChoice.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
+//                    }
+//                    btnContinueChooseWay?.alpha= 1.0F
+//                    btnContinueChooseWay?.isClickable= true
+//                    isGoogleWay = true
+//                }
+//                btnRuChoice?.setOnClickListener {
+//                    if(isGoogleWay){
+//                        if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
+//                            btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
+//                        }else{
+//                            btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
+//                        }
+//                        btnRuChoice.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
+//                    }
+//                    btnContinueChooseWay?.alpha= 1.0F
+//                    btnContinueChooseWay?.isClickable= true
+//                    isGoogleWay = false
+//
+//                }
+//                btnContinueChooseWay?.setOnClickListener {
+//                    dialog?.dismiss()
+//                    dialog = null
+//                    if (isGoogleWay) {
+//                        googleAd.invoke()                }
+//                    else {
+//                        ruAd.invoke()
+//                    }
+//                }
+//            }else{
+//                tvWay?.text = context.getString(R.string.select_pay_type)
+//                tvGoogle?.text = "Google pay"
+//                tvRu?.text = context.getString(R.string.yukassa)
+//                btnGoogleChoice?.setOnClickListener {
+//                    btnContinueChooseWay?.alpha= 1.0F
+//                    btnContinueChooseWay?.isClickable= true
+//                    isGoogleWay = true            }
+//                btnRuChoice?.setOnClickListener {                btnContinueChooseWay?.alpha= 1.0F
+//                    btnContinueChooseWay?.isClickable= true
+//                    isGoogleWay = false
+//                }
+//                btnContinueChooseWay?.setOnClickListener {
+//                    dialog?.dismiss()
+//                    dialog = null
+//                    if (isGoogleWay) {
+//                        googlePay?.invoke()
+//                    }else {                    ruPay?.invoke()
+//                    }            }
+//            }    }
+//        dialog?.show()}
 
 
     fun supportDialog(context: Context,clickTikTok:(()->Unit),clickYoutube:(()->Unit),clickTelegram:(()->Unit),dialogClose:(()->Unit)){

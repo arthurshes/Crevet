@@ -53,6 +53,7 @@
                         android:id="@+id/imageView"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
+                        android:background="@null"
                         android:layout_gravity="center"
                         android:layout_margin="5dp"
                         android:backgroundTint="@color/white"
@@ -60,6 +61,7 @@
 
                     <TextView
                         android:id="@+id/tvGoogle"
+                        android:background="@null"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -81,31 +83,26 @@
                     android:layout_marginBottom="10dp"
                     >
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                    <ImageView
+                        android:id="@+id/imRU"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:background="@null"
+                        android:layout_margin="5dp"
+                        app:srcCompat="@drawable/my_target_icon" />
 
-                        <ImageView
-                            android:id="@+id/imRU"
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:layout_gravity="center"
-                            android:layout_margin="5dp"
-                            app:srcCompat="@drawable/my_target_icon" />
-
-                        <TextView
-                            android:id="@+id/tvRu"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center_horizontal"
-                            android:text="@string/mytarget_ads"
-                            android:textSize="16dp"
-                            android:textStyle="bold"
-
-                            android:theme="@style/Text_black_white" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvRu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:text="@string/mytarget_ads"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+                        android:background="@null"
+                        android:theme="@style/Text_black_white" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tvRecForRu"
