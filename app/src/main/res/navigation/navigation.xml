@@ -224,4 +224,64 @@
             android:id="@+id/action_passwordRecoveryMethodFragment_to_coursesFragment"
             app:destination="@id/coursesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/indiCourseFragment"
+        android:name="workwork.test.andropediagits.presenter.IndiCourses.IndiCourseFragment"
+        android:label="fragment_indi_course"
+        tools:layout="@layout/fragment_indi_course" >
+        <action
+            android:id="@+id/action_indiCourseFragment_to_indiCreatorProfileFragment"
+            app:destination="@id/indiCreatorProfileFragment" />
+        <action
+            android:id="@+id/action_indiCourseFragment_to_indiThemeFragment"
+            app:destination="@id/indiThemeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/indiCreatorProfileFragment"
+        android:name="workwork.test.andropediagits.presenter.IndiCourses.IndiCreatorProfileFragment"
+        android:label="fragment_indi_creator_profile"
+        tools:layout="@layout/fragment_indi_creator_profile" >
+        <action
+            android:id="@+id/action_indiCreatorProfileFragment_to_indiThemeFragment"
+            app:destination="@id/indiThemeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/indiLessonFragment"
+        android:name="workwork.test.andropediagits.presenter.IndiCourses.IndiLessonFragment"
+        android:label="fragment_indi_lesson"
+        tools:layout="@layout/fragment_indi_lesson" >
+        <action
+            android:id="@+id/action_indiLessonFragment_to_indiVictorineFragment"
+            app:destination="@id/indiVictorineFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/indiLessonListFragment"
+        android:name="workwork.test.andropediagits.presenter.IndiCourses.IndiLessonListFragment"
+        android:label="fragment_indi_lesson_list"
+        tools:layout="@layout/fragment_indi_lesson_list" >
+        <action
+            android:id="@+id/action_indiLessonListFragment_to_indiLessonFragment"
+            app:destination="@id/indiLessonFragment" />
+        <action
+            android:id="@+id/action_indiLessonListFragment_to_indiVictorineFragment"
+            app:destination="@id/indiVictorineFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/indiThemeFragment"
+        android:name="workwork.test.andropediagits.presenter.IndiCourses.IndiThemeFragment"
+        android:label="fragment_indi_theme"
+        tools:layout="@layout/fragment_indi_theme" >
+        <action
+            android:id="@+id/action_indiThemeFragment_to_indiLessonListFragment"
+            app:destination="@id/indiLessonListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/indiVictorineFragment"
+        android:name="workwork.test.andropediagits.presenter.IndiCourses.IndiVictorineFragment"
+        android:label="fragment_indi_victorine"
+        tools:layout="@layout/fragment_indi_victorine" >
+        <action
+            android:id="@+id/action_indiVictorineFragment_to_indiThemeFragment"
+            app:destination="@id/indiThemeFragment" />
+    </fragment>
 </navigation>

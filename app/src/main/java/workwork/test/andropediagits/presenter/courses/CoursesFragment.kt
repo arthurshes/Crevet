@@ -2,6 +2,8 @@ package workwork.test.andropediagits.presenter.courses
 
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +36,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
+import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseEntity
 import workwork.test.andropediagits.databinding.FragmentCoursesBinding
 import workwork.test.andropediagits.domain.googbilling.BillingManager
@@ -48,6 +51,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class CoursesFragment (): Fragment(){
+    private var  backPressedOnce = false
     private var appUpdateManager: AppUpdateManager?=null
     private val updateType = AppUpdateType.IMMEDIATE
     private var binding: FragmentCoursesBinding? = null
@@ -81,10 +85,9 @@ class CoursesFragment (): Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Ваш код для обработки нажатия на кнопку "назад"        // Например, закрытие фрагмента или выполнение определенного действия
+
             }}
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
@@ -92,23 +95,54 @@ class CoursesFragment (): Fragment(){
         if (savedInstanceState != null) {
             viewModel.currentState = savedInstanceState.getString("state_key_course", "")
         }
-        if(args.isShowPromoCode){
-            val dialog = Dialog(requireContext())
-            dialog.setContentView(R.layout.promo_code_dialog)
-            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-            dialog.setCancelable(false)
-            val dialogReady = dialog.findViewById<CardView>(R.id.btnReadyPromo)
-            val dialogPromoCode = dialog.findViewById<EditText>(R.id.edEnterPromoCode)
-            val dialogError = dialog.findViewById<TextView>(R.id.tvPromoCodeError)
-            val btnClose = dialog.findViewById<LinearLayoutCompat>(R.id.btnClose)
-            dialogReady.setOnClickListener {
-                promoCodeTreatmentResult(dialogPromoCode,dialogError,dialog)
+        ShowDialogHelper.showDialogChooseWay(requireContext(),{
+            val adsProviderEntity = AdsProviderEntity(
+                selectedLMyTarger = false,
+                selectedGoogle = true
+            )
+            viewModel.selectAdsProvider(adsProviderEntity)
+            if(args.isShowPromoCode){
+                val dialog = Dialog(requireContext())
+                dialog.setContentView(R.layout.promo_code_dialog)
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.setCancelable(false)
+                val dialogReady = dialog.findViewById<CardView>(R.id.btnReadyPromo)
+                val dialogPromoCode = dialog.findViewById<EditText>(R.id.edEnterPromoCode)
+                val dialogError = dialog.findViewById<TextView>(R.id.tvPromoCodeError)
+                val btnClose = dialog.findViewById<LinearLayoutCompat>(R.id.btnClose)
+                dialogReady.setOnClickListener {
+                    promoCodeTreatmentResult(dialogPromoCode,dialogError,dialog)
+                }
+                btnClose.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.show()
             }
-            btnClose.setOnClickListener {
-                dialog.dismiss()
+        },{
+            val adsProviderEntity = AdsProviderEntity(
+                selectedLMyTarger = true,
+                selectedGoogle = false
+            )
+            viewModel.selectAdsProvider(adsProviderEntity)
+            if(args.isShowPromoCode){
+                val dialog = Dialog(requireContext())
+                dialog.setContentView(R.layout.promo_code_dialog)
+                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                dialog.setCancelable(false)
+                val dialogReady = dialog.findViewById<CardView>(R.id.btnReadyPromo)
+                val dialogPromoCode = dialog.findViewById<EditText>(R.id.edEnterPromoCode)
+                val dialogError = dialog.findViewById<TextView>(R.id.tvPromoCodeError)
+                val btnClose = dialog.findViewById<LinearLayoutCompat>(R.id.btnClose)
+                dialogReady.setOnClickListener {
+                    promoCodeTreatmentResult(dialogPromoCode,dialogError,dialog)
+                }
+                btnClose.setOnClickListener {
+                    dialog.dismiss()
+                }
+                dialog.show()
             }
-            dialog.show()
-        }
+        }, choiceAd = true)
+
 
         adapter?.andropointPrice = {androPrice->
             adapter?.rubPrice = {rubPrice->
@@ -481,9 +515,12 @@ class CoursesFragment (): Fragment(){
         var promoCodeState: PromoCodeState? = null
         lifecycleScope.launch {
             viewModel.checkPromoCode(dialogPromoCode.text.toString(), { resultPromoCode ->
+                Log.d("promoCodeTestTest",resultPromoCode.toString())
                 when (resultPromoCode) {
                     ErrorEnum.SUCCESS -> {
+                        Log.d("promoCodeTestTest",promoCodeState.toString()+" PromoExist")
                         when (promoCodeState) {
+
                             PromoCodeState.PROMOEXISTSUCCESS -> {
                                 requireActivity().runOnUiThread {
                                     Toast.makeText(

@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.internal.userAgent
 import workwork.test.andropediagits.core.exception.ErrorEnum
+import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseEntity
 import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
@@ -22,13 +24,19 @@ import workwork.test.andropediagits.domain.useCases.userLogic.state.SpendAndropo
 import javax.inject.Inject
 
 @HiltViewModel
-class CoursesViewModel @Inject constructor(val coursesRepo: CourseRepo, private val promoCodeUseCase: PromoCodeUseCase, private val courseUseCase: CourseUseCase, private val andropointUseCase: AndropointUseCase, private val themeUseCase: ThemeUseCase, private val transactionUseCase: TransactionUseCase) : ViewModel() {
+class CoursesViewModel @Inject constructor(private val userLogicRepo: UserLogicRepo,private val coursesRepo: CourseRepo, private val promoCodeUseCase: PromoCodeUseCase, private val courseUseCase: CourseUseCase, private val andropointUseCase: AndropointUseCase, private val themeUseCase: ThemeUseCase, private val transactionUseCase: TransactionUseCase) : ViewModel() {
     var currentState: String = ""
     private var _allCourses:MutableLiveData<List<CourseEntity>> = MutableLiveData()
     var allCourses: LiveData<List<CourseEntity>> = _allCourses
 
     init {
         initialCourse()
+    }
+
+    fun selectAdsProvider(adsProviderEntity: AdsProviderEntity){
+        viewModelScope.launch {
+            userLogicRepo.insertAdsProvider(adsProviderEntity)
+        }
     }
 
     fun buyCourseAndropoint(isSuccess: (ErrorEnum) -> Unit, andropointMinus:Int, isAndropointState:((BuyForAndropointStates)->Unit)){

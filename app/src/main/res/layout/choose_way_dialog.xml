@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="30dp"
+    android:layout_marginStart="30dp"
+    app:cardCornerRadius="20dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_dialog"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:theme="@style/ConstraintLightAndBlack"
+            app:cardCornerRadius="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvWay"
+                    android:layout_width="match_parent"
+                    android:theme="@style/Text_black_white"
+                    android:layout_height="wrap_content"
+
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:gravity="center"
+                    android:text="@string/select_ad_type" />
+                <LinearLayout
+                    android:id="@+id/btnGoogleChoice"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="22dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:backgroundTint="@color/white"
+                        app:srcCompat="@drawable/google" />
+
+                    <TextView
+                        android:id="@+id/tvGoogle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@color/white"
+                        android:gravity="center_horizontal"
+                        android:text="@string/google_ads"
+                        android:textSize="16dp"
+                        android:textStyle="bold"
+
+                        android:theme="@style/Text_black_white" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/btnRuChoice"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="22dp"
+                    android:layout_marginBottom="10dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imRU"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            app:srcCompat="@drawable/my_target_icon" />
+
+                        <TextView
+                            android:id="@+id/tvRu"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center_horizontal"
+                            android:text="@string/mytarget_ads"
+                            android:textSize="16dp"
+                            android:textStyle="bold"
+
+                            android:theme="@style/Text_black_white" />
+                    </LinearLayout>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvRecForRu"
+                    android:layout_width="wrap_content"
+                    android:theme="@style/Text_black_white"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_gravity="start"
+                    android:text="@string/recommended_for_russian_federation" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/btnContinueChooseWay"
+                    android:layout_width="wrap_content"
+                    android:clickable="false"
+                    android:alpha="0.5"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="10dp"
+                    app:cardBackgroundColor="#1F71D0">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="#1F71D0"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:paddingEnd="30dp"
+                        android:paddingStart="30dp"
+                        android:gravity="center|center_horizontal|center_vertical"
+                        android:text="@string/continue_"
+                        android:textStyle="bold"
+                        android:textColor="#FFFFFF" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

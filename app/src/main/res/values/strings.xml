@@ -1,4 +1,12 @@
 <resources>
+    <string name="select_ad_type">Выберите вид рекламы</string><string name="select_pay_type">Выберите способ оплаты</string>
+    <string name="google_ads">Реклама Google</string><string name="yukassa">Юкасса</string>
+    <string name="mytarget_ads">Реклама MyTarget</string><string name="recommended_for_russian_federation">*Рекомендуется для РФ</string>
+    <string name="way_ad">Вид рекламы</string>
+    <string name="delete_my_account_data">Удалить аккаунт</string>
+    <string name="google_sing_up">Войти через Google</string>
+    <string name="back_press_again_exit">Нажмите снова для выхода</string>
+    <string name="defaul_web_client_id">395678996298-0p708in0t58gpo81d5geevbskl67733n.apps.googleusercontent.com</string>
     <string name="exit_account_menu">Выйти из аккаунта</string>
     <string name="test_replay_results">Результаты теста</string>
     <string name="testing_bottom">Тестирования</string>
@@ -23,12 +31,15 @@
     <string name="password_mismatch">Пароли не совпадают</string>
     <string name="enter_your_email"> Введите вашу электронную почту для сброса пароля</string>
     <string name="enter_your_password"> Введите новый пароль</string>
-    <string name="select_date">Выбрать дату</string><string name="select_date_description">Введите дату и подсказку для себя по которой вы сможете восстановить пароль</string>
-    <string name="select_keyword">Выбрать ключевую фразу</string><string name="select_keyword_description">Введите ключевую фразу с вопросом или подсказкой по которой вы сможете восстановить пароль</string>
-    <string name="app_name">AndroPediaGits</string>
+    <string name="select_date">Выбрать дату</string>
+    <string name="select_date_description">Введите дату и подсказку для себя по которой вы сможете восстановить пароль</string>
+    <string name="select_keyword">Выбрать ключевую фразу</string>
+    <string name="select_keyword_description">Введите ключевую фразу с вопросом или подсказкой по которой вы сможете восстановить пароль</string>
+    <string name="app_name">Andropedia</string>
     <string name="fill_text">Заполните ключевую фразу и подсказку</string>
     <string name="keyword">Ключевая фраза</string>
-    <string name="invalid_date">Неверная дата</string><string name="invalid_keyword">Неверное слово</string>
+    <string name="invalid_date">Неверная дата</string>
+    <string name="invalid_keyword">Неверное слово</string>
     <string name="choose_another_date">Выберите другую дату</string>
     <string name="this_field_cannot_be_empty">Это поле не може быть пустым</string>
     <string name="enter_key_phrase_with_question_or_hint">Введите ключевую фразу с вопросом или подсказкой</string>
@@ -61,15 +72,15 @@
     <!--SignUp-->
     <string name="delay_andropoint_victorine_aviable">У вас нету задержки</string>
     <string name="welcome">Добро пожаловать!</string>
-<string name="pass_for_andropoint">Пропустить за андропоинты(-2ч) 4</string>
+    <string name="pass_for_andropoint">Пропустить за андропоинты(-2ч) 4</string>
 
     <string name="sign_in">Войти</string>
-    <string name="sign_up">Зарегистрироваться</string>
+    <string name="sign_up">Регистрация-вход</string>
     <string name="sign_in_existing_account">Войти в существуюший аккаунт</string>
     <string name="create_account">Создать аккаунт</string>
     <string name="welcome_back">С возвращением!</string>
     <string name="sign_up_title">Регистрация</string>
-    <string name="forgot_password">Забыли пороль?</string>
+    <string name="forgot_password">Забыли пароль?</string>
     <!--SignUp-->
     <!--Drawer--> <!--Drawer--> <!--Drawer--> <!--Drawer-->
     <string name="favourite">Избранные</string>
@@ -132,7 +143,7 @@
     <string name="advice">Советуем за это время хорошо подготовиться. И мы верим, что в следующий раз у вас все получится!</string>
     <string name="watch_add">Вы можете посмотреть рекламу чтобы сократить задержку</string>
     <string name="buy_premium_fail_test">Приобрести ПРЕМИУМ и избавится от задержки навсегда!</string>
-    <string name="term_before_fail_test">Вы сможете пройти тест повторно в DATA</string>
+    <string name="term_before_fail_test">Вы сможете пройти тест повторно в DATA GMT+3</string>
     <string name="attention">ВНИМАНИЕ!</string>
     <string name="end_theme">Поздравляем! Вы завершили тему!</string>
     <string name="end_theme_description">Хорошая работа! Продолжайте в том же духе!</string>

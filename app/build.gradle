@@ -7,6 +7,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -15,10 +16,10 @@ android {
 
     defaultConfig {
         applicationId "workwork.test.andropediagits"
-        minSdk 26
+        minSdk 27
         targetSdk 33
-        versionCode 15
-        versionName "2.4"
+        versionCode 34
+        versionName "4.3"
 
         testInstrumentationRunner "workwork.test.andropediagits.HiltTestRunner"
 
@@ -54,6 +55,8 @@ android {
 
 dependencies {
 
+    implementation 'com.my.target:mytarget-sdk:5.19.0'
+
     // adding Admob SDK
     implementation 'com.google.android.gms:play-services-ads:22.4.0'
     implementation 'com.google.android.ump:user-messaging-platform:2.1.0'
@@ -67,6 +70,7 @@ dependencies {
 
     implementation 'com.github.mukeshsolanki.android-otpview-pinview:otpview:3.1.0'
     implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.firebase:firebase-auth-ktx:22.3.0'
 
     /*  implementation 'com.vk:android-sdk-core:3.x.x'
       implementation 'com.vk:android-sdk-api:3.x.x' // generated models and api methods*/
@@ -80,7 +84,7 @@ dependencies {
     implementation "com.android.billingclient:billing:6.0.1"
     // Fragment
     implementation 'androidx.fragment:fragment-ktx:1.5.7'
-    implementation 'com.google.android.gms:play-services-auth:20.5.0'
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
 
     def navVersion = "2.5.3"
     implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"

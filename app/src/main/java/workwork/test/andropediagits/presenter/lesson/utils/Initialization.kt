@@ -69,7 +69,9 @@ object Initialization {
             if (text != null) {
 
                 textView.visibility = View.VISIBLE
-                textView.text = OptimizationText.searchTitles(text)
+               val textReplace = text.replace(Regex("\\d+\\.?(?==)"), "")
+
+                textView.text = OptimizationText.searchTitles(textReplace)
 
                 textView.setTextSize(pref?.getString(Constatns.TEXT_KEY, "20"))
             } else {

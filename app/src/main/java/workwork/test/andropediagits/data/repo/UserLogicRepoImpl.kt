@@ -4,6 +4,8 @@ package workwork.test.andropediagits.data.repo
 import workwork.test.andropediagits.core.model.SendStatus
 import workwork.test.andropediagits.data.local.MainDb
 import workwork.test.andropediagits.data.local.entities.AdsEntity
+import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
+import workwork.test.andropediagits.data.local.entities.BillingProviderEntity
 import workwork.test.andropediagits.data.local.entities.ResetNextEntity
 import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.data.local.entities.promo.PromoCodeEntity
@@ -11,6 +13,7 @@ import workwork.test.andropediagits.data.remote.CheckAdsLimitGetModel
 import workwork.test.andropediagits.data.remote.LogicUserApiService
 import workwork.test.andropediagits.data.remote.TimeApiService
 import workwork.test.andropediagits.data.remote.model.CheckAdsLimitModel
+import workwork.test.andropediagits.data.remote.model.DeleteMyAccModel
 import workwork.test.andropediagits.data.remote.model.EmailSignInAnswerModel
 import workwork.test.andropediagits.data.remote.model.StrikeModeAnswerModel
 import workwork.test.andropediagits.data.remote.model.TimeAnswerModel
@@ -41,6 +44,43 @@ class UserLogicRepoImpl @Inject constructor(val signInApiService: LogicUserApiSe
     private val dao = mainDb.getUserInfoDao()
     private val promoCodeDao = mainDb.getPromoCodeDao()
     private val resetDao = mainDb.getResetDao()
+    private val providerDao = mainDb.getProviderDao()
+
+    override suspend fun insertAdsProvider(adsProviderEntity: AdsProviderEntity) {
+        providerDao.insertAdsProvider(adsProviderEntity)
+    }
+
+    override suspend fun insertBillingProvider(billingProviderEntity: BillingProviderEntity) {
+        providerDao.insertBillingProvider(billingProviderEntity)
+    }
+
+    override suspend fun updateBillingProvider(billingProviderEntity: BillingProviderEntity) {
+        providerDao.updateBillingProvider(billingProviderEntity)
+    }
+
+    override suspend fun updateAdsProvider(adsProviderEntity: AdsProviderEntity) {
+        providerDao.updateAdsProvider(adsProviderEntity)
+    }
+
+    override suspend fun getMyAdsProvider(): AdsProviderEntity {
+       return providerDao.getMyAdsProvider()
+    }
+
+    override suspend fun getMyBillingProvider(): BillingProviderEntity {
+        return providerDao.getMyBillingProvider()
+    }
+
+    override suspend fun deleteAdsProvider() {
+        providerDao.deleteAdsProvider()
+    }
+
+    override suspend fun deletebillingProvider() {
+       providerDao.deletebillingProvider()
+    }
+
+    override suspend fun deleteMyAccount(DeleteMyAccModel: DeleteMyAccModel): SendStatus {
+        return signInApiService.deleteMyAccount(DeleteMyAccModel)
+    }
 
     override suspend fun sendUpdateNewPassword(updateNewPasswordModel: UpdateNewPasswordModel): SendStatus {
        return signInApiService.sendUpdateNewPassword(updateNewPasswordModel)

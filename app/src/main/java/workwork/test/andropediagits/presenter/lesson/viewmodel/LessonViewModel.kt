@@ -39,6 +39,17 @@ class LessonViewModel @Inject constructor(
     // var currentLevel: LiveData<ThemeLevelContentEntity>? = null
 private var countLesson:Int = 0
 
+    fun termExistCheckLocal(uniqueThemeId: Int,isExist:((Boolean)->Unit)){
+        viewModelScope.launch {
+            val theme = coursesRepo.searchThemeWithUniwueId(uniqueThemeId)
+            if(theme.termDateApi==null&&theme.termHourse==null){
+                isExist.invoke(true)
+            }else{
+                isExist.invoke(false)
+            }
+        }
+    }
+
     fun howManyTerm(isSuccess:((ErrorEnum)->Unit), isTermEnd:((String)->Unit),themeNumber:Int,courseNumber: Int){
         viewModelScope.launch {
             themeUseCase.howManyTerm(isSuccess, isTermEnd, themeNumber = themeNumber, courseNumber = courseNumber)

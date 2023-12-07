@@ -29,7 +29,7 @@ class PromoCodeUseCase @Inject constructor(private val userLogicRepo: UserLogicR
                     if(response.userPromoExist){
                         isPromoState.invoke(PromoCodeState.PROMOUSEREXIST)
                     }else{
-                        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
                         val date = dateFormat.parse( response.promoDate)
                         val promoCodeEntity = PromoCodeEntity(
                             promoId = userInfo?.token + promoCode + currentTime.datetime,
@@ -46,6 +46,7 @@ class PromoCodeUseCase @Inject constructor(private val userLogicRepo: UserLogicR
 
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
+            Log.d("promoDialdodod","promooException:${e.toString()}")
             if(checkSubscibe()){
                 isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                 return

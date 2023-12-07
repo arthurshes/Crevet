@@ -14,13 +14,10 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 
 import dagger.hilt.android.HiltAndroidApp
-import workwork.test.andropediagits.core.workmanagers.CheckCacheWorker
-import workwork.test.andropediagits.crashInspector.domain.useCase.CrashUseCase
-import workwork.test.andropediagits.domain.useCases.userLogic.CacheUseCase
-import javax.inject.Inject
+
 
 @HiltAndroidApp
-class MyApp:Application(),Configuration.Provider{
+class MyApp:Application(){
 
     override fun onCreate() {
         super.onCreate()
@@ -38,26 +35,10 @@ class MyApp:Application(),Configuration.Provider{
         }
     }
 
-    @Inject
-    lateinit var cacheWorkerFactory: CheckCacheWorkerFactory
-
-
-
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
-            .setMinimumLoggingLevel(Log.DEBUG)
-            .setWorkerFactory(cacheWorkerFactory)
-            .build()
-}
-
-
-
-class CheckCacheWorkerFactory @Inject constructor(private val cacheUseCase: CacheUseCase, private val crashUseCase: CrashUseCase):WorkerFactory(){
-    override fun createWorker(
-        appContext: Context,
-        workerClassName: String,
-        workerParameters: WorkerParameters
-    ): ListenableWorker? = CheckCacheWorker(cacheUseCase, appContext,workerParameters,crashUseCase)
 
 }
+
+
+
+
 

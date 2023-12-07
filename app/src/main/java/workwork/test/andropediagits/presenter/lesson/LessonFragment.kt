@@ -205,12 +205,17 @@ class LessonFragment : Fragment() {
             when(state){
                 ErrorEnum.SUCCESS -> {
                     if(termVar!=""){
-                        isTermExistButton = true
-                        val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_lock) // Замените R.drawable.my_drawable на свой ресурс
-                        binding?.btnNext?.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
-                        binding?.btnNext?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error))
-                        binding?.btnNext?.text = termVar
-                        binding?.btnNext?.isEnabled = false
+                        viewModel.termExistCheckLocal(args.uniqueThemeId,{
+                            if(!it){
+                                isTermExistButton = true
+                                val drawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_lock) // Замените R.drawable.my_drawable на свой ресурс
+                                binding?.btnNext?.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+                                binding?.btnNext?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error))
+                                binding?.btnNext?.text = termVar
+                                binding?.btnNext?.isEnabled = false
+                            }
+                        })
+
                     }
                 }
                 ErrorEnum.NOTNETWORK -> {

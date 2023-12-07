@@ -23,6 +23,9 @@ import com.google.android.gms.ads.OnUserEarnedRewardListener
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.my.target.ads.Reward
+import com.my.target.common.models.IAdLoadingError
+
 import dagger.hilt.android.AndroidEntryPoint
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -40,6 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 @AndroidEntryPoint
 class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
     private var isDialogOpen = false
+    private var adTarget: com.my.target.ads.RewardedAd? = null
     private var googleMobileAdsConsentManager: GoogleAdManager? = null
     private var rewardedAd: RewardedAd? = null
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
@@ -61,6 +65,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        adTarget = com.my.target.ads.RewardedAd(1455175, requireContext())
         binding = FragmentVictorineBottomSheetBinding.inflate(inflater, container, false)
         googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
         isTermVar = arguments?.getBoolean("isTerm", false) == true
@@ -103,11 +108,21 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                 isTermVictorine = false
             } else {
 
-                if (!isThemePassed) {
-                    isTermVictorine = true
-                    binding?.linearTermVictorineSheet?.visibility = View.VISIBLE
 
-                    binding?.termTextViewVictorineBottom?.text = terString
+
+                if (!isThemePassed) {
+                    viewModel.termExistCheckLocal(uniqueCurrentThemeId ?: 2,{
+                        if(it){
+                            binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
+                            isTermVictorine = false
+                        }else{
+                            isTermVictorine = true
+                            binding?.linearTermVictorineSheet?.visibility = View.VISIBLE
+
+                            binding?.termTextViewVictorineBottom?.text = terString
+                        }
+                    })
+
                 }
 
             }
@@ -236,7 +251,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
     private fun inVictorine(uniqueCurrentThemeId: Int?, isThemePassed: Boolean, courseName: String?, courseNameReal: String?, courseNumber: Int?) {
         if (isTermVictorine) {
             if (!isThemePassed) {
-                Toast.makeText(requireContext(), "${getString(R.string.victorine_is_closed_for_delay_until)}${terString}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "${getString(R.string.victorine_is_closed_for_delay_until)}${terString} GMT+3", Toast.LENGTH_LONG).show()
             } else {
                 if(!isDialogOpen) {
                     ShowDialogHelper.showDialogAttention(requireContext(), {
@@ -295,102 +310,205 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
     private fun checkLimitActualTreatmentResult() {
-        var isActualNotTerm = false
-        viewModel.checkLimitActual({ state ->
-            when (state) {
-                ErrorEnum.SUCCESS -> {
-                    Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
-                    Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
-                    if (isActualNotTerm) {
-                        if (startTimerViewAds) {
-                            requireActivity().runOnUiThread {
-                                Toast.makeText(
-                                    requireContext(),
-                                    getString(R.string.advertising_will_be_available_through),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+        viewModel.getMyAdsProvider {adsProviderEntity ->
+            if(adsProviderEntity.selectedGoogle){
+                var isActualNotTerm = false
+                viewModel.checkLimitActual({ state ->
+                    when (state) {
+                        ErrorEnum.SUCCESS -> {
+                            Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
+                            Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
+                            if (isActualNotTerm) {
+                                if (startTimerViewAds) {
+                                    requireActivity().runOnUiThread {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.advertising_will_be_available_through),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                } else {
+                                    showRewardedVideo()
+                                }
+                            } else {
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.advertising_limit_has_been_reached),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
                             }
-
-                        } else {
-                         showRewardedVideo()
                         }
-                    } else {
-                        requireActivity().runOnUiThread {
-                            Toast.makeText(
-                                requireContext(),
-                                getString(R.string.advertising_limit_has_been_reached),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                        ErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
                         }
 
-                    }
-                }
-                ErrorEnum.NOTNETWORK -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
+                        ErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
 
+                                }
+                            }
+                        }
+
+
+                        ErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
+                        }
+
+                        ErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
+                        }
+
+                        ErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
+                        }
+
+                        ErrorEnum.OFFLINEMODE -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogOffline(requireContext())
+                            }
+                        }
+
+                        ErrorEnum.OFFLINETHEMEBUY -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogOffline(requireContext())
+                            }
                         }
                     }
-                }
-
-                ErrorEnum.ERROR -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-
-                        }
-                    }
-                }
-
-
-                ErrorEnum.UNKNOWNERROR -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-
-                        }
-                    }
-                }
-
-                ErrorEnum.TIMEOUTERROR -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-
-                        }
-                    }
-                }
-
-                ErrorEnum.NULLPOINTERROR -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-
-                        }
-                    }
-                }
-
-                ErrorEnum.OFFLINEMODE -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
-                    }
-                }
-
-                ErrorEnum.OFFLINETHEMEBUY -> {
-                    requireActivity().runOnUiThread {
-                        ShowDialogHelper.showDialogOffline(requireContext())
-                    }
-                }
+                }, {
+                    isActualNotTerm = it
+                })
             }
-        }, {
-            isActualNotTerm = it
-        })
+            if(adsProviderEntity.selectedLMyTarger){
+                var isActualNotTerm = false
+                viewModel.checkLimitActual({ state ->
+                    when (state) {
+                        ErrorEnum.SUCCESS -> {
+                            Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
+                            Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
+                            if (isActualNotTerm) {
+                                if (startTimerViewAds) {
+                                    requireActivity().runOnUiThread {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.advertising_will_be_available_through),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+
+                                } else {
+                                    initAd()
+                                }
+                            } else {
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.advertising_limit_has_been_reached),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                            }
+                        }
+                        ErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
+                        }
+
+                        ErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
+                        }
+
+
+                        ErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
+                        }
+
+                        ErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
+                        }
+
+                        ErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+
+                                }
+                            }
+                        }
+
+                        ErrorEnum.OFFLINEMODE -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogOffline(requireContext())
+                            }
+                        }
+
+                        ErrorEnum.OFFLINETHEMEBUY -> {
+                            requireActivity().runOnUiThread {
+                                ShowDialogHelper.showDialogOffline(requireContext())
+                            }
+                        }
+                    }
+                }, {
+                    isActualNotTerm = it
+                })
+            }
+        }
+
     }
 
 
@@ -635,5 +753,41 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
         super.onDestroy()
         binding = null
     }
+
+    private fun initAd() {
+
+        // Устанавливаем слушатель событий
+        adTarget?.setListener(object : com.my.target.ads.RewardedAd.RewardedAdListener {
+
+            override fun onLoad(p0: com.my.target.ads.RewardedAd) {
+                adTarget?.show()
+            }
+
+            override fun onNoAd(p0: IAdLoadingError, p1: com.my.target.ads.RewardedAd) {
+                Toast.makeText(requireContext(),R.string.no_ads_view,Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onClick(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onClick")
+            }
+
+            override fun onDismiss(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onDismiss")
+            }
+
+            override fun onReward(p0: Reward, p1: com.my.target.ads.RewardedAd) {
+                adsViewTreatmentResult()
+                minusTwoHoursTerm()
+            }
+
+            override fun onDisplay(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onDisplay")
+            }
+        })
+
+        // Запускаем загрузку данных
+        adTarget?.load()
+    }
+
 }
 

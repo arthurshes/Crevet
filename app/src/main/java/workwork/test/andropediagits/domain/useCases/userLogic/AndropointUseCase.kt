@@ -149,6 +149,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                                 val responsePromoActual = userLogicRepo.checkActualMySubscribe(promoCodeModel)
                                 if (responsePromoActual.isActual) {
                                     updateAndropointPlus( 1 * 2)
+                                    isSuccess.invoke(ErrorEnum.SUCCESS)
                                     return
                                 }
                             }

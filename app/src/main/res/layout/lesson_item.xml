@@ -38,7 +38,7 @@
         android:layout_marginTop="4dp"
         android:text="Знакомство с andropedia"
         android:textSize="16sp"
-        android:maxLength="27"
+        android:maxLength="24"
         android:textStyle="bold"
         android:theme="@style/text_color_theme"
         app:layout_constraintStart_toEndOf="@+id/imLesson"

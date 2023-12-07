@@ -1,4 +1,15 @@
 <resources>
+
+    <string name="select_ad_type">Select advertising type</string>
+    <string name="select_pay_type">Select a Payment Method</string>
+    <string name="google_ads">Google Ads</string><string name="yukassa">Yukassa</string>
+    <string name="mytarget_ads">MyTarget Advertising</string>
+    <string name="recommended_for_russian_federation">*Recommended for the Russian Federation</string>
+    <string name="way_ad">Type of advertising</string>
+    <string name="delete_my_account_data">Delete account</string>
+    <string name="google_sing_up">Sign Up in Google</string>
+    <string name="back_press_again_exit">Click again to exit</string>
+    <string name="defaul_web_client_id">395678996298-0p708in0t58gpo81d5geevbskl67733n.apps.googleusercontent.com</string>
     <!--    <string name="social_network_description">Подписывайтесь на наши соц. сети чтобы быть в курсе последних обновлений и акций!</string>-->
     <!--    <string name="no_ads_view">Пока нет рекламы</string>-->
     <!--    <string name="cancel_rustore_billing">Вы отменили покупку</string>-->
@@ -212,7 +223,7 @@
     <string name="select_date_description">Enter the date and a hint to recover your password</string>
     <string name="select_keyword">Select keyword</string>
     <string name="select_keyword_description">Enter a keyword with a question or hint to recover your password</string>
-    <string name="app_name">AndroPediaGits</string>
+    <string name="app_name">Andropedia</string>
     <string name="fill_text">Fill in the keyword and hint</string>
     <string name="keyword">Keyword</string>
     <string name="invalid_date">Invalid date</string>
@@ -248,7 +259,7 @@
     <!--SignUp-->
     <string name="welcome">Welcome!</string>
     <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="sign_up">Sign Up-Sign In</string>
     <string name="sign_in_existing_account">Sign in to an existing account</string>
     <string name="create_account">Create an account</string>
     <string name="welcome_back">Welcome back!</string>
@@ -316,7 +327,7 @@
     <string name="advice">We recommend using this time to prepare well. And we believe that next time you will succeed!</string>
     <string name="watch_add">You can watch an ad to reduce the delay</string>
     <string name="buy_premium_fail_test">Purchase PREMIUM and get rid of the delay forever!</string>
-    <string name="term_before_fail_test">You can retake the test in DATA</string>
+    <string name="term_before_fail_test">You can retake the test in DATA GMT+3</string>
     <string name="attention">ATTENTION!</string>
     <string name="end_theme">Congratulations! You have completed the theme!</string>
     <string name="end_theme_description">Good job! Keep it up!</string>

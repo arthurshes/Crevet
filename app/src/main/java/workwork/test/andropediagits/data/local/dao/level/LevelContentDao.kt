@@ -11,7 +11,7 @@ import workwork.test.andropediagits.data.local.entities.levels.ThemeLevelContent
 @Dao
 interface LevelContentDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLevelsContent(themeLevelContentEntity: ThemeLevelContentEntity)
 
     @Query("DELETE FROM ThemeLevelContentEntityTable")

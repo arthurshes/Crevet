@@ -38,6 +38,13 @@ class ThemesAdapter(val args:ThemesFragmentArgs,val context:Context) : RecyclerV
     var buyThemePossible:((Boolean)->Unit)?=null
     var buyThemeAndropointPrice:((Int)->Unit)?=null
 
+    fun shortenText(inputText: String, maxLength: Int): String {
+        return if (inputText.length <= maxLength) {
+            inputText // Ничего не изменяем, если длина текста не превышает maxLength
+        } else {
+            inputText.substring(0, maxLength - 3)  + "..." // Укорачиваем текст до maxLength - 3 символов и добавляем троеточие
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeHolder {
         return ThemeHolder(ThemeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -59,16 +66,20 @@ class ThemesAdapter(val args:ThemesFragmentArgs,val context:Context) : RecyclerV
 
             tvNumberTheme.text = "${context.getString(R.string.theme_number)} ${position+1}"
             if(!currentTheme.isOpen&&currentTheme.themePrice==null){
+                tvTitleTheme.text = shortenText(currentTheme.themeName,18)
                 btnFav.visibility = View.GONE
                 cardCloseTheme.visibility = View.VISIBLE
             } else if(!currentTheme.isOpen&&currentTheme.themePrice==0){
+                tvTitleTheme.text = shortenText(currentTheme.themeName,18)
                 btnFav.visibility = View.GONE
                 cardCloseTheme.visibility = View.VISIBLE
             }
             else if(!currentTheme.isOpen&&currentTheme.themePrice!=null&&currentTheme.themePrice!=0){
                 btnFav.visibility = View.GONE
                 cardBuyAndropointsOrMoney.visibility = View.VISIBLE
+                tvTitleTheme.text = shortenText(currentTheme.themeName,18)
             }else{
+                tvTitleTheme.text = shortenText(currentTheme.themeName,24)
                 btnFav.visibility = View.VISIBLE
                 cardBuyAndropointsOrMoney.visibility = View.GONE
                 cardCloseTheme.visibility = View.GONE
@@ -101,7 +112,7 @@ class ThemesAdapter(val args:ThemesFragmentArgs,val context:Context) : RecyclerV
                 btnFav.visibility = View.VISIBLE
 
             }
-            tvTitleTheme.text = currentTheme.themeName
+
             themeCard.setOnClickListener {
                 if(!currentTheme.isOpen&&currentTheme.themePrice!=null&&currentTheme.themePrice!=0){
                     buyThemeUniqueId?.invoke(currentTheme.uniqueThemeId)

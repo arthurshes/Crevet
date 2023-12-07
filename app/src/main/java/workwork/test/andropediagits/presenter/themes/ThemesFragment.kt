@@ -41,11 +41,19 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.material.navigation.NavigationView
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.auth
+import com.my.target.ads.Reward
+import com.my.target.common.models.IAdLoadingError
+
 import dagger.hilt.android.AndroidEntryPoint
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.utils.Constatns.AD_UNIT_ID
 import workwork.test.andropediagits.core.utils.GoogleAdManager
+import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
 import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.databinding.FragmentThemesBinding
 import workwork.test.andropediagits.domain.googbilling.BillingManager
@@ -61,7 +69,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
+    private var adTarget: com.my.target.ads.RewardedAd? = null
     private var billingManager: BillingManager? = null
+    private var currentUser: FirebaseUser?=null
     private var binding: FragmentThemesBinding? = null
     private var googleMobileAdsConsentManager: GoogleAdManager? = null
     private var rewardedAd: RewardedAd? = null
@@ -80,6 +90,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
     private var listLang: LinearLayout? = null
     private var russianTextLang: TextView? = null
     private var englishTextLang: TextView? = null
+    private var auth: FirebaseAuth?=null
     private var imageArrowLangDown: ImageView? = null
     private var imageArrowLangUp: ImageView? = null
     private var timer: CountDownTimer? = null
@@ -87,7 +98,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
     private var isThemesFavorite = false
     private val russianText = "🇷🇺    Рус"
     private val englishText = "🇺🇸    Eng"
-
+    private var premiumVisible = false
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -102,6 +113,9 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         binding = FragmentThemesBinding.inflate(inflater, container, false)
         googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
         init()
+        auth = FirebaseAuth.getInstance()
+        adTarget = com.my.target.ads.RewardedAd(1455175, requireContext())
+        currentUser = auth?.currentUser
         billingManager = BillingManager(requireActivity() as AppCompatActivity)
         return binding?.root
     }
@@ -291,7 +305,13 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager)
             { checkLimitActualTreatmentResult() } }
 
-        btnPremiumDrawer?.setOnClickListener { openBS() }
+        btnPremiumDrawer?.setOnClickListener {
+            if(!premiumVisible){
+                premiumVisible = true
+                startTimerViewPremFun()
+                openBS()
+            }
+         }
 
         viewModel.getDataUser { userInfo -> getUserInfo(userInfo) }
     }
@@ -825,84 +845,171 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
 
     private fun checkLimitActualTreatmentResult() {
-        var isActualNotTerm = false
-        viewModel.checkLimitActual({ state ->
-            when (state) {
-                ErrorEnum.SUCCESS -> {
-                    Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
-                    Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
-                    if (isActualNotTerm) {
-                        if (startTimerViewAds) {
-                            requireActivity().runOnUiThread {
-                                Toast.makeText(requireContext(), getString(R.string.advertising_will_be_available_through), Toast.LENGTH_SHORT).show()
+        viewModel.getMyAdsProvider { adsProviderEntity ->
+            if(adsProviderEntity.selectedGoogle){
+                var isActualNotTerm = false
+                viewModel.checkLimitActual({ state ->
+                    when (state) {
+                        ErrorEnum.SUCCESS -> {
+                            Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
+                            Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
+                            if (isActualNotTerm) {
+                                if (startTimerViewAds) {
+                                    requireActivity().runOnUiThread {
+                                        Toast.makeText(requireContext(), getString(R.string.advertising_will_be_available_through), Toast.LENGTH_SHORT).show()
+                                    }
+
+                                } else {
+                                    showRewardedVideo()
+                                }
+                            } else {
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(requireContext(), getString(R.string.advertising_limit_has_been_reached), Toast.LENGTH_SHORT).show()
+                                }
+
                             }
-
-                        } else {
-                           showRewardedVideo()
-                        }
-                    } else {
-                        requireActivity().runOnUiThread {
-                            Toast.makeText(requireContext(), getString(R.string.advertising_limit_has_been_reached), Toast.LENGTH_SHORT).show()
                         }
 
-                    }
-                }
-
-                ErrorEnum.NOTNETWORK -> {
-                    requireActivity().runOnUiThread {
-                        binding?.dimViewTheme?.visibility = View.VISIBLE
-                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-                            binding?.dimViewTheme?.visibility = View.GONE
+                        ErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
                         }
-                    }
-                }
-                ErrorEnum.ERROR -> {
-                    requireActivity().runOnUiThread {
-                        binding?.dimViewTheme?.visibility = View.VISIBLE
-                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-                            binding?.dimViewTheme?.visibility = View.GONE
+                        ErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
                         }
-                    }
-                }
-                ErrorEnum.UNKNOWNERROR -> {
-                    requireActivity().runOnUiThread {
-                        binding?.dimViewTheme?.visibility = View.VISIBLE
-                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-                            binding?.dimViewTheme?.visibility = View.GONE
+                        ErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
                         }
-                    }
-                }
-                ErrorEnum.TIMEOUTERROR -> {
-                    requireActivity().runOnUiThread {
-                        binding?.dimViewTheme?.visibility = View.VISIBLE
-                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-                            binding?.dimViewTheme?.visibility = View.GONE
+                        ErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
                         }
-                    }
-                }
-                ErrorEnum.NULLPOINTERROR -> {
-                    requireActivity().runOnUiThread {
-                        binding?.dimViewTheme?.visibility = View.VISIBLE
-                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                            checkLimitActualTreatmentResult()
-                        }) {
-                            binding?.dimViewTheme?.visibility = View.GONE
+                        ErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
                         }
+                        else -> {}
                     }
-                }
-                else -> {}
+                }, {
+                    isActualNotTerm = it
+                })
             }
-        }, {
-            isActualNotTerm = it
-        })
+            if(adsProviderEntity.selectedLMyTarger){
+                var isActualNotTerm = false
+                viewModel.checkLimitActual({ state ->
+                    when (state) {
+                        ErrorEnum.SUCCESS -> {
+                            Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
+                            Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
+                            if (isActualNotTerm) {
+                                if (startTimerViewAds) {
+                                    requireActivity().runOnUiThread {
+                                        Toast.makeText(requireContext(), getString(R.string.advertising_will_be_available_through), Toast.LENGTH_SHORT).show()
+                                    }
+
+                                } else {
+                                    initAd()
+                                }
+                            } else {
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(requireContext(), getString(R.string.advertising_limit_has_been_reached), Toast.LENGTH_SHORT).show()
+                                }
+
+                            }
+                        }
+
+                        ErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        else -> {}
+                    }
+                }, {
+                    isActualNotTerm = it
+                })
+
+            }
+
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -937,6 +1044,17 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         }
     }
 
+    private fun startTimerViewPremFun(){
+        timer = object : CountDownTimer(2 * 1000, 1000) {
+            override fun onTick(millisUntilFinished: Long) { millisUntilFinished / 1000        }
+            override fun onFinish() {
+//                binding?.btnInVictorine?.isClickable = true
+                premiumVisible = false
+            }
+        }
+        timer?.start()
+    }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.id_favourite -> {
@@ -953,6 +1071,66 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                         }
                     }
                 }
+            }
+
+            R.id.id_delete_my_account->{
+                ShowDialogHelper.showDialogLoadData(requireContext())
+               if(currentUser!=null){
+                   Firebase.auth.signOut()
+               }
+
+                viewModel.deleteMyAccount({
+                    when(it){
+                        ErrorEnum.NOTNETWORK -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.ERROR -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.SUCCESS -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                            val action = ThemesFragmentDirections.actionThemesFragmentToSignInFragment()
+                            binding?.root?.let {
+                                Navigation.findNavController(it).navigate(action)
+                            }
+                        }
+                        ErrorEnum.UNKNOWNERROR -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.TIMEOUTERROR -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.NULLPOINTERROR -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.OFFLINEMODE -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        ErrorEnum.OFFLINETHEMEBUY -> {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                    }
+                })
+            }
+
+            R.id.id_way_ad->{
+              viewModel.getAdProvider({ currentProviderAds->
+                  ShowDialogHelper.showDialogChooseWay(requireContext(),{
+                    val adsProviderEntity = AdsProviderEntity(
+                        id = currentProviderAds.id,
+                        selectedGoogle = true,
+                        selectedLMyTarger = false
+                    )
+                      viewModel.selectAdsProvider(adsProviderEntity)
+                  },{
+                      val adsProviderEntity = AdsProviderEntity(
+                          id = currentProviderAds.id,
+                          selectedGoogle = false,
+                          selectedLMyTarger = true
+                      )
+                      viewModel.selectAdsProvider(adsProviderEntity)
+                  }, choiceAd = true, currentGoogleSelect = currentProviderAds.selectedGoogle)
+              })
             }
 
             R.id.id_reminder_schedule -> {
@@ -976,7 +1154,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 })
             }
             R.id.id_exit_account ->{
+
                 ShowDialogHelper.showDialogLoadData(requireContext())
+                if(currentUser!=null){
+                    Firebase.auth.signOut()
+                }
                 viewModel.exitCurrentAccount({ state->
                     Log.d("fuhruigvhewiurhb444viuewrh",state.toString())
                     when(state){
@@ -1311,6 +1493,113 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
             }
         }
+    }
+
+    private fun initAd() {
+
+        // Устанавливаем слушатель событий
+        adTarget?.setListener(object : com.my.target.ads.RewardedAd.RewardedAdListener {
+
+            override fun onLoad(p0: com.my.target.ads.RewardedAd) {
+                adTarget?.show()
+                viewModel.adsView { state->
+                    when(state){
+                        ErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                    initAd()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    initAd()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.SUCCESS -> Log.d("forkfoktogktg","SUCCESMAMBET")
+                        ErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    initAd()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                    initAd()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    initAd()
+                                }) {
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.OFFLINEMODE -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                                },{
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }) }
+                        }
+                        ErrorEnum.OFFLINETHEMEBUY -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewTheme?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                                },{
+                                    binding?.dimViewTheme?.visibility = View.GONE
+                                }) }
+                        }
+                    }
+                }
+            }
+
+            override fun onNoAd(p0: IAdLoadingError, p1: com.my.target.ads.RewardedAd) {
+                Toast.makeText(requireContext(),R.string.no_ads_view,Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onClick(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onClick")
+            }
+
+            override fun onDismiss(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onDismiss")
+            }
+
+            override fun onReward(p0: Reward, p1: com.my.target.ads.RewardedAd) {
+                addAndropoints()
+            }
+
+            override fun onDisplay(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onDisplay")
+            }
+        })
+
+        // Запускаем загрузку данных
+        adTarget?.load()
     }
 
     private fun loadRewardedAd() {

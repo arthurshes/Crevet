@@ -12,9 +12,11 @@ import workwork.test.andropediagits.core.exception.ErrorStateView
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntity
 import workwork.test.andropediagits.domain.repo.CourseRepo
+import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.transactionLogic.TransactionUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.AndropointUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.CourseUseCase
+import workwork.test.andropediagits.domain.useCases.userLogic.PromoCodeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.StrikeModeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.ThemeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.VictorineUseCase
@@ -25,14 +27,25 @@ import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeSt
 import javax.inject.Inject
 
 @HiltViewModel
-class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUseCase,private val coursesRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val victorineUseCase: VictorineUseCase, private val tryAgainUseCase: TryAgainUseCase, private val strikeModeUseCase: StrikeModeUseCase, private val andropointUseCase: AndropointUseCase, private  val transactionUseCase: TransactionUseCase): ViewModel() {
+class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUseCase,private val coursesRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val victorineUseCase: VictorineUseCase, private val tryAgainUseCase: TryAgainUseCase, private val strikeModeUseCase: StrikeModeUseCase, private val andropointUseCase: AndropointUseCase, private  val transactionUseCase: TransactionUseCase,private val promoCodeUseCase: PromoCodeUseCase,private val userLogicRepo: UserLogicRepo): ViewModel() {
 //    private var _allVictorineByTheme: MutableLiveData<List<VictorineEntity>> = MutableLiveData()
 //    var allVictorineByTheme: List<VictorineEntity>?=null
 //    private var _timerValue: MutableLiveData<Long> = MutableLiveData()
 //    var timerValue:LiveData<Long>?=null
 //     var _allVictorineAnswerVariantByTheme: List<VictorineAnswerVariantEntity>?=null
 
+  fun checkPromoCode(isSucces: (ErrorEnum) -> Unit,isActual: (Boolean) -> Unit){
+      viewModelScope.launch {
+          val promoCode = userLogicRepo.getAllMyPromo()
+          if(promoCode!=null){
+              promoCodeUseCase.checkPromoCodeSubscribeActual(promoCode.promoCode,isActual,isSucces)
+          }else{
+              isSucces.invoke(ErrorEnum.SUCCESS)
+              isActual.invoke(false)
+          }
 
+      }
+  }
 
 
     fun victorineExit(uniqueThemeId: Int,isTerm:((Boolean)->Unit),isDateUnlock:((String)->Unit),isSucces: ((ErrorEnum) -> Unit)){

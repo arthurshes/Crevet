@@ -12,11 +12,14 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import workwork.test.andropediagits.core.model.SendStatus
 import workwork.test.andropediagits.data.local.entities.AdsEntity
+import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
+import workwork.test.andropediagits.data.local.entities.BillingProviderEntity
 import workwork.test.andropediagits.data.local.entities.ResetNextEntity
 import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.data.local.entities.promo.PromoCodeEntity
 import workwork.test.andropediagits.data.remote.CheckAdsLimitGetModel
 import workwork.test.andropediagits.data.remote.model.CheckAdsLimitModel
+import workwork.test.andropediagits.data.remote.model.DeleteMyAccModel
 import workwork.test.andropediagits.data.remote.model.EmailSignInAnswerModel
 import workwork.test.andropediagits.data.remote.model.StrikeModeAnswerModel
 import workwork.test.andropediagits.data.remote.model.TimeAnswerModel
@@ -39,6 +42,32 @@ import workwork.test.andropediagits.data.remote.model.resetModelsDemo.UpdateNewP
 import workwork.test.andropediagits.data.remote.model.strike.StrikeModeSendModel
 
 interface UserLogicRepo {
+
+
+    suspend fun insertAdsProvider(adsProviderEntity: AdsProviderEntity)
+
+
+    suspend fun insertBillingProvider(billingProviderEntity: BillingProviderEntity)
+
+
+    suspend fun updateBillingProvider(billingProviderEntity: BillingProviderEntity)
+
+
+    suspend fun updateAdsProvider(adsProviderEntity: AdsProviderEntity)
+
+
+    suspend fun getMyAdsProvider(): AdsProviderEntity
+
+
+    suspend fun getMyBillingProvider(): BillingProviderEntity
+
+
+    suspend fun deleteAdsProvider()
+
+
+    suspend fun deletebillingProvider()
+
+    suspend fun deleteMyAccount( DeleteMyAccModel: DeleteMyAccModel):SendStatus
 
     suspend fun sendUpdateNewPassword(updateNewPasswordModel: UpdateNewPasswordModel):SendStatus
 

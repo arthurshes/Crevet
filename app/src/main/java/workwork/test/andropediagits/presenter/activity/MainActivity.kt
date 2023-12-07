@@ -2,6 +2,7 @@ package workwork.test.andropediagits.presenter.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 
@@ -15,6 +16,8 @@ import workwork.test.andropediagits.R
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private var backPressedTime = 0L
 
     protected val navController: NavController by lazy {
         Navigation. findNavController(
@@ -36,4 +39,6 @@ class MainActivity : AppCompatActivity() {
 //                .replace(R.id.fragmentCourses, fragment).commit()
 //        }
     }
+
+
 }

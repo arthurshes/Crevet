@@ -16,9 +16,10 @@ import workwork.test.andropediagits.data.remote.model.TimeAnswerModel
 import workwork.test.andropediagits.data.remote.model.course.CourseBuyModel
 import workwork.test.andropediagits.data.remote.model.theme.ThemeBuyModel
 import workwork.test.andropediagits.domain.repo.TransactionRepo
+import javax.inject.Inject
 
 
-class TransactionRepoImpl  constructor(val transactionApiService: TransactionApiService, val timeApiService: TimeApiService, val mainDb: MainDb):
+class TransactionRepoImpl  @Inject constructor(val transactionApiService: TransactionApiService, val timeApiService: TimeApiService, val mainDb: MainDb):
     TransactionRepo {
 
    private val transactionsDao = mainDb.getTransactionDao()

@@ -1,13 +1,24 @@
 package workwork.test.andropediagits.data.remote
 
 
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 import workwork.test.andropediagits.core.model.SendStatus
+import workwork.test.andropediagits.data.remote.individualCourseGet.GetModerationCourseStatusModel
+import workwork.test.andropediagits.data.remote.individualCourseGet.SnedRatingIndiModel
+import workwork.test.andropediagits.data.remote.individualCourseGet.UniqueCourseNumberGetModel
+import workwork.test.andropediagits.data.remote.individualCourseGet.buyIndiCourse.BuyIndividualCourseModel
+import workwork.test.andropediagits.data.remote.individualCourseGet.creatorSubscribe.BuyCreatorSubscribeModel
+import workwork.test.andropediagits.data.remote.individualCourseGet.creatorSubscribe.CreatorSubscribeGetModel
 import workwork.test.andropediagits.data.remote.model.CheckAdsLimitModel
+import workwork.test.andropediagits.data.remote.model.CreatorCourseProfileGetModel
+import workwork.test.andropediagits.data.remote.model.CreatorCourseProfileModel
+import workwork.test.andropediagits.data.remote.model.DeleteMyAccModel
 import workwork.test.andropediagits.data.remote.model.EmailSignInAnswerModel
+import workwork.test.andropediagits.data.remote.model.MyIncomeModel
 import workwork.test.andropediagits.data.remote.model.StrikeModeAnswerModel
 import workwork.test.andropediagits.data.remote.model.UserSignInModel
 import workwork.test.andropediagits.data.remote.model.adsTerm.AdsTermGetModel
@@ -22,6 +33,8 @@ import workwork.test.andropediagits.data.remote.model.course.search.ThemesUnique
 import workwork.test.andropediagits.data.remote.model.email.EmailRecoverModel
 import workwork.test.andropediagits.data.remote.model.email.EmailSignInModel
 import workwork.test.andropediagits.data.remote.model.email.RecoverStatusModel
+import workwork.test.andropediagits.data.remote.model.individualCourse.IndividualCourseGetModel
+import workwork.test.andropediagits.data.remote.model.individualCourse.IndividualGetModel
 import workwork.test.andropediagits.data.remote.model.interactive.InteractiveAllCorrectCodeModel
 import workwork.test.andropediagits.data.remote.model.interactive.InteractiveAnswerModel
 import workwork.test.andropediagits.data.remote.model.interactive.sendModels.InteractiveTestResultSendModel
@@ -48,6 +61,65 @@ import workwork.test.andropediagits.data.remote.model.victorine.VictorineAnswerM
 import workwork.test.andropediagits.data.remote.model.victorine.sendModels.VictorineTestResultSendModel
 
 interface LogicUserApiService {
+
+
+
+
+
+    @POST("user/account/delete")
+    suspend fun deleteMyAccount(@Body DeleteMyAccModel: DeleteMyAccModel):SendStatus
+
+
+
+    ///Test funs
+    @GET("user/indiCourses/getBuyedCourses")
+    suspend fun getMyBuyedIndiCourses(@Query("token")token: String):Response<List<IndividualCourseGetModel>>
+
+    @GET("user/indiCourses/ratingGet")
+    suspend fun getCurrentCourseRatings(@Query("page")page: Int,@Query("token")token: String,@Query("uniqueCourseNumber")uniqueCourseNumber: Int):Response<List<SnedRatingIndiModel>>
+
+    @POST("user/indiCourses/ratingSend")
+    suspend fun sendRatingIndiCourse(@Body snedRatingIndiModel: SnedRatingIndiModel):SendStatus
+
+    @GET("user/indiCourses/getCreatorProfile")
+    suspend fun getCreatorCourseProfile(@Query("token")token: String): CreatorCourseProfileGetModel
+
+    @POST("user/individualCourseCreater/updateProfile")
+    suspend fun updateCreatorProfile(@Body creatorCourseProfileModel: CreatorCourseProfileModel):SendStatus
+
+    @GET("user/individualCourseCreater/moderationStatus")
+    suspend fun getModerationStatusMyCourse(@Query("token")token: String,@Query("uniqueCourseNumber")uniqueCourseNumber:Int): GetModerationCourseStatusModel
+
+    @GET("user/individualCourseCreater/getIncome")
+    suspend fun getMyIncome(@Query("token")token: String): MyIncomeModel
+
+    @GET("user/createIndividualCourse/getUniqueCourseNumber")
+    suspend fun getUnuiqueCourseNumber(@Query("token")token: String): UniqueCourseNumberGetModel
+
+    @POST("user/buyCreatorSubscribe/buy")
+    suspend fun buyCreatorSubscribe(@Body buyCreatorSubscribeModel: BuyCreatorSubscribeModel):SendStatus
+
+    @GET("user/buyCreatorSubscribe/get")
+    suspend fun getAndCheckMyCreatorSubscribes(@Query("token") token: String): CreatorSubscribeGetModel
+
+    @POST("user/createIndividualCourse/create")
+    suspend fun testCreateIndividualCourse(@Body individualCreateModel: IndividualGetModel):SendStatus
+
+    @POST("user/createIndividualCourse/update")
+    suspend fun testUpdateIndividualCourse(@Body individualCreateModel: IndividualGetModel):SendStatus
+
+    @GET("user/myIndiCourses/get")
+    suspend fun getMyIndiCourses(@Query("token") token: String):IndividualGetModel
+
+
+    @GET("user/get/indiCourses")
+    suspend fun getIndiCourse(@Query("page") page:Int = 1,@Query("query") query:String):Response<List<IndividualCourseGetModel>>
+
+    @POST("user/indiCourses/download")
+    suspend fun buyLoadCourseIndi(@Body buyIndividualCourseModel: BuyIndividualCourseModel):IndividualGetModel
+
+
+    ///Test funs
 
     @POST("user/resetPassword/resetPassword")
     suspend fun sendUpdateNewPassword(@Body updateNewPasswordModel: UpdateNewPasswordModel):SendStatus

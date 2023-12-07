@@ -83,7 +83,7 @@ object OptimizationText {
 
     fun searchTitles(inputText: String): String {
         val pattern = "=([^=]*)="
-
+        inputText.replace(Regex("\\d+\\.?(?==)"), "")
         // Используем регулярное выражение для поиска всех вхождений
         val result = Regex(pattern).replace(inputText) {
             val foundText = it.groups[1]?.value ?: ""

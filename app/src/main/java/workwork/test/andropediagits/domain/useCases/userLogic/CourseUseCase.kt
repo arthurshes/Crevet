@@ -5,6 +5,8 @@ import okio.IOException
 import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.mappers.toCourseBuyEntity
+import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
+import workwork.test.andropediagits.data.local.entities.BillingProviderEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseBuyEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseEntity
 import workwork.test.andropediagits.data.local.entities.theme.ThemeEntity
@@ -26,6 +28,41 @@ import kotlin.Exception
 class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, private val transactionRepo: TransactionRepo, private val userLogicRepo: UserLogicRepo, private val tryAgainUseCase: TryAgainUseCase) {
 
     private var wtireUpdate = false
+
+
+    suspend fun chooseAdsProvider(isGoogleAdmob:Boolean,isMyTarget:Boolean,isSuccess: (ErrorEnum) -> Unit){
+        try {
+            val adsProviderEntity = AdsProviderEntity(
+                selectedGoogle = isGoogleAdmob,
+                selectedLMyTarger = isMyTarget
+            )
+            userLogicRepo.insertAdsProvider(adsProviderEntity)
+            isSuccess.invoke(ErrorEnum.SUCCESS)
+        }catch (e:IOException){
+            isSuccess.invoke(ErrorEnum.NOTNETWORK)
+        }catch (e:NullPointerException){
+            isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
+        }catch (e:Exception){
+            isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
+        }
+    }
+
+    suspend fun chooseBillingProvider(isGoogleBilling:Boolean,isRuBilling:Boolean,isSuccess: (ErrorEnum) -> Unit){
+        try {
+            val billingProviderEntity = BillingProviderEntity(
+                selectedGoogleBilling = isGoogleBilling,
+                selectedRuService = isRuBilling
+            )
+            userLogicRepo.insertBillingProvider(billingProviderEntity)
+            isSuccess.invoke(ErrorEnum.SUCCESS)
+        }catch (e:IOException){
+            isSuccess.invoke(ErrorEnum.NOTNETWORK)
+        }catch (e:NullPointerException){
+            isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
+        }catch (e:Exception){
+            isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
+        }
+    }
 
     suspend fun checkCourseBuy(courseBuyCheck:((Boolean)->Unit),isSuccess: (ErrorEnum) -> Unit){
         try {

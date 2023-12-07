@@ -71,15 +71,11 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/btnContinueReplay"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="70dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="70dp"
-
                     android:padding="8dp"
-                    android:visibility="visible"
                     app:cardBackgroundColor="#1F71D0">
 
 

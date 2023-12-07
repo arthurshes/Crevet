@@ -5,12 +5,15 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -47,6 +50,7 @@ import kotlin.time.Duration.Companion.nanoseconds
 
 @AndroidEntryPoint
 class VictorineFragment : Fragment() {
+private var backPressedOnce = false
     private var IsFeedback = false
     private var timerObser: Observer<Long>? = null
     private var binding: FragmentVictorineBinding? = null
@@ -90,6 +94,11 @@ class VictorineFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+
+            }}
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         initCircleView(binding!!)
         val nightDrawle = ContextCompat.getDrawable(requireContext(), R.drawable.progress_bar_custom_night)
         val lightDrawle = ContextCompat.getDrawable(requireContext(), R.drawable.progress_bar_custom)
@@ -149,6 +158,7 @@ class VictorineFragment : Fragment() {
             victorinesQuestionsCount = victorineEntities.size
             victorinesQuestions = victorineEntities
             victorinesQuestions?.shuffled()
+
             binding?.tvQuestion?.text = victorinesQuestions?.get(currentIndex)?.questionText?.trimEnd()
             viewModel.getAllQuestionAnswerVariants(victorineEntities[0].questionId,victorineEntities[0].vicotineTestId) { victorineAnswerVariantEntities ->
                 Log.d("showShowShow200",victorineAnswerVariantEntities.toString())
@@ -173,9 +183,7 @@ class VictorineFragment : Fragment() {
                 if(!isFirstItemSelected&&!isSecondItemSelected&&!isThirdItemSelected&&!isForthItemSelected&&!isFifthItemSelected){
 
                 }else{
-
-                    Log.d("victorineGrhtut", currentIndex.toString())
-                    Log.d("victorineGrhtut", progress.toString())
+                         btnNext.isEnabled = false
                     checkAnswer(victorineAnswerVariants)
                     tvQuestion.text = victorinesQuestions?.get(currentIndex)?.questionText?.trimEnd()
                     if (progress < (victorinesQuestions?.size ?: 0)) {
@@ -415,6 +423,7 @@ class VictorineFragment : Fragment() {
         if (victorinesQuestions?.size?.minus(1) != currentIndex) {
             currentIndex++
         }
+        binding?.btnNext?.isEnabled = true
         Log.d("victorineGrhtut", victorinesQuestions.toString())
         Log.d("victorineGrhtut", "currentIndex:${currentIndex}")
         binding?.tvQuestion?.text = victorinesQuestions?.get(currentIndex)?.questionText ?: ""
@@ -639,6 +648,7 @@ class VictorineFragment : Fragment() {
         anim.duration = 500
         anim.start()
         if (clickCount == victorines.size) {
+            binding?.btnNext?.isEnabled = false
             CustomTimerUtil.stopTimer()
             checkTestTreatmentResult(victorines, false)
         }
@@ -990,12 +1000,18 @@ class VictorineFragment : Fragment() {
                 "victorineTestResultStateStrikeResultTreaAndropoint",
                 resultStrikeModeDay.toString()
             )
+            var nextThemeFrag = false
             var subscribeActual = false
+            var isPromoActual = false
             when (resultStrikeModeAndropoints) {
                 ErrorEnum.SUCCESS -> {
                     viewModel.checSubscribe({
                         subscribeActual = it
                     }, { checkkState ->
+                        Log.d(
+                            "victorineTestResultStateStrikeResultTreaAndropointcheckkState",
+                            checkkState.toString()
+                        )
                         when (checkkState) {
                             ErrorEnum.NOTNETWORK -> {
                                 requireActivity().runOnUiThread {
@@ -1022,35 +1038,192 @@ class VictorineFragment : Fragment() {
                             }
 
                             ErrorEnum.SUCCESS -> {
+                                Log.d(
+                                    "victorineTestResultStateStrikeResultTreaAndropointsubscribeActual",
+                                    subscribeActual.toString()
+                                )
+                                Log.d(
+                                    "victorineTestResultStateStrikeResultTreaAndropointisPromoActual",
+                                    isPromoActual.toString()
+                                )
                                 requireActivity().runOnUiThread {
-                                    ShowDialogHelper.showDialogStrikeMode(
-                                        requireContext(),
-                                        resultStrikeModeDay,
-                                        layoutInflater,
-                                        subscribeActual,
-                                        {
-                                            val action =
-                                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
-                                                    args.courseNumber,
-                                                    args.courseNameReal,
-                                                    feedbackVisible = true
-                                                )
-                                            binding?.root?.let {
-                                                Navigation.findNavController(it).navigate(action)
+                                    if(subscribeActual){
+                                        ShowDialogHelper.showDialogStrikeMode(
+                                            requireContext(),
+                                            resultStrikeModeDay,
+                                            layoutInflater,
+                                            subscribeActual,
+                                            {
+                                                if(!nextThemeFrag){
+                                                    val action =
+                                                        VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                                            args.courseNumber,
+                                                            args.courseNameReal,
+                                                            feedbackVisible = true
+                                                        )
+                                                    binding?.root?.let {
+                                                        Navigation.findNavController(it).navigate(action)
+                                                    }
+                                                    nextThemeFrag = true
+                                                }
+
+                                            },
+                                            {
+                                                if(!nextThemeFrag) {
+                                                    val action =
+                                                        VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                                            args.courseNumber,
+                                                            args.courseNameReal,
+                                                            premiumVisible = true
+                                                        )
+                                                    binding?.root?.let {
+                                                        Navigation.findNavController(it)
+                                                            .navigate(action)
+                                                    }
+                                                    nextThemeFrag = true
+                                                }
                                             }
-                                        },
-                                        {
-                                            val action =
-                                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
-                                                    args.courseNumber,
-                                                    args.courseNameReal,
-                                                    premiumVisible = true
-                                                )
-                                            binding?.root?.let {
-                                                Navigation.findNavController(it).navigate(action)
+                                        )
+                                    }else{
+                                        viewModel.checkPromoCode({promoState->
+                                            when(promoState){
+                                                ErrorEnum.NOTNETWORK -> {
+                                                    requireActivity().runOnUiThread {
+                                                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                                            strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                                        }) {
+                                                            binding?.dimViewVictorine?.visibility = View.GONE
+
+                                                        }
+                                                    }
+                                                }
+
+                                                ErrorEnum.ERROR -> {
+                                                    requireActivity().runOnUiThread {
+                                                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                            strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                                        }) {
+                                                            binding?.dimViewVictorine?.visibility = View.GONE
+
+                                                        }
+                                                    }
+                                                }
+                                                ErrorEnum.SUCCESS -> {
+                                                    ShowDialogHelper.showDialogStrikeMode(
+                                                        requireContext(),
+                                                        resultStrikeModeDay,
+                                                        layoutInflater,
+                                                        isPromoActual,
+                                                        {
+                                                            val action =
+                                                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                                                    args.courseNumber,
+                                                                    args.courseNameReal,
+                                                                    feedbackVisible = true
+                                                                )
+                                                            binding?.root?.let {
+                                                                Navigation.findNavController(it).navigate(action)
+                                                            }
+                                                        },
+                                                        {
+                                                            val action =
+                                                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                                                    args.courseNumber,
+                                                                    args.courseNameReal,
+                                                                    premiumVisible = true
+                                                                )
+                                                            binding?.root?.let {
+                                                                Navigation.findNavController(it).navigate(action)
+                                                            }
+                                                        }
+                                                    )
+                                                }
+                                                ErrorEnum.UNKNOWNERROR -> {
+                                                    requireActivity().runOnUiThread {
+                                                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                            strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                                        }) {
+                                                            binding?.dimViewVictorine?.visibility = View.GONE
+
+                                                        }
+                                                    }
+                                                }
+
+                                                ErrorEnum.TIMEOUTERROR -> {
+                                                    requireActivity().runOnUiThread {
+                                                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                        ShowDialogHelper.showDialogTimeOutError(
+                                                            requireContext()
+                                                            ,{
+                                                                strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                                            }) {
+                                                            binding?.dimViewVictorine?.visibility = View.GONE
+
+                                                        }
+                                                    }
+                                                }
+
+                                                ErrorEnum.NULLPOINTERROR -> {
+                                                    requireActivity().runOnUiThread {
+                                                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                        ShowDialogHelper.showDialogUnknownError(
+                                                            requireContext(),{
+                                                                strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                                            }
+                                                        ) {
+                                                            binding?.dimViewVictorine?.visibility = View.GONE
+
+                                                        }
+                                                    }
+                                                }
+
+                                                ErrorEnum.OFFLINEMODE -> {
+                                                    requireActivity().runOnUiThread {
+
+                                                        ShowDialogHelper.showDialogAttentionStrikeMode(
+                                                            requireContext(),
+                                                            {
+                                                                strikeModeTreatmentResult()
+                                                            }) {
+                                                            val action =
+                                                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                                                    args.courseNumber,
+                                                                    args.courseNameReal
+                                                                )
+                                                            binding?.root?.let {
+                                                                Navigation.findNavController(it).navigate(action)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                ErrorEnum.OFFLINETHEMEBUY -> {
+                                                    requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.showDialogAttentionStrikeMode(
+                                                            requireContext(),
+                                                            {
+                                                                strikeModeAndropointTreatmentResult(resultStrikeModeDay)
+                                                            }) {
+                                                            val action =
+                                                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                                                    args.courseNumber,
+                                                                    args.courseNameReal
+                                                                )
+                                                            binding?.root?.let {
+                                                                Navigation.findNavController(it).navigate(action)
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
-                                        }
-                                    )
+                                        },{
+                                            isPromoActual = it
+                                        })
+                                    }
+
                                 }
                             }
 
@@ -1239,55 +1412,61 @@ class VictorineFragment : Fragment() {
     ) {
         Log.d("tttttt22tt", resultStrikeModeDay.toString())
         if (!isStrikeModeAndropointFlag) {
-            isStrikeModeAndropointFlag = true
             when (resultStrikeModeDay) {
                 1 -> {
                     viewModel.strikeModeAndropointProgress(
-                        { resultStrikeModeAndropoints(it) },
+                        { resultStrikeModeAndropoints.invoke(it) },
                         StrikeModeState.ONE
                     )
+                    isStrikeModeAndropointFlag = true
                 }
 
                 2 -> {
                     viewModel.strikeModeAndropointProgress(
-                        { resultStrikeModeAndropoints(it) },
+                        { resultStrikeModeAndropoints.invoke(it) },
                         StrikeModeState.TWO
                     )
+                    isStrikeModeAndropointFlag = true
                 }
 
                 3 -> {
                     viewModel.strikeModeAndropointProgress(
-                        { resultStrikeModeAndropoints(it) },
+                        { resultStrikeModeAndropoints.invoke(it) },
                         StrikeModeState.THREE
                     )
+                    isStrikeModeAndropointFlag = true
                 }
 
                 4 -> {
                     viewModel.strikeModeAndropointProgress(
-                        { resultStrikeModeAndropoints(it) },
+                        { resultStrikeModeAndropoints.invoke(it) },
                         StrikeModeState.FOUR
                     )
+                    isStrikeModeAndropointFlag = true
                 }
 
                 5 -> {
                     viewModel.strikeModeAndropointProgress(
-                        { resultStrikeModeAndropoints(it) },
+                        { resultStrikeModeAndropoints.invoke(it) },
                         StrikeModeState.FIVE
                     )
+                    isStrikeModeAndropointFlag = true
                 }
 
                 6 -> {
                     viewModel.strikeModeAndropointProgress(
-                        { resultStrikeModeAndropoints(it) },
+                        { resultStrikeModeAndropoints.invoke(it) },
                         StrikeModeState.SIX
                     )
+                    isStrikeModeAndropointFlag = true
                 }
 
                 7 -> {
                     viewModel.strikeModeAndropointProgress(
-                        { resultStrikeModeAndropoints(it) },
+                        { resultStrikeModeAndropoints.invoke(it) },
                         StrikeModeState.SEVEN
                     )
+                    isStrikeModeAndropointFlag = true
                 }
             }
         }

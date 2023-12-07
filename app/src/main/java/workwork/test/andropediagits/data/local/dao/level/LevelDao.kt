@@ -12,7 +12,7 @@ import workwork.test.andropediagits.data.local.entities.levels.LevelEntity
 @Dao
 interface LevelDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertLevels(levelEntity: LevelEntity)
 
     @Query("DELETE FROM LevelEntityTableCache")

@@ -40,17 +40,17 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
     }
 
 
-    fun saveUserInfo(userInfoEntity: UserInfoEntity, result: ((ErrorEnum) -> Unit)){
+    fun saveUserInfo(userInfoEntity: UserInfoEntity, result: ((ErrorEnum) -> Unit),lang: String){
        viewModelScope.launch {
            signInUseCase.insertUserInfo(userInfoEntity,{
                result.invoke(it)
-           })
+           },lang)
        }
     }
 
-     fun loadData(isSuccess:((ErrorEnum)->Unit),lang:String?=null){
+     fun loadData(isSuccess:((ErrorEnum)->Unit),lang:String?=null,token:String?=null){
          viewModelScope.launch {
-             cacheUseCase.downloaCourse({isSuccess.invoke(it)}, lang)
+             cacheUseCase.downloaCourse({isSuccess.invoke(it)}, lang,token)
          }
     }
 

@@ -12,6 +12,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import workwork.test.andropediagits.core.exception.ErrorEnum
+import workwork.test.andropediagits.data.local.entities.AdsEntity
+import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
+import workwork.test.andropediagits.data.local.entities.BillingProviderEntity
 import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.data.local.entities.theme.ThemeEntity
 import workwork.test.andropediagits.domain.repo.CourseRepo
@@ -45,6 +48,36 @@ class ThemeViewModel @Inject constructor(
 //    var allThemes: LiveData<List<ThemeEntity>> = _allThemes
     private var courseNumberKey = "countKey"
      var courseNumber = savedStateHandle.getLiveData<Int>(courseNumberKey, -1)
+
+    fun getAdProvider(adsProviderEntity: ((AdsProviderEntity)->Unit)){
+        viewModelScope.launch {
+            adsProviderEntity.invoke(userLogicRepo.getMyAdsProvider())
+        }
+    }
+
+    fun selectAdsProvider(adsProviderEntity: AdsProviderEntity){
+        viewModelScope.launch {
+            userLogicRepo.updateAdsProvider(adsProviderEntity)
+        }
+    }
+
+    fun deleteMyAccount(isSuccess: (ErrorEnum) -> Unit){
+        viewModelScope.launch {
+            signInUseCase.deleteMyAccount { isSuccess.invoke(it) }
+        }
+    }
+
+    fun getMyAdsProvider(adsProvider:((AdsProviderEntity)->Unit)){
+        viewModelScope.launch {
+            adsProvider.invoke(userLogicRepo.getMyAdsProvider())
+        }
+    }
+
+    fun getMyBillingProvider(billingProvider:((BillingProviderEntity)->Unit)){
+        viewModelScope.launch {
+            billingProvider.invoke(userLogicRepo.getMyBillingProvider())
+        }
+    }
 
     fun exitCurrentAccount( result: (ErrorEnum) -> Unit){
         viewModelScope.launch {

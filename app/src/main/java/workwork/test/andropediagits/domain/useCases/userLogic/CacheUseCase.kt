@@ -32,9 +32,69 @@ import javax.inject.Inject
 
 class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, private val userLogicRepo: UserLogicRepo, private val transactionRepo: TransactionRepo) {
 
-    suspend fun downloaCourse(isSuccess:((ErrorEnum)->Unit), lang:String?=null){
+    suspend fun downloaCourse(isSuccess:((ErrorEnum)->Unit), lang:String?=null,token:String?=null){
         try {
 //            val userInfo = userLogicRepo.getUserInfoLocal()
+       val currentDate = courseRepo.getCurrentTime()
+            if(token!=null){
+                val cacheResponse = courseRepo.getAllBackendCourse(token = token, lang ?: "rus")
+//            Log.d("djdjd33333222jjd",userInfo.token ?: "nullToken")
+                Log.d("djdjd33333222jjd","cacheee: "+cacheResponse.themeLessons?.filter {
+                    it.levelName == "Обращение к системным службам через контекст"
+                })
+//                Log.d("djdjd33333222jjd","cacheee: "+cacheResponse.themeLessons)
+                cacheResponse.courses?.forEach { oneCourse->
+                    courseRepo.insertCourse(oneCourse.toCourseEntity())
+                }
+                cacheResponse.themes?.forEach { oneTheme->
+                    courseRepo.insertTheme(oneTheme.toThemeEntity())
+                }
+                cacheResponse.themeLessons?.forEach { oneLesson->
+                    courseRepo.insertLevels(oneLesson.toLevelEntity())
+                }
+                cacheResponse.themeLessonContents?.forEach { oneLessonContent->
+                    courseRepo.insertLevelsContents(oneLessonContent.toThemeLevelContentEntity())
+                }
+                cacheResponse.victorines?.forEach { oneVictorine->
+                    courseRepo.insertVictorine(oneVictorine.toVictorineEntity())
+                }
+                cacheResponse.victorinesAnswerVariants?.forEach { oneVictorineAnswer->
+                    courseRepo.insertVictorineAnswerVariant(oneVictorineAnswer.toVictorineAnswerVariantEntity())
+                }
+                cacheResponse.victorineClues?.forEach { oneVictorineClue->
+                    courseRepo.insertVictorineClue(oneVictorineClue.toVictorineClueEntity())
+                }
+//            cacheResponse.interactives?.forEach { oneInteractiveTest->
+//                courseRepo.insertInteractiveEntity(oneInteractiveTest.toInteractiveEntity())
+//            }
+//            cacheResponse.interactiveCodeVariants?.forEach { oneInteractiveVariant->
+//                courseRepo.insertInteractiveCodeVariant(oneInteractiveVariant.toInteractiveCodeVariantEntity())
+//            }
+//            cacheResponse.interactiveCorrectAnswers?.forEach { oneInteractiveCorrectAnswer->
+//                courseRepo.insertInteractiveCodeCorrectAnswer(oneInteractiveCorrectAnswer.toInteractiveCorrectCodeEntity())
+//            }
+                updateUserProgress(cacheResponse.userProgress)
+                val myBuyCourses = transactionRepo.checkMyBuyCourse(token ?: "")
+                if(!myBuyCourses.isNullOrEmpty()&&myBuyCourses[0].codeAnswer != 707){
+                    myBuyCourses.forEach { buyCourse->
+                        Log.d("vklerfnvlnefwtrnvbIKQewvogiNqw","lastOpenCourse:${cacheResponse.userProgress.lastOpenCourse} buyCourse:${buyCourse.courseNumber} andropointBuy:${buyCourse.andropointBuy} lasOpenTheme:${cacheResponse.userProgress.lastOpenTheme}")
+                        if (buyCourse.andropointBuy==0){
+
+                            openAllThemesBuyCourse(buyCourse.courseNumber, lastThemeNumber = cacheResponse.userProgress.lastOpenTheme ?: 1)
+
+                        }
+                    }
+                }
+                val buyThemes = transactionRepo.checkUserBuyTheme(token ?: "")
+                if(buyThemes[0].codeAnswer!=707&&!buyThemes.isNullOrEmpty()){
+                    buyThemes.forEach { oneBuyTheme ->
+                        openBuyThemes(oneBuyTheme.uniqueThemeId)
+                    }
+                }
+
+                isSuccess.invoke(ErrorEnum.SUCCESS)
+                return
+            }
             val userInfoLocal = userLogicRepo.getUserInfoLocal()
             val userInfo = userLogicRepo.getCurrentUserInfo(userInfoLocal.token)
             val isInfinitys = userInfo.isInfinity == 1
@@ -45,7 +105,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
                 image = userInfo.image,
                 lastOpenTheme = userInfo.lastThemeNumber ?: 0,
                 lastOpenCourse = userInfo.lastCourseNumber ?: 0,
-                lastOnlineDate = userInfoLocal.lastOnlineDate,
+                lastOnlineDate = currentDate.datetime,
                 userLanguage = lang,
                 andropointCount = userInfo.andropointCount ?: 0,
                 strikeModeDay = userInfo.strikeModeDay ?: 0,

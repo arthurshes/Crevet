@@ -31,6 +31,14 @@ class ListLessonsAdapter(
     inner class LessonsHolder(val binding: LessonItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 
+    fun shortenText(inputText: String, maxLength: Int): String {
+        return if (inputText.length <= maxLength) {
+            inputText // Ничего не изменяем, если длина текста не превышает maxLength
+        } else {
+            inputText.substring(0, maxLength - 3) + "..." // Укорачиваем текст до maxLength - 3 символов и добавляем троеточие
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonsHolder {
         return LessonsHolder(
             LessonItemBinding.inflate(
@@ -49,7 +57,8 @@ class ListLessonsAdapter(
     override fun onBindViewHolder(holder: LessonsHolder, position: Int) {
         val currentLesson = diffList.currentList[position]
         holder.binding.apply {
-            tvTitleLessonItem.text = currentLesson.levelName
+
+            tvTitleLessonItem.text = shortenText(currentLesson.levelName,24)
             tvNumberLesson.text = "${context.getString(R.string.lesson_number)} ${position+1}"
             tvTopicTitle.text = args.courseName
 

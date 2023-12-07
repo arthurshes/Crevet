@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "395678996298",
+    "project_id": "andropedia-406704",
+    "storage_bucket": "andropedia-406704.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395678996298:android:a913e61e23cd5aaa6fd3b3",
+        "android_client_info": {
+          "package_name": "workwork.test.andropediagits"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "395678996298-5c77n84er9d5961jn1aluap0pa3me33i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "workwork.test.andropediagits",
+            "certificate_hash": "ce7c46c2b649f2c77397f0a9948e3c4326360d65"
+          }
+        },
+        {
+          "client_id": "395678996298-0p708in0t58gpo81d5geevbskl67733n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy6XovXhafRqGkoVz0X1RpR-ETxoTCDkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "395678996298-0p708in0t58gpo81d5geevbskl67733n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

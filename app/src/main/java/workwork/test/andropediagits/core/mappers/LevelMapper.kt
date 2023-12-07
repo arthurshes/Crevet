@@ -57,7 +57,7 @@ fun LevelThemeAnswerModel.toLevelEntity(): LevelEntity {
         levelName = levelName,
         levelNumber = levelNumber,
         themeNumber = themeNumber,
-        uniqueLevelId = courseNumber+themeNumber+levelNumber,
+        uniqueLevelId = uniqueLevelId,
         uniqueThemeId = uniqueThemeId,
         lastUpdateDate = lastUpdateDate
     )

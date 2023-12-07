@@ -14,8 +14,10 @@ import workwork.test.andropediagits.data.local.MainDb
 import workwork.test.andropediagits.data.remote.LogicUserApiService
 import workwork.test.andropediagits.data.remote.TimeApiService
 import workwork.test.andropediagits.data.repo.CourseRepoImpl
+import workwork.test.andropediagits.data.repo.IndividualCourseCreaterRepoImpl
 import workwork.test.andropediagits.data.repo.UserLogicRepoImpl
 import workwork.test.andropediagits.domain.repo.CourseRepo
+import workwork.test.andropediagits.domain.repo.IndividualCourseCreaterRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.validators.UserInfoValidator
 
@@ -24,6 +26,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object UserLogicModule {
+
+    @Provides
+    @Singleton
+    fun provideIndiCoursesRepo(mainDb: MainDb,logicUserApiService: LogicUserApiService):IndividualCourseCreaterRepo =
+        IndividualCourseCreaterRepoImpl(mainDb, logicUserApiService)
+
 
     @Provides
     fun provideUserInfo(): UserInfoValidator =

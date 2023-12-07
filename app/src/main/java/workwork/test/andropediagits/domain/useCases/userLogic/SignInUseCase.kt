@@ -1,5 +1,6 @@
 package workwork.test.andropediagits.domain.useCases.userLogic
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.util.Log
 
@@ -16,7 +17,9 @@ import workwork.test.andropediagits.core.exception.TooLongPasswordException
 import workwork.test.andropediagits.core.exception.TooLongUserNameException
 import workwork.test.andropediagits.core.exception.WrongAddressEmialException
 import workwork.test.andropediagits.core.mappers.toUserInfoLocalEntity
+import workwork.test.andropediagits.data.local.entities.ResetNextEntity
 import workwork.test.andropediagits.data.local.entities.UserInfoEntity
+import workwork.test.andropediagits.data.remote.model.DeleteMyAccModel
 import workwork.test.andropediagits.data.remote.model.UserSignInModel
 import workwork.test.andropediagits.data.remote.model.email.EmailRecoverModel
 import workwork.test.andropediagits.data.remote.model.email.RecoverPassState
@@ -36,6 +39,53 @@ import javax.inject.Inject
 import kotlin.Exception
 
 class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo, private val updateUserInfoUseCase: UpdateUserInfoUseCase, private val emailValidator: EmailValidator, private val transactionRepo: TransactionRepo, private  val userInfoValidator: UserInfoValidator,private val courseRepo: CourseRepo){
+
+
+    suspend fun deleteMyAccount(isSuccess: (ErrorEnum) -> Unit){
+        try{
+            val token = userLogicRepo.getUserInfoLocal()
+            val deleteMyAccModel = DeleteMyAccModel(token.token)
+            val response = userLogicRepo.deleteMyAccount(deleteMyAccModel)
+            if(response.codeAnswer==212){
+                courseRepo.deleteAllCourse()
+                courseRepo.deleteAllThemes()
+                courseRepo.deleteAllLevels()
+                courseRepo.deleteAllLevelsContent()
+                courseRepo.deleteAllVictorineClue()
+                courseRepo.deleteAllVictorines()
+                courseRepo.deleteAllVictorineVariants()
+                userLogicRepo.deleteUserInfoLocal(token)
+                val subscribes = transactionRepo.getSubscribe()
+                if(subscribes!=null){
+                    transactionRepo.deleteSubscribe(subscribes)
+                }
+                val themeBuy = transactionRepo.getAllBuyThemes()
+                if(!themeBuy.isNullOrEmpty()){
+                    themeBuy.forEach { buyTheme->
+                        transactionRepo.deleteThemeBuy(buyTheme)
+                    }
+                }
+                val buyCourses = transactionRepo.getAllMyCourseBuy()
+                if(!buyCourses.isNullOrEmpty()){
+                    buyCourses.forEach { buyCourse->
+                        transactionRepo.deleteBuyCourse(buyCourse)
+                    }
+                }
+            }
+            isSuccess.invoke(ErrorEnum.SUCCESS)
+        }catch (e:IOException){
+            isSuccess.invoke(ErrorEnum.NOTNETWORK)
+        }catch (e:TimeoutException){
+            isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
+        }catch (e:HttpException){
+            isSuccess.invoke(ErrorEnum.ERROR)
+        }catch (e:NullPointerException){
+            isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
+        }catch (e:Exception){
+            isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
+        }
+    }
+
 
     suspend fun exitCurrentAccount(isSuccess: (ErrorEnum) -> Unit){
         try{
@@ -79,14 +129,34 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }
     }
 
-    suspend fun insertUserInfo(userInfoEntity: UserInfoEntity, isSuccess: ((ErrorEnum) -> Unit)){
+    @SuppressLint("SuspiciousIndentation")
+    suspend fun insertUserInfo(userInfoEntity: UserInfoEntity, isSuccess: ((ErrorEnum) -> Unit), lang:String?=null){
         try {
+            val currentDate = courseRepo.getCurrentTime()
             userLogicRepo.insertUserInfoLocal(userInfoEntity)
             val userSignInModel = UserSignInModel(
                 token = userInfoEntity.token,
                 name = userInfoEntity.name
             )
-            userLogicRepo.sendUserInfo(userSignInModel)
+          val response =  userLogicRepo.sendUserInfo(userSignInModel)
+            if(response.codeAnswer==212){
+                val userInfo = userLogicRepo.getCurrentUserInfo(userInfoEntity.token)
+                val isInfinitys = userInfo.isInfinity == 1
+                val updateUserLocalInf = UserInfoEntity(
+                    name = userInfo.name ?: "DefaultName",
+                    token = userInfo.token,
+                    image = userInfo.image,
+                    lastOpenTheme = userInfo.lastThemeNumber ?: 0,
+                    lastOpenCourse = userInfo.lastCourseNumber ?: 0,
+                    lastOnlineDate = currentDate.datetime,
+                    userLanguage = lang,
+                    andropointCount = userInfo.andropointCount ?: 0,
+                    strikeModeDay = userInfo.strikeModeDay ?: 0,
+                    isInfinity = isInfinitys,
+                )
+                userLogicRepo.updateUserInfoLocal(updateUserLocalInf)
+            }
+           isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:TimeoutException){

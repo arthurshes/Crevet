@@ -1,7 +1,8 @@
 package workwork.test.andropediagits.core.utils
 
 object Constatns {
-//  1
+//
+//    const val BASE_URL = "http://10.0.2.2:8080/"
     const val BASE_URL = "http://194.67.109.8/"
     const val TEXT_KEY = "text_size_key"
     const val CLUE_KEY = "victorine_clue_key"
@@ -10,6 +11,7 @@ object Constatns {
 //    const val TIME_BASE_URL = "http://worldtimeapi.org/"
     const val CORRECT_ANSWER_ANDROPOINT_COUNT = 2
     const val MY_API_KEY = "gT23HUiKoOLi0wqBkLOgB4329874"
+//const val MY_API_KEY = "gT23HUiKoOLi0wqBkLOgB43298742222"
     const val PASSWORD_MAX_LENGHT = 23
     const val VICTORINE_REMUNERATION = 25
     const val INTERACTIVE_REMUNERATION = 70
@@ -30,6 +32,9 @@ object Constatns {
     const val HUNDRED_ANDROPOINT_BUY = "andropedia_hunderd_andropoint_bu"
     const val  FIVEHUNDRED_ANDROPOINT_BUY = "andropedia_five_hundred_andropoint_bu"
     const val INFINITY_ANDANDROPOINT_BUY = "andropedia_infinity_andropoint_bu"
+    const val CREATE_ONE_INDI_COURSE_BUY = "andropedia_buy_one_create_indicourse"
 
-    const val AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+
+
+    const val AD_UNIT_ID = "ca-app-pub-3295956250809839/6601024214"
 }
