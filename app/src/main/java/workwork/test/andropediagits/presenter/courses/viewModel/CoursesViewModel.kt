@@ -2,6 +2,7 @@ package workwork.test.andropediagits.presenter.courses.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +31,7 @@ class CoursesViewModel @Inject constructor(private val userLogicRepo: UserLogicR
     var allCourses: LiveData<List<CourseEntity>> = _allCourses
 
     init {
+//        _allCourses.postValue( savedStateHandle.get("courses")?: emptyList<CourseEntity>())
         initialCourse()
     }
 

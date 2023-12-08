@@ -567,19 +567,20 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                 OnUserEarnedRewardListener { rewardItem ->
                     val rewardAmount = rewardItem.amount
                     val rewardType = rewardItem.type
-                    minusTwoHoursTerm()
+                    adsViewTreatmentResult()
                     Log.d("TAG", "User earned the reward.")
                 }
             )
-            adsViewTreatmentResult()
+
         }
     }
 
     private fun adsViewTreatmentResult() {
         viewModel.adsView({ state ->
+            Log.d("victorineAdsRuTestState",state.toString())
             when (state) {
                 ErrorEnum.SUCCESS -> {
-
+                    minusTwoHoursTerm()
                 }
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
@@ -649,6 +650,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
     private fun minusTwoHoursTerm() {
         viewModel.minus2HoursTermAds({ state ->
+            Log.d("victorineAdsRuTestState","minusTwoHourseState: "+state.toString())
             when (state) {
                 ErrorEnum.SUCCESS -> {
                     requireActivity().runOnUiThread {
@@ -728,6 +730,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
         })
     }
 
+
     private fun startTimerViewAdsFun() {
         timer = object : CountDownTimer(11 * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -777,7 +780,6 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
 
             override fun onReward(p0: Reward, p1: com.my.target.ads.RewardedAd) {
                 adsViewTreatmentResult()
-                minusTwoHoursTerm()
             }
 
             override fun onDisplay(p0: com.my.target.ads.RewardedAd) {

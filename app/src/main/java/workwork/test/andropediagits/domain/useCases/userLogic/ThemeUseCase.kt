@@ -783,6 +783,7 @@ class ThemeUseCase @Inject constructor(
             }
             isSucces.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
+            Log.d("victorineAdsRuTestState",e.toString())
             if(checkSubscibe()){
                 isSucces.invoke(ErrorEnum.OFFLINEMODE)
                 return
@@ -793,10 +794,13 @@ class ThemeUseCase @Inject constructor(
             }
             isSucces.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
+            Log.d("victorineAdsRuTestState",e.toString())
             isSucces.invoke(ErrorEnum.ERROR)
         }catch (e:TimeoutException){
+            Log.d("victorineAdsRuTestState",e.toString())
             isSucces.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            Log.d("victorineAdsRuTestState",e.toString())
             isSucces.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }

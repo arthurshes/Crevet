@@ -25,6 +25,7 @@ import workwork.test.andropediagits.data.remote.model.UserProgressModel
 import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.concurrent.TimeoutException
@@ -309,6 +310,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     suspend fun checkCache(isSuccess:((ErrorEnum)->Unit)){
         try {
             val myInfo = userLogicRepo.getUserInfoLocal()
@@ -319,7 +321,11 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
                 notNullCourses.forEach { courseLocal ->
                     getAllActualDateBack.lastDatesCourses.forEach { lastUpdateCourse ->
                         if (courseLocal.courseNumber == lastUpdateCourse.courseNumber) {
-                            if (courseLocal.lastUpdateDate.time > lastUpdateCourse.lastUpdateDate.time) {
+                            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                            val dateBackend = dateFormat.parse(lastUpdateCourse.lastUpdateDate)
+                            Log.d("AnswerBackDate","localDateCourse:${courseLocal.lastUpdateDate} backendDate:${dateBackend}")
+                            if (courseLocal.lastUpdateDate.time > dateBackend.time) {
+
                                 courseRepo.deleteAllCourse()
                                 courseRepo.deleteAllThemes()
                                 courseRepo.deleteAllLevels()
@@ -573,7 +579,9 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
                 notNullCourses.forEach { courseLocal ->
                     getAllActualDateBack.lastDatesCourses.forEach { lastUpdateCourse ->
                         if (courseLocal.courseNumber == lastUpdateCourse.courseNumber) {
-                            if (courseLocal.lastUpdateDate.time > lastUpdateCourse.lastUpdateDate.time) {
+                            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                            val backendDate = dateFormat.parse(lastUpdateCourse.lastUpdateDate)
+                            if (courseLocal.lastUpdateDate.time > backendDate.time) {
                                 courseRepo.deleteAllCourse()
                                 courseRepo.deleteAllThemes()
                                 courseRepo.deleteAllLevels()

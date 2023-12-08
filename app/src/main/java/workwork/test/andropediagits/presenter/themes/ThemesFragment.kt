@@ -1074,43 +1074,49 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             }
 
             R.id.id_delete_my_account->{
-                ShowDialogHelper.showDialogLoadData(requireContext())
-               if(currentUser!=null){
-                   Firebase.auth.signOut()
-               }
+                 binding?.dimViewTheme?.visibility = View.VISIBLE
+                ShowDialogHelper.showDialogDeleteDataAcc(requireContext(),{
+                    ShowDialogHelper.showDialogLoadData(requireContext())
+                    if(currentUser!=null){
+                        Firebase.auth.signOut()
+                    }
 
-                viewModel.deleteMyAccount({
-                    when(it){
-                        ErrorEnum.NOTNETWORK -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                        }
-                        ErrorEnum.ERROR -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                        }
-                        ErrorEnum.SUCCESS -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                            val action = ThemesFragmentDirections.actionThemesFragmentToSignInFragment()
-                            binding?.root?.let {
-                                Navigation.findNavController(it).navigate(action)
+                    viewModel.deleteMyAccount({
+                        when(it){
+                            ErrorEnum.NOTNETWORK -> {
+                                ShowDialogHelper.closeDialogLoadData()
+                            }
+                            ErrorEnum.ERROR -> {
+                                ShowDialogHelper.closeDialogLoadData()
+                            }
+                            ErrorEnum.SUCCESS -> {
+                                ShowDialogHelper.closeDialogLoadData()
+                                val action = ThemesFragmentDirections.actionThemesFragmentToSignInFragment()
+                                binding?.root?.let {
+                                    Navigation.findNavController(it).navigate(action)
+                                }
+                            }
+                            ErrorEnum.UNKNOWNERROR -> {
+                                ShowDialogHelper.closeDialogLoadData()
+                            }
+                            ErrorEnum.TIMEOUTERROR -> {
+                                ShowDialogHelper.closeDialogLoadData()
+                            }
+                            ErrorEnum.NULLPOINTERROR -> {
+                                ShowDialogHelper.closeDialogLoadData()
+                            }
+                            ErrorEnum.OFFLINEMODE -> {
+                                ShowDialogHelper.closeDialogLoadData()
+                            }
+                            ErrorEnum.OFFLINETHEMEBUY -> {
+                                ShowDialogHelper.closeDialogLoadData()
                             }
                         }
-                        ErrorEnum.UNKNOWNERROR -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                        }
-                        ErrorEnum.TIMEOUTERROR -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                        }
-                        ErrorEnum.NULLPOINTERROR -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                        }
-                        ErrorEnum.OFFLINEMODE -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                        }
-                        ErrorEnum.OFFLINETHEMEBUY -> {
-                            ShowDialogHelper.closeDialogLoadData()
-                        }
-                    }
+                    })
+                },{
+                    binding?.dimViewTheme?.visibility = View.GONE
                 })
+
             }
 
             R.id.id_reminder_schedule -> {
@@ -1176,7 +1182,9 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
             R.id.id_way_ad->{
                 viewModel.getAdProvider({ currentProviderAds->
+                    binding?.dimViewTheme?.visibility = View.VISIBLE
                     ShowDialogHelper.showDialogChooseWay(requireContext(),{
+                        binding?.dimViewTheme?.visibility = View.GONE
                         val adsProviderEntity = AdsProviderEntity(
                             id = currentProviderAds.id,
                             selectedGoogle = true,
@@ -1184,6 +1192,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                         )
                         viewModel.selectAdsProvider(adsProviderEntity)
                     },{
+                        binding?.dimViewTheme?.visibility = View.GONE
                         val adsProviderEntity = AdsProviderEntity(
                             id = currentProviderAds.id,
                             selectedGoogle = false,

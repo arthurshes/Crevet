@@ -1,4 +1,7 @@
 <resources>
+    <string name="delete_account_ok">Удалить</string>
+    <string name="delete_account_cancel">Отмена</string>
+    <string name="delete_account_question">Вы точно хотите удалить данные?</string>
     <string name="select_ad_type">Выберите вид рекламы</string><string name="select_pay_type">Выберите способ оплаты</string>
     <string name="google_ads">Реклама Google</string><string name="yukassa">Юкасса</string>
     <string name="mytarget_ads">Реклама MyTarget</string><string name="recommended_for_russian_federation">*Рекомендуется для РФ</string>

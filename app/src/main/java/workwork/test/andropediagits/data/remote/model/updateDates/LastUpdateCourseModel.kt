@@ -4,5 +4,5 @@ import java.util.Date
 
 data class LastUpdateCourseModel(
     val courseNumber:Int,
-    val lastUpdateDate: Date
+    val lastUpdateDate: String
 )

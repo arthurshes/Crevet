@@ -96,13 +96,14 @@ class CoursesFragment (): Fragment(){
             viewModel.currentState = savedInstanceState.getString("state_key_course", "")
         }
         if(args.isShowPromoCode) {
+            binding?.dimViewCourse?.visibility = View.GONE
             ShowDialogHelper.showDialogChooseWay(requireContext(), {
                 val adsProviderEntity = AdsProviderEntity(
                     selectedLMyTarger = false,
                     selectedGoogle = true
                 )
                 viewModel.selectAdsProvider(adsProviderEntity)
-
+                binding?.dimViewCourse?.visibility = View.GONE
                 val dialog = Dialog(requireContext())
                 dialog.setContentView(R.layout.promo_code_dialog)
                 dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -125,7 +126,7 @@ class CoursesFragment (): Fragment(){
                     selectedGoogle = false
                 )
                 viewModel.selectAdsProvider(adsProviderEntity)
-                if (args.isShowPromoCode) {
+                binding?.dimViewCourse?.visibility = View.GONE
                     val dialog = Dialog(requireContext())
                     dialog.setContentView(R.layout.promo_code_dialog)
                     dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -141,7 +142,7 @@ class CoursesFragment (): Fragment(){
                         dialog.dismiss()
                     }
                     dialog.show()
-                }
+
             }, choiceAd = true)
         }
 

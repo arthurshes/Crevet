@@ -1,5 +1,7 @@
 <resources>
-
+    <string name="delete_account_ok">Delete</string>
+    <string name="delete_account_cancel">Cancel</string>
+    <string name="delete_account_question">Are you sure you want to delete your data?</string>
     <string name="select_ad_type">Select advertising type</string>
     <string name="select_pay_type">Select a Payment Method</string>
     <string name="google_ads">Google Ads</string><string name="yukassa">Yukassa</string>

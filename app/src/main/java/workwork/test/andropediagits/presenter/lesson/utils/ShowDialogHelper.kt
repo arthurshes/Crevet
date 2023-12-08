@@ -43,6 +43,33 @@ object ShowDialogHelper {
    private var isShowDialogBuy = false
     private var isCloseDialog = false
     private var isFailDialog = false
+    private var isDeleteDialog = false
+
+
+    fun showDialogDeleteDataAcc(context: Context,delete:(()->Unit),close: (() -> Unit)){
+        dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        dialog?.setContentView(R.layout.delete_account_dialog)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        if(!isDeleteDialog){
+            isDeleteDialog = true
+            val okButton = dialog?.findViewById<CardView>(R.id.btnDeleteAccount)
+            val cancelBtn = dialog?.findViewById<TextView>(R.id.tv_delete_acc_cancel)
+            okButton?.setOnClickListener {
+            dialog?.dismiss()
+            dialog = null
+                delete.invoke()
+            }
+            cancelBtn?.setOnClickListener {
+                dialog?.dismiss()
+                dialog = null
+            }
+            dialog?.show()
+        }
+        dialog?.setOnDismissListener {
+            isDeleteDialog = false
+            close.invoke()
+        }
+    }
 
     fun showDialogChooseWay(    context: Context,
                                 googleAd: () -> Unit, ruAd: () -> Unit,    googlePay: (() -> Unit)? = null,
@@ -53,6 +80,7 @@ object ShowDialogHelper {
             context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
             dialogChooseWay = true
             var isGoogleWay = false
+            var isRuWay = false
         dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.choose_way_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -60,6 +88,7 @@ object ShowDialogHelper {
         val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
         val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
         val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
+
         val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
             val tvRu = dialog?.findViewById<TextView>(R.id.tvRu)
         val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
@@ -68,12 +97,15 @@ object ShowDialogHelper {
             } else {                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
             }
             btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+                btnContinueChooseWay?.isClickable = true
         } else {
+                btnContinueChooseWay?.isClickable = true
             if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
             btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
             btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
         } else {                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background) }
-            btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)        }
+            btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+        }
         if (choiceAd) {            btnGoogleChoice?.setOnClickListener {
             if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {                        btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
             }                    else {
@@ -83,6 +115,7 @@ object ShowDialogHelper {
             btnContinueChooseWay?.alpha = 1.0F
             btnContinueChooseWay?.isClickable = true
             isGoogleWay = true
+            isRuWay = false
         }
             btnRuChoice?.setOnClickListener {
             if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
@@ -93,12 +126,24 @@ object ShowDialogHelper {
             btnRuChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
             btnContinueChooseWay?.alpha = 1.0F
             btnContinueChooseWay?.isClickable = true
-            isGoogleWay = false            }
+            isGoogleWay = false
+                isRuWay = true
+            }
             btnContinueChooseWay?.setOnClickListener {                dialog?.dismiss()
                 dialog = null
-                if (isGoogleWay) {
-                    googleAd.invoke()                } else {
-                    ruAd.invoke()                }
+
+                if(currentGoogleSelect==false&&!isGoogleWay&&!isRuWay){
+                    ruAd.invoke()
+                }else
+
+                if(currentGoogleSelect==true&&!isGoogleWay&&!isRuWay){
+                    googleAd.invoke()
+                }else if (isGoogleWay) {
+                    googleAd.invoke()
+                }
+                if(isRuWay){
+                    ruAd.invoke()
+                }
             }        } else {
             tvWay?.text = context.getString(R.string.select_pay_type)
             tvGoogle?.text = "Google pay"
