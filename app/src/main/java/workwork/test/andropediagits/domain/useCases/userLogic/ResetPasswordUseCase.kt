@@ -14,6 +14,7 @@ import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.state.ResetSendState
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
@@ -69,6 +70,7 @@ class ResetPasswordUseCase @Inject constructor(private val transactionRepo: Tran
         } catch (e: NullPointerException) {
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         } catch (e: Exception) {
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -97,6 +99,7 @@ class ResetPasswordUseCase @Inject constructor(private val transactionRepo: Tran
         } catch (e: NullPointerException) {
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         } catch (e: Exception) {
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -128,6 +131,7 @@ class ResetPasswordUseCase @Inject constructor(private val transactionRepo: Tran
         } catch (e: NullPointerException) {
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         } catch (e: Exception) {
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -163,6 +167,7 @@ class ResetPasswordUseCase @Inject constructor(private val transactionRepo: Tran
             Log.d("tktktktktktasmt",e.toString())
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("tktktktktktasmt",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -192,6 +197,7 @@ class ResetPasswordUseCase @Inject constructor(private val transactionRepo: Tran
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -220,6 +226,7 @@ class ResetPasswordUseCase @Inject constructor(private val transactionRepo: Tran
       }catch (e:NullPointerException){
           isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
       }catch (e:Exception){
+          if(e is CancellationException) throw e
           isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
       }
 

@@ -13,6 +13,7 @@ import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
@@ -92,6 +93,7 @@ class StrikeModeUseCase @Inject constructor(private val repo: UserLogicRepo, pri
             Log.d("victorineTestResultStateSimpleTreamtResult",e.toString())
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("victorineTestResultStateSimpleTreamtResult",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -151,6 +153,7 @@ class StrikeModeUseCase @Inject constructor(private val repo: UserLogicRepo, pri
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }

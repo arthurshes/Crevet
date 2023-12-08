@@ -14,6 +14,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.Try
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.UpdateUserInfoUseCase
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
@@ -74,6 +75,7 @@ class SplashScreenUseCase @Inject constructor(private val userLogicRepo: UserLog
             Log.d("Splashss",e.toString())
             isSuccess.invoke(SplashActionEnum.LONGWAITSERVER)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("Splashss",e.toString())
             isSuccess.invoke(SplashActionEnum.ERRORSCREEN)
         }

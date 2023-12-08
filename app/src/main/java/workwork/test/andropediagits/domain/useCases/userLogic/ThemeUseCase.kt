@@ -2,6 +2,8 @@ package workwork.test.andropediagits.domain.useCases.userLogic
 
 import android.annotation.SuppressLint
 import android.util.Log
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 
 import okio.IOException
 import retrofit2.HttpException
@@ -23,6 +25,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.upd
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.updateStates.UpdateThemeState
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -103,6 +106,7 @@ class ThemeUseCase @Inject constructor(
         }catch (e:HttpException){
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:Exception) {
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -149,6 +153,7 @@ class ThemeUseCase @Inject constructor(
         }catch (e:HttpException){
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -215,6 +220,7 @@ class ThemeUseCase @Inject constructor(
             }catch (e:HttpException){
                 isSuccess.invoke(ErrorEnum.ERROR)
             }catch (e:Exception){
+            if(e is CancellationException) throw e
                 isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
             }
     }
@@ -570,59 +576,110 @@ class ThemeUseCase @Inject constructor(
         }catch (e:IOException){
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             if(checkSubscibe()){
-                val theme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
-                val updateTheme = ThemeEntity(
-                    uniqueThemeId =  theme.uniqueThemeId,
-                    themeName = theme.themeName,
-                    themeNumber = theme.themeNumber,
-                    courseNumber = theme.courseNumber,
-                    lessonsCount = theme.lessonsCount,
-                    lastUpdateDate = theme.lastUpdateDate,
-                    termHourse = null,
-                    termDateApi = null,
-                    victorineMistakeAnswer = theme.victorineMistakeAnswer,
-                    victorineCorrectAnswer = theme.victorineCorrectAnswer,
-                    interactiveCodeMistakes = theme.interactiveCodeMistakes,
-                    interactiveCodeCorrect = theme.interactiveCodeCorrect,
-                    interactiveQuestionCount = theme.interactiveQuestionCount,
-                    victorineQuestionCount = theme.victorineQuestionCount,
-                    vicotineTestId = theme.vicotineTestId,
-                    interactiveTestId = theme.interactiveTestId,
-                    imageTheme = theme.imageTheme,
-                    isOpen = theme.isOpen,
-                    duoDate = theme.duoDate,
-                    victorineDate = theme.victorineDate,
-                    isVictorine = theme.isVictorine,
-                    isDuoInter = theme.isDuoInter,
-                    isFav = theme.isFav,
-                    isThemePassed = true,
-                    possibleToOpenThemeFree = theme.possibleToOpenThemeFree,
-                    lastCourseTheme = theme.lastCourseTheme,
-                    themePrice = theme.themePrice
-                )
-                courseRepo.updateTheme(updateTheme)
-                if(!theme.lastCourseTheme){
-                    openNextTheme(uniqueThemeId,{errorState->
-                        when(errorState){
-                            ErrorEnum.NOTNETWORK -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
-                            ErrorEnum.ERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
-                            ErrorEnum.SUCCESS -> isSuccess.invoke(ErrorStateView.SUCCESS)
-                            ErrorEnum.UNKNOWNERROR -> isSuccess.invoke(ErrorStateView.ERROR)
-                            ErrorEnum.TIMEOUTERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
-                            ErrorEnum.NULLPOINTERROR -> isSuccess.invoke(ErrorStateView.ERROR)
-                            ErrorEnum.OFFLINEMODE -> isSuccess.invoke(ErrorStateView.OFFLINE)
-                            ErrorEnum.OFFLINETHEMEBUY -> isSuccess.invoke(ErrorStateView.OFFLINEBUYTHEME)
-                        }
-                    },{ uniqueIds->
-                        buythemesId?.invoke(uniqueIds)
-                    })
+                withContext(NonCancellable) {
+                    val theme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
+                    val updateTheme = ThemeEntity(
+                        uniqueThemeId = theme.uniqueThemeId,
+                        themeName = theme.themeName,
+                        themeNumber = theme.themeNumber,
+                        courseNumber = theme.courseNumber,
+                        lessonsCount = theme.lessonsCount,
+                        lastUpdateDate = theme.lastUpdateDate,
+                        termHourse = null,
+                        termDateApi = null,
+                        victorineMistakeAnswer = theme.victorineMistakeAnswer,
+                        victorineCorrectAnswer = theme.victorineCorrectAnswer,
+                        interactiveCodeMistakes = theme.interactiveCodeMistakes,
+                        interactiveCodeCorrect = theme.interactiveCodeCorrect,
+                        interactiveQuestionCount = theme.interactiveQuestionCount,
+                        victorineQuestionCount = theme.victorineQuestionCount,
+                        vicotineTestId = theme.vicotineTestId,
+                        interactiveTestId = theme.interactiveTestId,
+                        imageTheme = theme.imageTheme,
+                        isOpen = theme.isOpen,
+                        duoDate = theme.duoDate,
+                        victorineDate = theme.victorineDate,
+                        isVictorine = theme.isVictorine,
+                        isDuoInter = theme.isDuoInter,
+                        isFav = theme.isFav,
+                        isThemePassed = true,
+                        possibleToOpenThemeFree = theme.possibleToOpenThemeFree,
+                        lastCourseTheme = theme.lastCourseTheme,
+                        themePrice = theme.themePrice
+                    )
+                    courseRepo.updateTheme(updateTheme)
+                    if (!theme.lastCourseTheme) {
+                        openNextTheme(uniqueThemeId, { errorState ->
+                            when (errorState) {
+                                ErrorEnum.NOTNETWORK -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                ErrorEnum.ERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                ErrorEnum.SUCCESS -> isSuccess.invoke(ErrorStateView.SUCCESS)
+                                ErrorEnum.UNKNOWNERROR -> isSuccess.invoke(ErrorStateView.ERROR)
+                                ErrorEnum.TIMEOUTERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                ErrorEnum.NULLPOINTERROR -> isSuccess.invoke(ErrorStateView.ERROR)
+                                ErrorEnum.OFFLINEMODE -> isSuccess.invoke(ErrorStateView.OFFLINE)
+                                ErrorEnum.OFFLINETHEMEBUY -> isSuccess.invoke(ErrorStateView.OFFLINEBUYTHEME)
+                            }
+                        }, { uniqueIds ->
+                            buythemesId?.invoke(uniqueIds)
+                        })
+                    }
+                    saveKeyTryAgainTheme(uniqueThemeId.plus(1))
                 }
-                saveKeyTryAgainTheme(uniqueThemeId.plus(1))
                 isSuccess.invoke(ErrorStateView.OFFLINE)
                 return
             }
             if (checkBuyCourse()){
-                saveKeyTryAgainTheme(uniqueThemeId.plus(1))
+                withContext(NonCancellable) {
+                    val theme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
+                    val updateTheme = ThemeEntity(
+                        uniqueThemeId = theme.uniqueThemeId,
+                        themeName = theme.themeName,
+                        themeNumber = theme.themeNumber,
+                        courseNumber = theme.courseNumber,
+                        lessonsCount = theme.lessonsCount,
+                        lastUpdateDate = theme.lastUpdateDate,
+                        termHourse = null,
+                        termDateApi = null,
+                        victorineMistakeAnswer = theme.victorineMistakeAnswer,
+                        victorineCorrectAnswer = theme.victorineCorrectAnswer,
+                        interactiveCodeMistakes = theme.interactiveCodeMistakes,
+                        interactiveCodeCorrect = theme.interactiveCodeCorrect,
+                        interactiveQuestionCount = theme.interactiveQuestionCount,
+                        victorineQuestionCount = theme.victorineQuestionCount,
+                        vicotineTestId = theme.vicotineTestId,
+                        interactiveTestId = theme.interactiveTestId,
+                        imageTheme = theme.imageTheme,
+                        isOpen = theme.isOpen,
+                        duoDate = theme.duoDate,
+                        victorineDate = theme.victorineDate,
+                        isVictorine = theme.isVictorine,
+                        isDuoInter = theme.isDuoInter,
+                        isFav = theme.isFav,
+                        isThemePassed = true,
+                        possibleToOpenThemeFree = theme.possibleToOpenThemeFree,
+                        lastCourseTheme = theme.lastCourseTheme,
+                        themePrice = theme.themePrice
+                    )
+                    courseRepo.updateTheme(updateTheme)
+                    if (!theme.lastCourseTheme) {
+                        openNextTheme(uniqueThemeId, { errorState ->
+                            when (errorState) {
+                                ErrorEnum.NOTNETWORK -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                ErrorEnum.ERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                ErrorEnum.SUCCESS -> isSuccess.invoke(ErrorStateView.SUCCESS)
+                                ErrorEnum.UNKNOWNERROR -> isSuccess.invoke(ErrorStateView.ERROR)
+                                ErrorEnum.TIMEOUTERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                ErrorEnum.NULLPOINTERROR -> isSuccess.invoke(ErrorStateView.ERROR)
+                                ErrorEnum.OFFLINEMODE -> isSuccess.invoke(ErrorStateView.OFFLINE)
+                                ErrorEnum.OFFLINETHEMEBUY -> isSuccess.invoke(ErrorStateView.OFFLINEBUYTHEME)
+                            }
+                        }, { uniqueIds ->
+                            buythemesId?.invoke(uniqueIds)
+                        })
+                    }
+                    saveKeyTryAgainTheme(uniqueThemeId.plus(1))
+                }
                 isSuccess.invoke(ErrorStateView.OFFLINE)
                 return
             }
@@ -644,6 +701,7 @@ class ThemeUseCase @Inject constructor(
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             isSuccess.invoke(ErrorStateView.TRYAGAIN)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             isSuccess.invoke(ErrorStateView.ERROR)
         }
@@ -800,6 +858,7 @@ class ThemeUseCase @Inject constructor(
             Log.d("victorineAdsRuTestState",e.toString())
             isSucces.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("victorineAdsRuTestState",e.toString())
             isSucces.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -880,6 +939,7 @@ class ThemeUseCase @Inject constructor(
         }catch (e: TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+                    if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -971,6 +1031,7 @@ class ThemeUseCase @Inject constructor(
             Log.d("nffnrfnrnfrnfnr3434434nfrnf",e.toString())
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("nffnrfnrnfrnfnr3434434nfrnf",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -1005,7 +1066,9 @@ class ThemeUseCase @Inject constructor(
             }
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
-            saveKeyTryAgainTheme(uniqueThemeId)
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(uniqueThemeId)
+            }
             if(checkSubscibe()){
                 isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                 return
@@ -1024,13 +1087,20 @@ class ThemeUseCase @Inject constructor(
             })
           isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
-            saveKeyTryAgainTheme(uniqueThemeId)
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(uniqueThemeId)
+            }
              isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:TimeoutException){
-            saveKeyTryAgainTheme(uniqueThemeId)
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(uniqueThemeId)
+            }
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
-            saveKeyTryAgainTheme(uniqueThemeId)
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(uniqueThemeId)
+            }
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -1102,6 +1172,11 @@ class ThemeUseCase @Inject constructor(
             }
             isSuccess.invoke(ErrorEnum.SUCCESS)
         } catch (e:IOException){
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(uniqueThemeId)
+            }
+
+
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             if(checkSubscibe()){
                 isSuccess.invoke(ErrorEnum.OFFLINEMODE)
@@ -1118,19 +1193,29 @@ class ThemeUseCase @Inject constructor(
                     isSuccess.invoke(ErrorEnum.OFFLINETHEMEBUY)
                 }
             })
-            saveKeyTryAgainTheme(uniqueThemeId)
+
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         } catch (e:HttpException){
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(uniqueThemeId)
+            }
             Log.d("victorineerirjirjgigjitjgt",e.toString())
-            saveKeyTryAgainTheme(uniqueThemeId)
+
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:TimeoutException){
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(uniqueThemeId)
+            }
             Log.d("victorineerirjirjgigjitjgt",e.toString())
-            saveKeyTryAgainTheme(uniqueThemeId)
+
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(uniqueThemeId)
+            }
+            if(e is CancellationException) throw e
             Log.d("victorineerirjirjgigjitjgt",e.toString())
-            saveKeyTryAgainTheme(uniqueThemeId)
+
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
 }
@@ -1258,7 +1343,10 @@ class ThemeUseCase @Inject constructor(
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
             Log.d("victorineerirjirjgigjitjgt",e.toString())
-            saveKeyTryAgainTheme(currentUniqueThemeId.plus(1))
+            withContext(NonCancellable){
+                saveKeyTryAgainTheme(currentUniqueThemeId.plus(1))
+            }
+
             if(checkSubscibe()){
                 isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                 return
@@ -1277,15 +1365,28 @@ class ThemeUseCase @Inject constructor(
 
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:NullPointerException){
+            withContext(NonCancellable) {
+                saveKeyTryAgainTheme(currentUniqueThemeId.plus(1))
+            }
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:TimeoutException){
+            withContext(NonCancellable) {
+                saveKeyTryAgainTheme(currentUniqueThemeId.plus(1))
+            }
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:HttpException){
+            withContext(NonCancellable) {
+                saveKeyTryAgainTheme(currentUniqueThemeId.plus(1))
+            }
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:Exception){
+            withContext(NonCancellable) {
+                saveKeyTryAgainTheme(currentUniqueThemeId.plus(1))
+            }
+            if(e is CancellationException) throw e
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -1359,6 +1460,7 @@ class ThemeUseCase @Inject constructor(
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -1393,6 +1495,7 @@ class ThemeUseCase @Inject constructor(
         }catch (e:NullPointerException) {
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }

@@ -2,6 +2,8 @@ package workwork.test.andropediagits.domain.useCases.transactionLogic
 
 
 import android.util.Log
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import okio.IOException
 import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -24,6 +26,7 @@ import workwork.test.andropediagits.domain.repo.TransactionRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -165,18 +168,40 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
             transactionRepo.sendUserThemeBuy(themeBuyModel)
             isSucces.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
-            saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            withContext(NonCancellable){
+                saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            }
+
+            if(checkSubscibe()){
+                isSucces.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            if(checkBuyCourse()){
+                isSucces.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+
             isSucces.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:Exception){
-            saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            withContext(NonCancellable){
+                saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            }
+            if(e is CancellationException) throw e
             isSucces.invoke(ErrorEnum.UNKNOWNERROR)
         }catch (e:HttpException){
-            saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            withContext(NonCancellable){
+                saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            }
             isSucces.invoke(ErrorEnum.ERROR)
         }catch (e:NullPointerException){
+            withContext(NonCancellable){
+                saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            }
             isSucces.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:TimeoutException){
-            saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            withContext(NonCancellable){
+                saveErrorUpdate(uniqueThemeId = uniqueThemeId)
+            }
             isSucces.invoke(ErrorEnum.TIMEOUTERROR)
         }
     }
@@ -184,11 +209,11 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
     suspend fun subscribeBuy(term:Int,isSuccess:((ErrorEnum)->Unit)){
         try {
             val currentTime = transactionRepo.getCurrentTime()
-            val promoInfoLocal = userLogicRepo.getAllMyPromo()
+            val promocode = userLogicRepo.getAllMyPromo()
             val token = userLogicRepo.getUserInfoLocal().token
-            promoInfoLocal?.let { promocode ->
-                val currentSubs = transactionRepo.getSubscribe()
-                currentSubs?.let { myLocalSub->
+           if(promocode!=null){
+                val myLocalSub = transactionRepo.getSubscribe()
+                if(myLocalSub!=null){
                     val updateSub = SubscribeEntity(
                         term = myLocalSub.term+term,
                         date = myLocalSub.date,
@@ -217,8 +242,8 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
                 isSuccess.invoke(ErrorEnum.SUCCESS)
                 return
             }
-            val currentSubs = transactionRepo.getSubscribe()
-            currentSubs?.let { myLocalSub->
+            val myLocalSub = transactionRepo.getSubscribe()
+            if(myLocalSub!=null){
                 val updateSub = SubscribeEntity(
                     term = myLocalSub.term+term,
                     date = myLocalSub.date,
@@ -245,19 +270,40 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
             transactionRepo.sendSubscribtionTransaction(subscribe)
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
-            saveErrorUpdate(subscribe = "obkotkbokb")
+            withContext(NonCancellable){
+                saveErrorUpdate(subscribe = "obkotkbokb")
+            }
+
+            if(checkSubscibe()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            if(checkBuyCourse()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
-            saveErrorUpdate(subscribe = "obkotkbokb")
+            withContext(NonCancellable){
+                saveErrorUpdate(subscribe = "obkotkbokb")
+            }
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:Exception){
-            saveErrorUpdate(subscribe = "obkotkbokb")
+            withContext(NonCancellable){
+                saveErrorUpdate(subscribe = "obkotkbokb")
+            }
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }catch (e:TimeoutException){
-            saveErrorUpdate(subscribe = "obkotkbokb")
+            withContext(NonCancellable){
+                saveErrorUpdate(subscribe = "obkotkbokb")
+            }
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:NullPointerException){
-            saveErrorUpdate(subscribe = "obkotkbokb")
+            withContext(NonCancellable){
+                saveErrorUpdate(subscribe = "obkotkbokb")
+            }
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }
     }
@@ -481,22 +527,58 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
             }
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
-            saveErrorUpdate(courseNumber = courseNumber)
+            withContext(NonCancellable){
+                saveErrorUpdate(courseNumber = courseNumber)
+            }
+
+            if(checkBuyCourse()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            if(checkSubscibe()){
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
-            saveErrorUpdate(courseNumber = courseNumber)
+            withContext(NonCancellable){
+                saveErrorUpdate(courseNumber = courseNumber)
+            }
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:Exception){
-            saveErrorUpdate(courseNumber = courseNumber)
+            withContext(NonCancellable){
+                saveErrorUpdate(courseNumber = courseNumber)
+            }
+            if(e is CancellationException) throw e
+
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }catch (e:TimeoutException){
-            saveErrorUpdate(courseNumber = courseNumber)
+            withContext(NonCancellable){
+                saveErrorUpdate(courseNumber = courseNumber)
+            }
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:NullPointerException){
+            withContext(NonCancellable){
+                saveErrorUpdate(courseNumber = courseNumber)
+            }
 //            saveErrorUpdate(courseNumber = courseNumber)
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }
     }
+
+    private suspend fun checkBuyCourse():Boolean{
+        val buyCourses = transactionRepo.getAllMyCourseBuy()
+        buyCourses?.let { buyCoursesNotNull ->
+            buyCourses.forEach { oneBuyCourse ->
+                if (!oneBuyCourse.andropointBuy) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+
 
     private suspend fun saveErrorUpdate(subscribe:String?=null,courseNumber: Int?=null,uniqueThemeId: Int?=null){
         courseNumber?.let {courNotnull->
@@ -628,6 +710,11 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
                 isSuccess.invoke(ErrorEnum.OFFLINEMODE)
                 return
             }
+            if(checkBuyCourse()){
+                isActual.invoke(false)
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
             e.printStackTrace()
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
@@ -638,6 +725,7 @@ class TransactionUseCase @Inject constructor(private val transactionRepo: Transa
             e.printStackTrace()
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d(
                 "victorineTestResultStateStrikeResultTreaAndropoint",
                 e.toString()

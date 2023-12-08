@@ -13,6 +13,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.state.PromoCodeSta
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
@@ -64,6 +65,7 @@ class PromoCodeUseCase @Inject constructor(private val userLogicRepo: UserLogicR
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("promoDialdodod","promooException:${e.toString()}")
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -99,6 +101,7 @@ class PromoCodeUseCase @Inject constructor(private val userLogicRepo: UserLogicR
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }

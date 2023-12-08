@@ -19,6 +19,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.state.SpendAndropo
 import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeState
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
@@ -59,6 +60,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
             crashUseCase.sendCrash(exception = e.message(), className = this.toString())
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("victorineerirjirjgigjitjgt",e.toString())
             crashUseCase.sendCrash(exception = e.message ?: "unknown error", className = this.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
@@ -93,6 +95,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                 crashUseCase.sendCrash(exception = e.message(), className = this.toString())
                 isSuccess.invoke(ErrorEnum.ERROR)
             }catch (e:Exception){
+                if(e is CancellationException) throw e
                 Log.d("victorineerirjirjgigjitjgt",e.toString())
                 crashUseCase.sendCrash(exception = e.message ?: "unknown error", className = this.toString())
                 isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
@@ -184,6 +187,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        if(e is CancellationException) throw e
                         Log.d(
                             "victorineTestResultStateStrikeResultTreaAndropoint",
                             e.toString()
@@ -252,6 +256,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        if(e is CancellationException) throw e
                         Log.d(
                             "victorineTestResultStateStrikeResultTreaAndropoint",
                             e.toString()
@@ -318,6 +323,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        if(e is CancellationException) throw e
                         Log.d(
                             "victorineTestResultStateStrikeResultTreaAndropoint",
                             e.toString()
@@ -375,6 +381,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        if(e is CancellationException) throw e
                         Log.d(
                             "victorineTestResultStateStrikeResultTreaAndropoint",
                             e.toString()
@@ -432,6 +439,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        if(e is CancellationException) throw e
                         Log.d(
                             "victorineTestResultStateStrikeResultTreaAndropoint",
                             e.toString()
@@ -489,6 +497,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        if(e is CancellationException) throw e
                         Log.d(
                             "victorineTestResultStateStrikeResultTreaAndropoint",
                             e.toString()
@@ -546,6 +555,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                         )
                         isSuccess.invoke(ErrorEnum.ERROR)
                     }catch (e:Exception){
+                        if(e is CancellationException) throw e
                         Log.d(
                             "victorineTestResultStateStrikeResultTreaAndropoint",
                             e.toString()
@@ -601,6 +611,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                 } catch (e: HttpException) {
                     isSuccess.invoke(ErrorEnum.ERROR)
                 }catch (e:Exception){
+                    if(e is CancellationException) throw e
                     isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                 }catch (e: TimeoutException){
                     isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
@@ -641,6 +652,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                 } catch (e: HttpException) {
                     isSuccess.invoke(ErrorEnum.ERROR)
                 }catch (e:Exception){
+                    if(e is CancellationException) throw e
                     isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                 }catch (e: TimeoutException){
                     isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
@@ -682,6 +694,7 @@ class AndropointUseCase @Inject constructor(private val userLogicRepo: UserLogic
                 }catch (e:HttpException){
                     isSuccess.invoke(ErrorEnum.ERROR)
                 }catch (e:Exception){
+                    if(e is CancellationException) throw e
                     isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
                 }catch (e: TimeoutException){
                     isSuccess.invoke(ErrorEnum.TIMEOUTERROR)

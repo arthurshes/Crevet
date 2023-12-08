@@ -16,6 +16,7 @@ import workwork.test.andropediagits.core.mappers.toThemeLevelContentEntity
 import workwork.test.andropediagits.core.mappers.toVictorineAnswerVariantEntity
 import workwork.test.andropediagits.core.mappers.toVictorineClueEntity
 import workwork.test.andropediagits.core.mappers.toVictorineEntity
+import workwork.test.andropediagits.data.local.MainDb
 import workwork.test.andropediagits.data.local.entities.AdsEntity
 import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseEntity
@@ -28,12 +29,14 @@ import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
 class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, private val userLogicRepo: UserLogicRepo, private val transactionRepo: TransactionRepo) {
 
-    suspend fun downloaCourse(isSuccess:((ErrorEnum)->Unit), lang:String?=null,token:String?=null){
+    @SuppressLint("SuspiciousIndentation")
+    suspend fun downloaCourse(isSuccess:((ErrorEnum)->Unit), lang:String?=null, token:String?=null){
         try {
 //            val userInfo = userLogicRepo.getUserInfoLocal()
        val currentDate = courseRepo.getCurrentTime()
@@ -180,6 +183,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             Log.d("stategyrfgyrefguregu3",e.toString())
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("stategyrfgyrefguregu3",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -224,6 +228,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
 
     suspend fun downloadUpdateLang(isSuccess:((ErrorEnum)->Unit)){
         try {
+
             courseRepo.deleteAllCourse()
             courseRepo.deleteAllThemes()
             courseRepo.deleteAllLevels()
@@ -305,6 +310,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             Log.d("downloadLanfintitoibnoyt",e.toString())
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("downloadLanfintitoibnoyt",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -449,6 +455,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             Log.d("sppspsp",e.toString())
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("sppspsp",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
@@ -520,6 +527,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
             Log.d("Splashss",e.toString())
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("Splashss",e.toString())
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }

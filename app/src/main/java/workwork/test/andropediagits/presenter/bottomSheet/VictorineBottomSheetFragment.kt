@@ -106,9 +106,9 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
             } else if (terString == "Invalid date") {
                 binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
                 isTermVictorine = false
-            } else {
+            }
 
-
+            else {
 
                 if (!isThemePassed) {
                     viewModel.termExistCheckLocal(uniqueCurrentThemeId ?: 2,{
@@ -655,7 +655,6 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                 ErrorEnum.SUCCESS -> {
                     requireActivity().runOnUiThread {
                         Toast.makeText(requireContext(),getString(R.string.delay_was_successfully_reset), Toast.LENGTH_SHORT).show()
-                        dismiss()
                     }
 
                 }
@@ -725,7 +724,16 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }, arguments?.getInt("uniqueThemeID", 2) ?: 0, { remainingHours ->
             if (remainingHours == "0null") {
-                Toast.makeText(requireContext(),getString(R.string.delay_has_been_successfully_reset), Toast.LENGTH_SHORT).show()
+                requireActivity().runOnUiThread {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.delay_has_been_successfully_reset),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            requireActivity().runOnUiThread {
+                dismiss()
             }
         })
     }

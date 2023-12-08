@@ -22,6 +22,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.Upd
 import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.updateStates.UpdateThemeState
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import kotlin.Exception
@@ -171,6 +172,7 @@ class VictorineUseCase @Inject constructor(private val updateThemeUseCase: Updat
            Log.d("victorineTestdfetd",e.toString())
           isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
        }catch (e:Exception){
+           if(e is CancellationException) throw e
            Log.d("victorineTestdfetd",e.toString())
            isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
        }

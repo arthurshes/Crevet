@@ -20,6 +20,7 @@ import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import java.util.ArrayList
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
@@ -179,10 +180,12 @@ class TryAgainUseCase @Inject constructor(private val courseRepo: CourseRepo, pr
             },{ isBuy->
                 if (isBuy){
                     isSuccess?.invoke(ErrorEnum.OFFLINETHEMEBUY)
-                    return@checkAndGeIdtLocalBuyThemes
+
+                }else{
+                    isSuccess?.invoke(ErrorEnum.NOTNETWORK)
                 }
             })
-            isSuccess?.invoke(ErrorEnum.NOTNETWORK)
+
         }catch (e: HttpException){
             Log.d("Splashsst",e.toString())
             successFlag = false
@@ -194,6 +197,7 @@ class TryAgainUseCase @Inject constructor(private val courseRepo: CourseRepo, pr
             Log.d("Splashsst",e.toString())
             isSuccess?.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("Splashsst",e.toString())
             successFlag = false
             isSuccess?.invoke(ErrorEnum.UNKNOWNERROR)

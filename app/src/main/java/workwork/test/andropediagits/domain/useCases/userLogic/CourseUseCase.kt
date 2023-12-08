@@ -1,6 +1,8 @@
 package workwork.test.andropediagits.domain.useCases.userLogic
 
 import android.util.Log
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import okio.IOException
 import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -21,6 +23,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.privateUseCase.Try
 import workwork.test.andropediagits.domain.useCases.userLogic.state.BuyForAndropointStates
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import kotlin.Exception
@@ -43,6 +46,7 @@ class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, priv
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -60,6 +64,7 @@ class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, priv
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -99,6 +104,7 @@ class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, priv
         }catch (e:TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -193,6 +199,7 @@ class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, priv
         }catch (e:NullPointerException) {
              isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -406,23 +413,21 @@ class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, priv
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
             if (checkSubscibe()){
-                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
-                return
-            }
-            if(!wtireUpdate){
-                val currentCourse = courseRepo.searchCourseWithNumber(courseNumber)
-                val courseEntity = CourseEntity(
-                    courseName = currentCourse.courseName,
-                    courseNumber = currentCourse.courseNumber,
-                    possibleToOpenCourseFree = currentCourse.possibleToOpenCourseFree,
-                    description = currentCourse.description,
-                    isNetworkConnect = currentCourse.isNetworkConnect,
-                    lastUpdateDate = currentCourse.lastUpdateDate,
-                    isOpen = true
-                )
-                courseRepo.updateCourse(courseEntity)
-                val themesCourse = courseRepo.searchThemesWithCourseNumber(courseNumber)
-                val n = themesCourse.minByOrNull { it.themeNumber }
+                withContext(NonCancellable) {
+                    if (!wtireUpdate) {
+                        val currentCourse = courseRepo.searchCourseWithNumber(courseNumber)
+                        val courseEntity = CourseEntity(
+                            courseName = currentCourse.courseName,
+                            courseNumber = currentCourse.courseNumber,
+                            possibleToOpenCourseFree = currentCourse.possibleToOpenCourseFree,
+                            description = currentCourse.description,
+                            isNetworkConnect = currentCourse.isNetworkConnect,
+                            lastUpdateDate = currentCourse.lastUpdateDate,
+                            isOpen = true
+                        )
+                        courseRepo.updateCourse(courseEntity)
+                        val themesCourse = courseRepo.searchThemesWithCourseNumber(courseNumber)
+                        val n = themesCourse.minByOrNull { it.themeNumber }
 
 //                    if (smallestModel != null) {
 //                        println("Объект с самым маленьким номером: ${smallestModel.number}, другое свойство: ${smallestModel.otherProperty}")
@@ -431,42 +436,177 @@ class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, priv
 //                    }
 //
 //                    }
-                openAllThemesPreviewCourse(courseNumber)
-                if(n!=null) {
-                    val updateThemeEntity = ThemeEntity(
-                        uniqueThemeId = n.uniqueThemeId,
-                        lastUpdateDate = Date(),
-                        themeName = n.themeName,
-                        courseNumber = n.courseNumber,
-                        themeNumber = n.themeNumber,
-                        interactiveCodeMistakes = n.interactiveCodeMistakes,
-                        interactiveCodeCorrect = n.interactiveCodeCorrect,
-                        victorineMistakeAnswer = n.victorineMistakeAnswer,
-                        victorineCorrectAnswer = n.victorineCorrectAnswer,
-                        victorineDate = n.victorineDate,
-                        interactiveTestId = n.interactiveTestId,
-                        interactiveQuestionCount = n.interactiveQuestionCount,
-                        victorineQuestionCount = n.victorineQuestionCount,
-                        vicotineTestId = n.vicotineTestId,
-                        duoDate = n.duoDate,
-                        isDuoInter = n.isDuoInter,
-                        isVictorine = n.isVictorine,
-                        isOpen = true,
-                        termHourse = n.termHourse,
-                        termDateApi = n.termDateApi,
-                        imageTheme = n.imageTheme,
-                        lessonsCount = n.lessonsCount,
-                        lastCourseTheme = n.lastCourseTheme,
-                        isFav = n.isFav,
-                        isThemePassed = n.isThemePassed,
-                        possibleToOpenThemeFree = n.possibleToOpenThemeFree,
-                        themePrice = n.themePrice
-                    )
-                    courseRepo.updateTheme(updateThemeEntity)
+                        openAllThemesPreviewCourse(courseNumber)
+                        if (n != null) {
+                            val updateThemeEntity = ThemeEntity(
+                                uniqueThemeId = n.uniqueThemeId,
+                                lastUpdateDate = Date(),
+                                themeName = n.themeName,
+                                courseNumber = n.courseNumber,
+                                themeNumber = n.themeNumber,
+                                interactiveCodeMistakes = n.interactiveCodeMistakes,
+                                interactiveCodeCorrect = n.interactiveCodeCorrect,
+                                victorineMistakeAnswer = n.victorineMistakeAnswer,
+                                victorineCorrectAnswer = n.victorineCorrectAnswer,
+                                victorineDate = n.victorineDate,
+                                interactiveTestId = n.interactiveTestId,
+                                interactiveQuestionCount = n.interactiveQuestionCount,
+                                victorineQuestionCount = n.victorineQuestionCount,
+                                vicotineTestId = n.vicotineTestId,
+                                duoDate = n.duoDate,
+                                isDuoInter = n.isDuoInter,
+                                isVictorine = n.isVictorine,
+                                isOpen = true,
+                                termHourse = n.termHourse,
+                                termDateApi = n.termDateApi,
+                                imageTheme = n.imageTheme,
+                                lessonsCount = n.lessonsCount,
+                                lastCourseTheme = n.lastCourseTheme,
+                                isFav = n.isFav,
+                                isThemePassed = n.isThemePassed,
+                                possibleToOpenThemeFree = n.possibleToOpenThemeFree,
+                                themePrice = n.themePrice
+                            )
+                            courseRepo.updateTheme(updateThemeEntity)
+                        }
+                        saveErrorUpdate(
+                            courseNumber = courseNumber,
+                            andropointCount = currentCourse.coursePriceAndropoint ?: 200
+                        )
+                    }
                 }
-                saveErrorUpdate(courseNumber = courseNumber, andropointCount = currentCourse.coursePriceAndropoint ?: 200)
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
             }
 
+            if(checkBuyCourse()){
+                withContext(NonCancellable) {
+                    if (!wtireUpdate) {
+                        val currentCourse = courseRepo.searchCourseWithNumber(courseNumber)
+                        val courseEntity = CourseEntity(
+                            courseName = currentCourse.courseName,
+                            courseNumber = currentCourse.courseNumber,
+                            possibleToOpenCourseFree = currentCourse.possibleToOpenCourseFree,
+                            description = currentCourse.description,
+                            isNetworkConnect = currentCourse.isNetworkConnect,
+                            lastUpdateDate = currentCourse.lastUpdateDate,
+                            isOpen = true
+                        )
+                        courseRepo.updateCourse(courseEntity)
+                        val themesCourse = courseRepo.searchThemesWithCourseNumber(courseNumber)
+                        val n = themesCourse.minByOrNull { it.themeNumber }
+
+//                    if (smallestModel != null) {
+//                        println("Объект с самым маленьким номером: ${smallestModel.number}, другое свойство: ${smallestModel.otherProperty}")
+//                    } else {
+//                        println("Массив пуст.")
+//                    }
+//
+//                    }
+                        openAllThemesPreviewCourse(courseNumber)
+                        if (n != null) {
+                            val updateThemeEntity = ThemeEntity(
+                                uniqueThemeId = n.uniqueThemeId,
+                                lastUpdateDate = Date(),
+                                themeName = n.themeName,
+                                courseNumber = n.courseNumber,
+                                themeNumber = n.themeNumber,
+                                interactiveCodeMistakes = n.interactiveCodeMistakes,
+                                interactiveCodeCorrect = n.interactiveCodeCorrect,
+                                victorineMistakeAnswer = n.victorineMistakeAnswer,
+                                victorineCorrectAnswer = n.victorineCorrectAnswer,
+                                victorineDate = n.victorineDate,
+                                interactiveTestId = n.interactiveTestId,
+                                interactiveQuestionCount = n.interactiveQuestionCount,
+                                victorineQuestionCount = n.victorineQuestionCount,
+                                vicotineTestId = n.vicotineTestId,
+                                duoDate = n.duoDate,
+                                isDuoInter = n.isDuoInter,
+                                isVictorine = n.isVictorine,
+                                isOpen = true,
+                                termHourse = n.termHourse,
+                                termDateApi = n.termDateApi,
+                                imageTheme = n.imageTheme,
+                                lessonsCount = n.lessonsCount,
+                                lastCourseTheme = n.lastCourseTheme,
+                                isFav = n.isFav,
+                                isThemePassed = n.isThemePassed,
+                                possibleToOpenThemeFree = n.possibleToOpenThemeFree,
+                                themePrice = n.themePrice
+                            )
+                            courseRepo.updateTheme(updateThemeEntity)
+                        }
+                        saveErrorUpdate(
+                            courseNumber = courseNumber,
+                            andropointCount = currentCourse.coursePriceAndropoint ?: 200
+                        )
+                    }
+                }
+                isSuccess.invoke(ErrorEnum.OFFLINEMODE)
+                return
+            }
+            withContext(NonCancellable) {
+                if (!wtireUpdate) {
+                    val currentCourse = courseRepo.searchCourseWithNumber(courseNumber)
+                    val courseEntity = CourseEntity(
+                        courseName = currentCourse.courseName,
+                        courseNumber = currentCourse.courseNumber,
+                        possibleToOpenCourseFree = currentCourse.possibleToOpenCourseFree,
+                        description = currentCourse.description,
+                        isNetworkConnect = currentCourse.isNetworkConnect,
+                        lastUpdateDate = currentCourse.lastUpdateDate,
+                        isOpen = true
+                    )
+                    courseRepo.updateCourse(courseEntity)
+                    val themesCourse = courseRepo.searchThemesWithCourseNumber(courseNumber)
+                    val n = themesCourse.minByOrNull { it.themeNumber }
+
+//                    if (smallestModel != null) {
+//                        println("Объект с самым маленьким номером: ${smallestModel.number}, другое свойство: ${smallestModel.otherProperty}")
+//                    } else {
+//                        println("Массив пуст.")
+//                    }
+//
+//                    }
+                    openAllThemesPreviewCourse(courseNumber)
+                    if (n != null) {
+                        val updateThemeEntity = ThemeEntity(
+                            uniqueThemeId = n.uniqueThemeId,
+                            lastUpdateDate = Date(),
+                            themeName = n.themeName,
+                            courseNumber = n.courseNumber,
+                            themeNumber = n.themeNumber,
+                            interactiveCodeMistakes = n.interactiveCodeMistakes,
+                            interactiveCodeCorrect = n.interactiveCodeCorrect,
+                            victorineMistakeAnswer = n.victorineMistakeAnswer,
+                            victorineCorrectAnswer = n.victorineCorrectAnswer,
+                            victorineDate = n.victorineDate,
+                            interactiveTestId = n.interactiveTestId,
+                            interactiveQuestionCount = n.interactiveQuestionCount,
+                            victorineQuestionCount = n.victorineQuestionCount,
+                            vicotineTestId = n.vicotineTestId,
+                            duoDate = n.duoDate,
+                            isDuoInter = n.isDuoInter,
+                            isVictorine = n.isVictorine,
+                            isOpen = true,
+                            termHourse = n.termHourse,
+                            termDateApi = n.termDateApi,
+                            imageTheme = n.imageTheme,
+                            lessonsCount = n.lessonsCount,
+                            lastCourseTheme = n.lastCourseTheme,
+                            isFav = n.isFav,
+                            isThemePassed = n.isThemePassed,
+                            possibleToOpenThemeFree = n.possibleToOpenThemeFree,
+                            themePrice = n.themePrice
+                        )
+                        courseRepo.updateTheme(updateThemeEntity)
+                    }
+                    saveErrorUpdate(
+                        courseNumber = courseNumber,
+                        andropointCount = currentCourse.coursePriceAndropoint ?: 200
+                    )
+                }
+            }
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:HttpException){
             isSuccess.invoke(ErrorEnum.ERROR)
@@ -475,6 +615,7 @@ class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, priv
         }catch (e:TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -545,6 +686,7 @@ class CourseUseCase @Inject constructor(private val courseRepo: CourseRepo, priv
             courseRepo.insertKey(updateKeyEntity)
 
     }
+
 
 
 

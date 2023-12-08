@@ -34,6 +34,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.validators.UserInf
 import workwork.test.andropediagits.domain.useCases.userLogic.validators.UserInfoValidator
 import java.util.Calendar
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import kotlin.Exception
@@ -82,6 +83,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -125,6 +127,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -166,6 +169,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }catch (e:NullPointerException){
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -221,6 +225,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }catch (e:NullPointerException){
             isSuccess.invoke(RecoverPassState.NULLPOINTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(RecoverPassState.UNKNOWNERROR)
         }
     }
@@ -260,6 +265,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
             Log.d("emailStatesdd","EmailIsEmpty")
             isSuccess.invoke(EmailErrorEnum.EmailIsEmpty)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("s8888222sss",e.toString())
             Log.d("emailStatesdd","vUNKNOWNERROR")
             isSuccess.invoke(EmailErrorEnum.UNKNOWNERROR)
@@ -301,6 +307,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }catch (e: NameIsEmptyException){
             isSuccess.invoke(UserInfoUpdateEnum.NameIsEmpty)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             Log.d("s8888222sss",e.toString())
             isSuccess.invoke(UserInfoUpdateEnum.UNKNOWNERROR)
         }
@@ -340,6 +347,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }catch (e:TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -359,6 +367,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }catch (e:TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
