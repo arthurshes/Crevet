@@ -5,13 +5,13 @@ import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.data.local.entities.indi.IndiCourseEntity
 import workwork.test.andropediagits.data.local.entities.indi.IndiThemeEntity
-import workwork.test.andropediagits.domain.repo.IndividualCourseCreaterRepo
+import workwork.test.andropediagits.domain.repo.IndividualCoursesRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.state.IndiCourseModerationStatus
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
-class IndividualCreaterUseCase @Inject constructor(private val individualCourseCreaterRepo: IndividualCourseCreaterRepo, private val userLogicRepo: UserLogicRepo) {
+class IndividualCreaterUseCase @Inject constructor(private val individualCoursesRepo: IndividualCoursesRepo, private val userLogicRepo: UserLogicRepo) {
 
     suspend fun getIncomeData(){
 
@@ -36,7 +36,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourseC
     suspend fun createCourse(isSuccess:((ErrorEnum)->Unit),courseName:String,courseDescription:String,coursePriceDollar:String,myRequisits:String){
         try {
             val token = userLogicRepo.getUserInfoLocal()
-            val uniqueCourseNumber = individualCourseCreaterRepo.getUnuiqueCourseNumber(token = token.token)
+            val uniqueCourseNumber = individualCoursesRepo.getUnuiqueCourseNumber(token = token.token)
             val indiCourseEntity = IndiCourseEntity(
                 createrToken = token.token,
                 coursePrice = coursePriceDollar,
@@ -47,7 +47,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourseC
                 versionCourse = 1,
                 uniqueCourseNumber = uniqueCourseNumber.uniqueCourseNumber
             )
-            individualCourseCreaterRepo.createIndiCourse(indiCourseEntity)
+            individualCoursesRepo.createIndiCourse(indiCourseEntity)
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
@@ -65,7 +65,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourseC
     suspend fun createIndiThemeCourse(uniqueCourseNumber:Int,isSuccess:((ErrorEnum)->Unit),themeName:String){
         try {
             val userInfo = userLogicRepo.getUserInfoLocal()
-            val indiThemes = individualCourseCreaterRepo.getAllIndiThemes(uniqueCourseNumber,userInfo.token)?.maxOfOrNull {
+            val indiThemes = individualCoursesRepo.getAllIndiThemes(uniqueCourseNumber,userInfo.token)?.maxOfOrNull {
                 it.themeNumber
             }
             val indiThemeEntity = IndiThemeEntity(
@@ -74,7 +74,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourseC
                 themeNumber = indiThemes ?: 1,
                 uniqueCourseNumber = uniqueCourseNumber
             )
-            individualCourseCreaterRepo.createIndiThemes(indiThemeEntity)
+            individualCoursesRepo.createIndiThemes(indiThemeEntity)
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
             isSuccess.invoke(ErrorEnum.NOTNETWORK)

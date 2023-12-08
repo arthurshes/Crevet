@@ -1,7 +1,6 @@
 package workwork.test.andropediagits.di.userLogicModule
 
 
-import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,10 +13,10 @@ import workwork.test.andropediagits.data.local.MainDb
 import workwork.test.andropediagits.data.remote.LogicUserApiService
 import workwork.test.andropediagits.data.remote.TimeApiService
 import workwork.test.andropediagits.data.repo.CourseRepoImpl
-import workwork.test.andropediagits.data.repo.IndividualCourseCreaterRepoImpl
+import workwork.test.andropediagits.data.repo.IndividualCoursesRepoImpl
 import workwork.test.andropediagits.data.repo.UserLogicRepoImpl
 import workwork.test.andropediagits.domain.repo.CourseRepo
-import workwork.test.andropediagits.domain.repo.IndividualCourseCreaterRepo
+import workwork.test.andropediagits.domain.repo.IndividualCoursesRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.validators.UserInfoValidator
 
@@ -29,8 +28,8 @@ object UserLogicModule {
 
     @Provides
     @Singleton
-    fun provideIndiCoursesRepo(mainDb: MainDb,logicUserApiService: LogicUserApiService):IndividualCourseCreaterRepo =
-        IndividualCourseCreaterRepoImpl(mainDb, logicUserApiService)
+    fun provideIndiCoursesRepo(mainDb: MainDb,logicUserApiService: LogicUserApiService):IndividualCoursesRepo =
+        IndividualCoursesRepoImpl(mainDb, logicUserApiService)
 
 
     @Provides

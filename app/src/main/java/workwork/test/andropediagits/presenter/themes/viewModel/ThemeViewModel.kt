@@ -50,37 +50,37 @@ class ThemeViewModel @Inject constructor(
      var courseNumber = savedStateHandle.getLiveData<Int>(courseNumberKey, -1)
 
     fun getAdProvider(adsProviderEntity: ((AdsProviderEntity)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             adsProviderEntity.invoke(userLogicRepo.getMyAdsProvider())
         }
     }
 
     fun selectAdsProvider(adsProviderEntity: AdsProviderEntity){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userLogicRepo.updateAdsProvider(adsProviderEntity)
         }
     }
 
     fun deleteMyAccount(isSuccess: (ErrorEnum) -> Unit){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             signInUseCase.deleteMyAccount { isSuccess.invoke(it) }
         }
     }
 
     fun getMyAdsProvider(adsProvider:((AdsProviderEntity)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             adsProvider.invoke(userLogicRepo.getMyAdsProvider())
         }
     }
 
     fun getMyBillingProvider(billingProvider:((BillingProviderEntity)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             billingProvider.invoke(userLogicRepo.getMyBillingProvider())
         }
     }
 
     fun exitCurrentAccount( result: (ErrorEnum) -> Unit){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             signInUseCase.exitCurrentAccount(result)
         }
     }
@@ -92,49 +92,49 @@ class ThemeViewModel @Inject constructor(
     }
 
     fun langChoose(languagesEnum: LanguagesEnum, isSuccess: ((ErrorEnum) -> Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             signInUseCase.languageChoose(isSuccess,languagesEnum)
         }
     }
 
     fun getCurrentLang(currentLang:((String)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             currentLang.invoke(userLogicRepo.getUserInfoLocal().userLanguage ?: "eng")
         }
     }
 
     fun buyAndropoints(addAndropoints: AddAndropoints,isSuccess: ((ErrorEnum) -> Unit),){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             andropointUseCase.addAndropoint(isSuccess,addAndropoints)
         }
     }
 
    fun adsView(isSuccess: ((ErrorEnum) -> Unit)){
-       viewModelScope.launch {
+       viewModelScope.launch(Dispatchers.IO) {
            adsUseCase.viewAds(isSuccess)
        }
    }
 
     fun checkLimitActual(isSuccess: ((ErrorEnum) -> Unit), isLimitActual:((Boolean)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             adsUseCase.checkTermLimit(isSuccess, isLimitActual)
         }
     }
 
     fun addAndropointAds(isSuccess: ((ErrorEnum) -> Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             andropointUseCase.addAndropoint(isSuccess,AddAndropoints.ADDANDROPOINTSVIEWAD)
         }
     }
 
     fun addFavorite(uniqueThemeId: Int){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             themeUseCase.themeIsFavorite(uniqueThemeId)
         }
     }
 
     fun removeFavorite(uniqueThemeId: Int){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             themeUseCase.themeNotFavorite(uniqueThemeId)
         }
     }
@@ -161,19 +161,19 @@ class ThemeViewModel @Inject constructor(
 
     fun putCourseNumberLocal(numberCourse: Int,themes:((List<ThemeEntity>)->Unit)) {
             Log.d("themeSttvdr","startAllThemesCourse")
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             themes.invoke(coursesRepo.searchThemesWithCourseNumber(numberCourse))
         }
 
     }
      fun getDataUser(isUserInfo:((UserInfoEntity)->Unit)){
-           viewModelScope.launch {
+           viewModelScope.launch(Dispatchers.IO) {
                isUserInfo.invoke(userLogicRepo.getUserInfoLocal())
            }
     }
 
     fun getFavoritesThemes(themes:((List<ThemeEntity>)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
         themes.invoke(themeUseCase.getAllFavoriteThemes())
         }
     }
@@ -184,7 +184,7 @@ class ThemeViewModel @Inject constructor(
     }*/
 
     fun buyThemeForMoney(uniqueThemeId: Int,isSuccess: (ErrorEnum) -> Unit){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             transactionUseCase.themeBuy(uniqueThemeId,isSuccess)
         }
     }

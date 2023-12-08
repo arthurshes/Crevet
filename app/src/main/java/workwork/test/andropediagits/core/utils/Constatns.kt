@@ -2,7 +2,9 @@ package workwork.test.andropediagits.core.utils
 
 object Constatns {
 //
-//    const val BASE_URL = "http://10.0.2.2:8080/"
+//    const val BASE_URL = "http://10.0.2.2:8080/"\
+    const val INDI_COURSE_NOT_BUY = 1839549323
+    const val INDI_COURSE_RAITING_NOT_VISIBLE = 493742741
     const val BASE_URL = "https://www.allpedia.ru/"
     const val TEXT_KEY = "text_size_key"
     const val CLUE_KEY = "victorine_clue_key"

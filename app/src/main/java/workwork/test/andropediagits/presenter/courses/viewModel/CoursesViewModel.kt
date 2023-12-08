@@ -36,38 +36,38 @@ class CoursesViewModel @Inject constructor(private val userLogicRepo: UserLogicR
     }
 
     fun selectAdsProvider(adsProviderEntity: AdsProviderEntity){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userLogicRepo.insertAdsProvider(adsProviderEntity)
         }
     }
 
     fun buyCourseAndropoint(isSuccess: (ErrorEnum) -> Unit, andropointMinus:Int, isAndropointState:((BuyForAndropointStates)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             andropointUseCase.spendAndropoints(SpendAndropointState.COURSEOPENING,isSuccess,isAndropointState, andropointMinusCount = andropointMinus)
         }
     }
 
     fun buyCourseAndropointOpen(isSuccess: (ErrorEnum) -> Unit,courseNumber: Int){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             courseUseCase.courseBuyAndropoint(isSuccess,courseNumber)
         }
     }
 
     fun checkAllCourseThemesTerm(courseNumber: Int, isSuccess:((ErrorEnum)->Unit), isTermActual:((Boolean)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             themeUseCase.checkAllCourseThemesTerm(courseNumber, isSuccess, isTermActual)
         }
     }
 
      fun initialCourse(){
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             _allCourses.postValue(coursesRepo.getAllCourses())
         }
     }
 
 
      fun checkPromoCode(promoCode: String, result: (ErrorEnum) -> Unit, promoState: (PromoCodeState) -> Unit) {
-        viewModelScope.launch {
+        viewModelScope.launch (Dispatchers.IO){
             promoCodeUseCase.checkPromoCode(promoCode, { result(it) }, { promoState(it) })
         }
     }
@@ -85,7 +85,7 @@ class CoursesViewModel @Inject constructor(private val userLogicRepo: UserLogicR
 //    }
 
     fun buyCourseForMoney(isSuccess: (ErrorEnum) -> Unit, courseNumber: Int){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             transactionUseCase.courseBuy(courseNumber, isSuccess)
         }
     }

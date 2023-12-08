@@ -9,5 +9,6 @@ data class IndividualCourseGetModel(
     val uniqueCourseNumber:Int,
     val createrName:String,
     val createrImage:String?=null,
-    val versionCourse:Int
+    val versionCourse:Int,
+    val raiting:Float
 )

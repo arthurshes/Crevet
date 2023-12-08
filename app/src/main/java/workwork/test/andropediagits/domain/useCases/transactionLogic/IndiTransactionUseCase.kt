@@ -6,7 +6,7 @@ import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.data.local.entities.indi.IndiCreatorSubscribeEntity
 import workwork.test.andropediagits.data.remote.individualCourseGet.creatorSubscribe.BuyCreatorSubscribeModel
-import workwork.test.andropediagits.domain.repo.IndividualCourseCreaterRepo
+import workwork.test.andropediagits.domain.repo.IndividualCoursesRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeoutException
 
 import javax.inject.Inject
 
-class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo,private val individualCourseCreaterRepo: IndividualCourseCreaterRepo) {
+class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo,private val individualCoursesRepo: IndividualCoursesRepo) {
 
 
 
@@ -22,14 +22,14 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
         val token = userLogicRepo.getUserInfoLocal().token
         try {
             val currentDate = userLogicRepo.getCurrentTime()
-            val existCheck = individualCourseCreaterRepo.getMyIndiSubs()
+            val existCheck = individualCoursesRepo.getMyIndiSubs()
             if(!existCheck.successSend&&!newBuy){
                 val buyCreatorSubscribeModel = BuyCreatorSubscribeModel(
                     token = token,
                     buyDate = currentDate.datetime,
                     term = existCheck.term
                 )
-                val response = individualCourseCreaterRepo.buyCreatorSubscribe(buyCreatorSubscribeModel)
+                val response = individualCoursesRepo.buyCreatorSubscribe(buyCreatorSubscribeModel)
                 if(response.status){
                     val subscribeCreatorSubscribeEntity = IndiCreatorSubscribeEntity(
                         token = token,
@@ -37,7 +37,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
                         dateBuy = existCheck.dateBuy,
                         successSend = true
                     )
-                    individualCourseCreaterRepo.updateIndiCreaterSubscribe(subscribeCreatorSubscribeEntity)
+                    individualCoursesRepo.updateIndiCreaterSubscribe(subscribeCreatorSubscribeEntity)
                 }
                 isSuccess.invoke(ErrorEnum.SUCCESS)
                 return
@@ -47,7 +47,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
                     buyDate = currentDate.datetime,
                     term = existCheck.term+term
                 )
-                val response = individualCourseCreaterRepo.buyCreatorSubscribe(buyCreatorSubscribeModel)
+                val response = individualCoursesRepo.buyCreatorSubscribe(buyCreatorSubscribeModel)
                 if(response.status){
                     val subscribeCreatorSubscribeEntity = IndiCreatorSubscribeEntity(
                         token = token,
@@ -55,7 +55,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
                         dateBuy = existCheck.dateBuy,
                         successSend = true
                     )
-                    individualCourseCreaterRepo.updateIndiCreaterSubscribe(subscribeCreatorSubscribeEntity)
+                    individualCoursesRepo.updateIndiCreaterSubscribe(subscribeCreatorSubscribeEntity)
                 }
                 isSuccess.invoke(ErrorEnum.SUCCESS)
                 return
@@ -65,7 +65,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
                 buyDate = currentDate.datetime,
                 term = term
             )
-           individualCourseCreaterRepo.buyCreatorSubscribe(buyCreatorSubscribeModel)
+           individualCoursesRepo.buyCreatorSubscribe(buyCreatorSubscribeModel)
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
             subscribeSendError(term, token)
@@ -89,9 +89,9 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
     suspend fun checkCreaterSubscribe(isActual:((Boolean)->Unit), isActualToDate:((String)->Unit), isSuccess: ((ErrorEnum) -> Unit),isAccountBanned:((Boolean)->Unit)){
         try {
             val token = userLogicRepo.getUserInfoLocal().token
-            val response = individualCourseCreaterRepo.getAndCheckMyCreatorSubscribes(token)
+            val response = individualCoursesRepo.getAndCheckMyCreatorSubscribes(token)
             if(response.statusCode==2106){
-                val localSubs = individualCourseCreaterRepo.getMyIndiSubs()
+                val localSubs = individualCoursesRepo.getMyIndiSubs()
                 if(localSubs!=null){
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                     val date = dateFormat.parse( response.buyDate)
@@ -101,7 +101,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
                         dateBuy = date,
                         successSend = true
                     )
-                  individualCourseCreaterRepo.insertCreatorSubscribe(indiCreatorSubscribeEntity)
+                  individualCoursesRepo.insertCreatorSubscribe(indiCreatorSubscribeEntity)
                 }
                 isAccountBanned.invoke(false)
                 isActual.invoke(true)
@@ -133,7 +133,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
     }
 
     private suspend fun subscribeSendError(term: Int,token:String){
-        val existCheck = individualCourseCreaterRepo.getMyIndiSubs()
+        val existCheck = individualCoursesRepo.getMyIndiSubs()
         if(existCheck!=null){
             val subscribeCreatorSubscribeEntity = IndiCreatorSubscribeEntity(
                 token = token,
@@ -141,7 +141,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
                 dateBuy = existCheck.dateBuy,
                 successSend = false
             )
-            individualCourseCreaterRepo.updateIndiCreaterSubscribe(subscribeCreatorSubscribeEntity)
+            individualCoursesRepo.updateIndiCreaterSubscribe(subscribeCreatorSubscribeEntity)
         }else{
             val subscribeCreatorSubscribeEntity = IndiCreatorSubscribeEntity(
                 token = token,
@@ -149,7 +149,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
                 dateBuy = Date(),
                 successSend = false
             )
-            individualCourseCreaterRepo.insertCreatorSubscribe(subscribeCreatorSubscribeEntity)
+            individualCoursesRepo.insertCreatorSubscribe(subscribeCreatorSubscribeEntity)
         }
     }
 

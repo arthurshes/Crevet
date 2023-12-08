@@ -9,12 +9,24 @@ import androidx.room.Update
 
 import workwork.test.andropediagits.data.local.entities.SubscribeEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseBuyEntity
+import workwork.test.andropediagits.data.local.entities.indi.IndiCourseBuyEntity
 import workwork.test.andropediagits.data.local.entities.indi.IndiCreatorSubscribeEntity
 import workwork.test.andropediagits.data.local.entities.theme.ThemeBuyEntity
 
 @Dao
 interface TransactionsDao {
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBuyIndiCourse(indiCourseBuyEntity: IndiCourseBuyEntity)
+
+    @Delete
+    suspend fun deleteIndiCourse(indiCourseBuyEntity: IndiCourseBuyEntity)
+
+    @Query("SELECT * FROM indiCourseBuyTable")
+    suspend fun getAllBuyIndiCourses():List<IndiCourseBuyEntity>
+
+    @Query("SELECT * FROM indiCourseBuyTable WHERE creatorToken = :creatorToken")
+    suspend fun getAllBuyIndiCoursesForCreator(creatorToken:String):List<IndiCourseBuyEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCreatorSubscribe(creatorSubscribeEntity: IndiCreatorSubscribeEntity)

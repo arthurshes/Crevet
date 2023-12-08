@@ -18,6 +18,7 @@ import workwork.test.andropediagits.data.local.dao.promo.PromoCodeDao
 import workwork.test.andropediagits.data.local.dao.theme.IndiThemeDao
 import workwork.test.andropediagits.data.local.dao.theme.ThemeDao
 import workwork.test.andropediagits.data.local.dao.updateKey.UpdateKeysDao
+import workwork.test.andropediagits.data.local.dao.victorine.IndiVictorineDao
 import workwork.test.andropediagits.data.local.dao.victorine.VictorineDao
 import workwork.test.andropediagits.data.local.entities.AdsEntity
 import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
@@ -28,6 +29,7 @@ import workwork.test.andropediagits.data.local.entities.SubscribeEntity
 import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseBuyEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseEntity
+import workwork.test.andropediagits.data.local.entities.indi.IndiCourseBuyEntity
 import workwork.test.andropediagits.data.local.entities.indi.IndiCourseEntity
 import workwork.test.andropediagits.data.local.entities.indi.IndiCreatorSubscribeEntity
 import workwork.test.andropediagits.data.local.entities.indi.IndiLessonContentEntity
@@ -56,11 +58,13 @@ import workwork.test.andropediagits.data.local.typeConverters.StringListTypeConv
 import workwork.test.andropediagits.data.local.typeConverters.ThemeLevelContentEntityConverter
 
 
-@Database(entities = [CourseEntity::class, VictorineClueEntity::class, ThemeEntity::class, UserInfoEntity::class, LevelEntity::class, ThemeLevelContentEntity::class, SubscribeEntity::class, CourseBuyEntity::class, ThemeBuyEntity::class, VictorineEntity::class, VictorineAnswerVariantEntity::class, InteractiveCodeVariantEntity::class, InteractiveCorrectCodeEntity::class, InteractiveEntity::class, UpdatesKeyEntity::class, PromoCodeEntity::class, ReminderEntity::class, AdsEntity::class,ResetNextEntity::class,IndiCourseEntity::class, IndiLessonContentEntity::class,IndiThemeEntity::class,IndiLessonEntity::class,IndiVictorineAnswerVarEntity::class,IndiVIctorineClueEntity::class,IndiVictorineQuestionEntity::class, IndiCreatorSubscribeEntity::class, BillingProviderEntity::class, AdsProviderEntity::class], version = 1)
+@Database(entities = [CourseEntity::class, VictorineClueEntity::class, ThemeEntity::class, UserInfoEntity::class, LevelEntity::class, ThemeLevelContentEntity::class, SubscribeEntity::class, CourseBuyEntity::class, ThemeBuyEntity::class, VictorineEntity::class, VictorineAnswerVariantEntity::class, InteractiveCodeVariantEntity::class, InteractiveCorrectCodeEntity::class, InteractiveEntity::class, UpdatesKeyEntity::class, PromoCodeEntity::class, ReminderEntity::class, AdsEntity::class,ResetNextEntity::class,IndiCourseEntity::class, IndiLessonContentEntity::class,IndiThemeEntity::class,IndiLessonEntity::class,IndiVictorineAnswerVarEntity::class,IndiVIctorineClueEntity::class,IndiVictorineQuestionEntity::class, IndiCreatorSubscribeEntity::class, BillingProviderEntity::class, AdsProviderEntity::class, IndiCourseBuyEntity::class], version = 1)
 @TypeConverters(
     DateTypeConverter::class, BitMapTypeConverter::class, StringListTypeConverter::class,
     ThemeLevelContentEntityConverter::class, LocalDateTypeConverter::class)
 abstract class MainDb:RoomDatabase(){
+
+    abstract fun getIndiVictorineDao(): IndiVictorineDao
 
     abstract fun getProviderDao(): ProviderSelectDao
 

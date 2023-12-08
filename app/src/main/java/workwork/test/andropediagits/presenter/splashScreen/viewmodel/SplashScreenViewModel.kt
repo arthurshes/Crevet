@@ -15,13 +15,13 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashScreenViewModel@Inject constructor(private val splashScreenUseCase: SplashScreenUseCase, private val cacheUseCase: CacheUseCase): ViewModel() {
      fun checkSplashScreen( result: ((SplashActionEnum) -> Unit)){
-         viewModelScope.launch {
+         viewModelScope.launch(Dispatchers.IO) {
              splashScreenUseCase.start({result.invoke(it)})
          }
     }
 
     fun checkCacheActual(result:((ErrorEnum)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
           cacheUseCase.checkCache({
               result.invoke(it)
           })
@@ -29,7 +29,7 @@ class SplashScreenViewModel@Inject constructor(private val splashScreenUseCase: 
     }
 
     fun checkSubscribeActual(result: (ErrorEnum) -> Unit){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             cacheUseCase.checkSubscribesAndBuyCourse(result)
         }
     }

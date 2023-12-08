@@ -8,6 +8,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import workwork.test.andropediagits.core.model.SendStatus
 import workwork.test.andropediagits.data.remote.individualCourseGet.GetModerationCourseStatusModel
+import workwork.test.andropediagits.data.remote.individualCourseGet.IndividualCourseCheckModel
 import workwork.test.andropediagits.data.remote.individualCourseGet.SnedRatingIndiModel
 import workwork.test.andropediagits.data.remote.individualCourseGet.UniqueCourseNumberGetModel
 import workwork.test.andropediagits.data.remote.individualCourseGet.buyIndiCourse.BuyIndividualCourseModel
@@ -72,11 +73,24 @@ interface LogicUserApiService {
 
 
     ///Test funs
+
+    @GET("user/indiCourses/getCreatorProfile/courses")
+    suspend fun getCreatorCourseProfilePaging(@Query("token")token: String,@Query("page")page: Int = 1): List<IndividualCourseGetModel>
+
+    @GET("user/indiCourses/raitingCheck")
+    suspend fun checkUserSendRaitingThisCourse(@Query("token")token: String,@Query("creatorToken")creatorToken: String,@Query("uniqueCourseNumber")uniqueCourseNumber: Int):SendStatus
+
+    @GET("user/indiCourses/downloadOne")
+    suspend fun downloadOneIndiCourse(@Query("creatorToken")creatorToken: String,@Query("uniqueCourseNumber")uniqueCourseNumber: Int):IndividualGetModel
+
+    @GET("user/indiCourses/checkOne")
+    suspend fun checkOneIndiCourseBuy(@Query("token")token: String,@Query("creatorToken")creatorToken:String,@Query("uniqueCourseNumber")uniqueCourseNumber: Int):IndividualCourseCheckModel
+
     @GET("user/indiCourses/getBuyedCourses")
-    suspend fun getMyBuyedIndiCourses(@Query("token")token: String):Response<List<IndividualCourseGetModel>>
+    suspend fun getMyBuyedIndiCourses(@Query("token")token: String):Response<List<IndividualCourseCheckModel>>
 
     @GET("user/indiCourses/ratingGet")
-    suspend fun getCurrentCourseRatings(@Query("page")page: Int,@Query("token")token: String,@Query("uniqueCourseNumber")uniqueCourseNumber: Int):Response<List<SnedRatingIndiModel>>
+    suspend fun getCurrentCourseRatings(@Query("page")page: Int=1,@Query("token")token: String,@Query("uniqueCourseNumber")uniqueCourseNumber: Int):Response<List<SnedRatingIndiModel>>
 
     @POST("user/indiCourses/ratingSend")
     suspend fun sendRatingIndiCourse(@Body snedRatingIndiModel: SnedRatingIndiModel):SendStatus

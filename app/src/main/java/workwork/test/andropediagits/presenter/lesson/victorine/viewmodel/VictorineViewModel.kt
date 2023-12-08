@@ -35,7 +35,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 //     var _allVictorineAnswerVariantByTheme: List<VictorineAnswerVariantEntity>?=null
 
   fun checkPromoCode(isSucces: (ErrorEnum) -> Unit,isActual: (Boolean) -> Unit){
-      viewModelScope.launch {
+      viewModelScope.launch(Dispatchers.IO) {
           val promoCode = userLogicRepo.getAllMyPromo()
           if(promoCode!=null){
               promoCodeUseCase.checkPromoCodeSubscribeActual(promoCode.promoCode,isActual,isSucces)
@@ -49,18 +49,18 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 
 
     fun victorineExit(uniqueThemeId: Int,isTerm:((Boolean)->Unit),isDateUnlock:((String)->Unit),isSucces: ((ErrorEnum) -> Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             themeUseCase.termExitVictorine(uniqueThemeId,isTerm,isDateUnlock,isSuccess=isSucces)
         }
     }
 
     fun thisThemeIsPassed(uniqueThemeId: Int,isPassed:((Boolean)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
            isPassed.invoke(themeUseCase.thisThemeisPassed(uniqueThemeId))
         }
     }
     fun getTimeVictorine(victorineTime:((Long)->Unit), uniqueThemeId: Int, isSucces: (ErrorEnum) -> Unit, isTimerStart:((Boolean)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val theme = coursesRepo.searchAllVictorinesWithUniqueThemeId(uniqueThemeId)
             victorineTime.invoke(theme[0].victorineTimeSec)
             transactionUseCase.checkSubscribeActual({
@@ -74,7 +74,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 
 
     fun checkCourseBuy(isSucces: (ErrorEnum) -> Unit, isBuy:((Boolean)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             courseUseCase.checkCourseBuy({
                 Log.d("startTimerVic2","viewMOdel:${it}")
                   isBuy.invoke(it)
@@ -85,21 +85,21 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
     }
 
       fun resetOlddata(uniqueThemeId: Int){
-          viewModelScope.launch {
+          viewModelScope.launch(Dispatchers.IO) {
               victorineUseCase.resetOldVictorineData(uniqueThemeId)
           }
       }
 
 
      fun getAllVictorineTheme(uniqueThemeId: Int,allVictorines:((List<VictorineEntity>)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             allVictorines.invoke(coursesRepo.searchAllVictorinesWithUniqueThemeId(uniqueThemeId).shuffled())
         }
 
     }
 
      fun getAllQuestionAnswerVariants(questionId:Int,victorineTestId:Int,allVictorinesAnswer:((List<VictorineAnswerVariantEntity>)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             allVictorinesAnswer.invoke(coursesRepo.searchVictorineAnswerVariantsWithQuestionId(questionId,victorineTestId))
         }
 
@@ -131,7 +131,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
         }
     }
     fun checkAnswer(answer: VictorineAnswerVariantEntity, result:((ErrorEnum)->Unit), isClue:((String)->Unit)?=null){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             victorineUseCase.updateVictorineData(answer,{result(it)},{
                 if (isClue != null) {
                     isClue(it)
@@ -181,7 +181,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
     }*/
 
     fun checSubscribe(isActual:((Boolean)->Unit),isSucces:((ErrorEnum)->Unit)){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
               transactionUseCase.checkSubscribeActual({errore->
                   isSucces.invoke(errore)
               },{ actual->

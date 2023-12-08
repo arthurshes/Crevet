@@ -9,6 +9,6 @@ data class CreatorCourseProfileGetModel(
     val instagramLink:String?="",
     val vkLink:String?="",
     val telegramLink:String?="",
-    val youtubeLink:String?="",
-    val hisCourses:List<IndividualCourseGetModel>
+    val youtubeLink:String?=""
+//    val hisCourses:List<IndividualCourseGetModel>
 )

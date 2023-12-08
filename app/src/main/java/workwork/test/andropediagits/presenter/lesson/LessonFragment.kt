@@ -18,6 +18,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -123,7 +124,7 @@ class LessonFragment : Fragment() {
                     }else{
                         next--
                     }
-                    lifecycleScope.launch {
+                    lifecycleScope.launch(Dispatchers.IO) {
 
                         val textTitle = viewModel.getPreviousContent(
                             args.CourseNumber,
@@ -153,7 +154,7 @@ class LessonFragment : Fragment() {
                     next = 88
                 }
                 Log.d("firjfirjfirjfijrfjri","nextValue${next}")
-                lifecycleScope.launch {
+                lifecycleScope.launch(Dispatchers.IO) {
                     val nexText =  viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,next ?: 1)?.textTitle
                     Log.d("firjfirjfirjfijrfjri","courseNumberArgs:${args.CourseNumber},themeNumber:${args.ThemeNumber},levelNUmber:${next}")
                     viewModel.getNextContent(args.CourseNumber,args.ThemeNumber,next ?: 1,{
