@@ -1,6 +1,8 @@
 package workwork.test.andropediagits.domain.useCases.transactionLogic
 
 import android.annotation.SuppressLint
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import okio.IOException
 import retrofit2.HttpException
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -10,6 +12,7 @@ import workwork.test.andropediagits.domain.repo.IndividualCoursesRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 
 import javax.inject.Inject
@@ -68,19 +71,31 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
            individualCoursesRepo.buyCreatorSubscribe(buyCreatorSubscribeModel)
             isSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){
-            subscribeSendError(term, token)
+            withContext(NonCancellable){
+                subscribeSendError(term, token)
+            }
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:Exception){
-            subscribeSendError(term, token)
+            withContext(NonCancellable){
+                subscribeSendError(term, token)
+            }
+
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }catch (e: HttpException){
-            subscribeSendError(term, token)
+            withContext(NonCancellable){
+                subscribeSendError(term, token)
+            }
             isSuccess.invoke(ErrorEnum.ERROR)
         }catch (e:NullPointerException){
-            subscribeSendError(term, token)
+            withContext(NonCancellable){
+                subscribeSendError(term, token)
+            }
             isSuccess.invoke(ErrorEnum.NULLPOINTERROR)
         }catch (e: TimeoutException){
-            subscribeSendError(term, token)
+            withContext(NonCancellable){
+                subscribeSendError(term, token)
+            }
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }
     }
@@ -118,7 +133,7 @@ class IndiTransactionUseCase @Inject constructor(private val userLogicRepo: User
 
             isSuccess.invoke(ErrorEnum.NOTNETWORK)
         }catch (e:Exception){
-
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }catch (e: HttpException){
 

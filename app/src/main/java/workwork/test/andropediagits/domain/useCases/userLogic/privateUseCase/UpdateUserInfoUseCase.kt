@@ -33,7 +33,8 @@ class UpdateUserInfoUseCase @Inject constructor(private val userLogicRepo: UserL
                   lastOpenTheme = userInfoLocal?.lastOpenTheme ?: 0,
                   lastOpenCourse = userInfoLocal?.lastOpenCourse ?: 0,
                   userLanguage = lang ?: userInfoLocal?.userLanguage,
-                  phoneBrand = phoneName ?: userInfoLocal?.phoneBrand ?: "Xiaomi"
+                  phoneBrand = phoneName ?: userInfoLocal?.phoneBrand ?: "Xiaomi",
+                  heartsCount = userInfoLocal?.heartsCount ?: 0
               )
               Log.d("andropointCount",andropointCount.toString())
               userLogicRepo.updateUserInfoLocal(updateUserEntity)
@@ -46,7 +47,8 @@ class UpdateUserInfoUseCase @Inject constructor(private val userLogicRepo: UserL
                       strikeModeDay = strikeModeDay ?: userInfoLocal?.strikeModeDay,
                       lastCourseNumber = userInfoLocal?.lastOpenCourse,
                       lastThemeNumber = userInfoLocal?.lastOpenTheme,
-                      isInfinity = 1
+                      isInfinity = 1,
+                      heartsCount = userInfoLocal?.heartsCount ?: 0
                   )
                   userLogicRepo.updateUserInfo(userUpdateBackend)
               }
@@ -62,7 +64,8 @@ class UpdateUserInfoUseCase @Inject constructor(private val userLogicRepo: UserL
               lastOpenTheme = userInfoLocal?.lastOpenTheme ?: 0,
               lastOpenCourse = userInfoLocal?.lastOpenCourse ?: 0,
               userLanguage = lang ?: userInfoLocal?.userLanguage,
-              phoneBrand = phoneName ?: userInfoLocal?.phoneBrand ?: "Xiaomi"
+              phoneBrand = phoneName ?: userInfoLocal?.phoneBrand ?: "Xiaomi",
+              heartsCount = userInfoLocal?.heartsCount ?: 0
           )
           Log.d("andropointCount",andropointCount.toString())
           userLogicRepo.updateUserInfoLocal(updateUserEntity)
@@ -75,7 +78,8 @@ class UpdateUserInfoUseCase @Inject constructor(private val userLogicRepo: UserL
                   strikeModeDay = strikeModeDay ?: userInfoLocal?.strikeModeDay,
                   lastCourseNumber = userInfoLocal?.lastOpenCourse,
                   lastThemeNumber = userInfoLocal?.lastOpenTheme,
-                  isInfinity = infinityToInt(userInfoLocal.isInfinity ?: false)
+                  isInfinity = infinityToInt(userInfoLocal.isInfinity ?: false),
+                  heartsCount = userInfoLocal.heartsCount ?: 0
               )
               userLogicRepo.updateUserInfo(userUpdateBackend)
           }
@@ -92,7 +96,8 @@ class UpdateUserInfoUseCase @Inject constructor(private val userLogicRepo: UserL
             val userUpdateBackend = UserSignInModel(
                 name = name ?: "",
                 image = image,
-                token = token ?: ""
+                token = token ?: "",
+                heartsCount = 0
             )
             userLogicRepo.sendUserInfo(userUpdateBackend)
         }

@@ -40,7 +40,7 @@ class LessonViewModel @Inject constructor(
 private var countLesson:Int = 0
 
     fun termExistCheckLocal(uniqueThemeId: Int,isExist:((Boolean)->Unit)){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch{
             val theme = coursesRepo.searchThemeWithUniwueId(uniqueThemeId)
             if(theme.termDateApi==null&&theme.termHourse==null){
                 isExist.invoke(true)
@@ -51,19 +51,19 @@ private var countLesson:Int = 0
     }
 
     fun howManyTerm(isSuccess:((ErrorEnum)->Unit), isTermEnd:((String)->Unit),themeNumber:Int,courseNumber: Int){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch{
             themeUseCase.howManyTerm(isSuccess, isTermEnd, themeNumber = themeNumber, courseNumber = courseNumber)
         }
     }
 
     fun checkVictorineExistTheme(victorineExist:((Boolean)->Unit),uniqueThemeId: Int){
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch{
             themeUseCase.thisThemeVictorineYes(victorineExist,uniqueThemeId)
         }
     }
 
     fun test() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             //    coursesRepo.searchAllLevelsTheme()
         }
     }

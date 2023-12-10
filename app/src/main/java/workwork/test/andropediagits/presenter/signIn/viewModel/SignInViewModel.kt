@@ -21,12 +21,12 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
 
 
     fun getCurrentTime(currentTime:((String)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             currentTime.invoke(userLogicRepo.getCurrentTime().datetime)
         }
     }
      fun signInEmail(email: String, password: String,lang: String, isRegister:((Boolean)->Unit),result: ((EmailErrorEnum) -> Unit)) {
-         viewModelScope.launch(Dispatchers.IO) {
+         viewModelScope.launch {
              signInUseCase.emailSignIn(
                  {
                      result(it)
@@ -41,7 +41,7 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
 
 
     fun saveUserInfo(userInfoEntity: UserInfoEntity, result: ((ErrorEnum) -> Unit),lang: String){
-       viewModelScope.launch(Dispatchers.IO) {
+       viewModelScope.launch {
            signInUseCase.insertUserInfo(userInfoEntity,{
                result.invoke(it)
            },lang)
@@ -49,13 +49,13 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
     }
 
      fun loadData(isSuccess:((ErrorEnum)->Unit),lang:String?=null,token:String?=null){
-         viewModelScope.launch(Dispatchers.IO) {
+         viewModelScope.launch{
              cacheUseCase.downloaCourse({isSuccess.invoke(it)}, lang,token)
          }
     }
 
     fun checkSubscribesAndBuyCourse(isSuccess: ((ErrorEnum) -> Unit)){
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch {
             cacheUseCase.checkSubscribesAndBuyCourse(isSuccess)
         }
     }

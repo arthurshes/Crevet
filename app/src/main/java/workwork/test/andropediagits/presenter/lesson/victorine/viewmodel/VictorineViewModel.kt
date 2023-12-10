@@ -16,6 +16,7 @@ import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.transactionLogic.TransactionUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.AndropointUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.CourseUseCase
+import workwork.test.andropediagits.domain.useCases.userLogic.HeartsUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.PromoCodeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.StrikeModeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.ThemeUseCase
@@ -27,15 +28,35 @@ import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeSt
 import javax.inject.Inject
 
 @HiltViewModel
-class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUseCase,private val coursesRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val victorineUseCase: VictorineUseCase, private val tryAgainUseCase: TryAgainUseCase, private val strikeModeUseCase: StrikeModeUseCase, private val andropointUseCase: AndropointUseCase, private  val transactionUseCase: TransactionUseCase,private val promoCodeUseCase: PromoCodeUseCase,private val userLogicRepo: UserLogicRepo): ViewModel() {
+class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUseCase,private val coursesRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val victorineUseCase: VictorineUseCase, private val tryAgainUseCase: TryAgainUseCase, private val strikeModeUseCase: StrikeModeUseCase, private val andropointUseCase: AndropointUseCase, private  val transactionUseCase: TransactionUseCase,private val promoCodeUseCase: PromoCodeUseCase,private val userLogicRepo: UserLogicRepo,private val heartsUseCase: HeartsUseCase): ViewModel() {
 //    private var _allVictorineByTheme: MutableLiveData<List<VictorineEntity>> = MutableLiveData()
 //    var allVictorineByTheme: List<VictorineEntity>?=null
 //    private var _timerValue: MutableLiveData<Long> = MutableLiveData()
 //    var timerValue:LiveData<Long>?=null
 //     var _allVictorineAnswerVariantByTheme: List<VictorineAnswerVariantEntity>?=null
 
+    ///new func
+    fun getHeartsUser(heartCount:((Int)->Unit),isInfinity:((Boolean)->Unit),isSuccess:((ErrorEnum)->Unit)){
+        viewModelScope.launch {
+            heartsUseCase.getHeartUser(isInfinity,heartCount,isSuccess)
+        }
+    }
+
+    fun minusHeart(minusHeart:Int,isSucces: ((ErrorEnum) -> Unit),isEnd:((Boolean)->Unit)){
+        viewModelScope.launch {
+            heartsUseCase.minusHearts(minusHeart,isSucces,isEnd)
+        }
+    }
+
+    fun buyHeart(isSucces: ((ErrorEnum) -> Unit),heartCount:Int,isHeartBuy:((Boolean)->Unit)){
+        viewModelScope.launch {
+            heartsUseCase.buyHearts(heartCount,isSucces,isHeartBuy)
+        }
+    }
+    ///new func
+
   fun checkPromoCode(isSucces: (ErrorEnum) -> Unit,isActual: (Boolean) -> Unit){
-      viewModelScope.launch(Dispatchers.IO) {
+      viewModelScope.launch {
           val promoCode = userLogicRepo.getAllMyPromo()
           if(promoCode!=null){
               promoCodeUseCase.checkPromoCodeSubscribeActual(promoCode.promoCode,isActual,isSucces)
@@ -49,18 +70,18 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 
 
     fun victorineExit(uniqueThemeId: Int,isTerm:((Boolean)->Unit),isDateUnlock:((String)->Unit),isSucces: ((ErrorEnum) -> Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             themeUseCase.termExitVictorine(uniqueThemeId,isTerm,isDateUnlock,isSuccess=isSucces)
         }
     }
 
     fun thisThemeIsPassed(uniqueThemeId: Int,isPassed:((Boolean)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
            isPassed.invoke(themeUseCase.thisThemeisPassed(uniqueThemeId))
         }
     }
     fun getTimeVictorine(victorineTime:((Long)->Unit), uniqueThemeId: Int, isSucces: (ErrorEnum) -> Unit, isTimerStart:((Boolean)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch{
             val theme = coursesRepo.searchAllVictorinesWithUniqueThemeId(uniqueThemeId)
             victorineTime.invoke(theme[0].victorineTimeSec)
             transactionUseCase.checkSubscribeActual({
@@ -74,7 +95,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 
 
     fun checkCourseBuy(isSucces: (ErrorEnum) -> Unit, isBuy:((Boolean)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             courseUseCase.checkCourseBuy({
                 Log.d("startTimerVic2","viewMOdel:${it}")
                   isBuy.invoke(it)
@@ -85,21 +106,21 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
     }
 
       fun resetOlddata(uniqueThemeId: Int){
-          viewModelScope.launch(Dispatchers.IO) {
+          viewModelScope.launch{
               victorineUseCase.resetOldVictorineData(uniqueThemeId)
           }
       }
 
 
      fun getAllVictorineTheme(uniqueThemeId: Int,allVictorines:((List<VictorineEntity>)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             allVictorines.invoke(coursesRepo.searchAllVictorinesWithUniqueThemeId(uniqueThemeId).shuffled())
         }
 
     }
 
      fun getAllQuestionAnswerVariants(questionId:Int,victorineTestId:Int,allVictorinesAnswer:((List<VictorineAnswerVariantEntity>)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             allVictorinesAnswer.invoke(coursesRepo.searchVictorineAnswerVariantsWithQuestionId(questionId,victorineTestId))
         }
 
@@ -121,17 +142,17 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 //            _allVictorineAnswerVariantByTheme = coursesRepo.searchVictorineAnswerVariantsWithQuestionId(uniqueThemeId)
 //    }
     fun checkTestResult(uniqueThemeId: Int, result: (ErrorStateView) -> Unit, dateUnlock: (String) -> Unit, correctCount:Int, misstakesAnswersC:Int, isTimerOut:Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             themeUseCase.checkTestResults(uniqueThemeId,{result(it)},{dateUnlock(it)}, correctAnswerTstCo = correctCount, misstakesAnswersC = misstakesAnswersC, isTimerOut = isTimerOut)
         }
     }
      fun addAndropoints(result: (ErrorEnum) -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             andropointUseCase.victorineProgressAndropoint { result(it) }
         }
     }
     fun checkAnswer(answer: VictorineAnswerVariantEntity, result:((ErrorEnum)->Unit), isClue:((String)->Unit)?=null){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             victorineUseCase.updateVictorineData(answer,{result(it)},{
                 if (isClue != null) {
                     isClue(it)
@@ -141,7 +162,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 
     }
     fun tryAgainSendProgress( result: (ErrorEnum) -> Unit,buyThemeId: ((List<Int>) -> Unit)?=null){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             tryAgainUseCase.tryAgainSendProgres({result(it)},{
                 if (buyThemeId != null) {
                     buyThemeId(it)
@@ -150,7 +171,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
         }
     }
     fun strikeModeProgress( result: (ErrorEnum) -> Unit,strikeModeDay:(Int)->Unit,buyThemeId: ((List<Int>) -> Unit)?=null){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
          strikeModeUseCase.strikeModeMainFun({ result(it) }, { strikeModeDay(it) },
              {
                  if (buyThemeId != null) {
@@ -166,7 +187,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 //       }
 // }
     fun strikeModeAndropointProgress(result: (ErrorEnum) -> Unit, strikeModeState: StrikeModeState, buyThemeId: ((List<Int>) -> Unit)?=null){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
          andropointUseCase.strikeModeAddAndropoint({result(it)},strikeModeState,{
              if (buyThemeId != null) {
                  buyThemeId(it)
@@ -181,7 +202,7 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
     }*/
 
     fun checSubscribe(isActual:((Boolean)->Unit),isSucces:((ErrorEnum)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch{
               transactionUseCase.checkSubscribeActual({errore->
                   isSucces.invoke(errore)
               },{ actual->

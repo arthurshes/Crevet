@@ -18,5 +18,6 @@ data class UserInfoEntity(
     val strikeModeDay:Int?=0,
     val lastOpenCourse:Int?=0,
     val lastOpenTheme:Int?=0,
-    val isInfinity:Boolean?=false
+    val isInfinity:Boolean?=false,
+    val heartsCount:Int?=0
 )

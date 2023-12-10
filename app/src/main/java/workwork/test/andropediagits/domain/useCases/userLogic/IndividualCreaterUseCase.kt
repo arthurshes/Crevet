@@ -8,6 +8,7 @@ import workwork.test.andropediagits.data.local.entities.indi.IndiThemeEntity
 import workwork.test.andropediagits.domain.repo.IndividualCoursesRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.userLogic.state.IndiCourseModerationStatus
+import java.util.concurrent.CancellationException
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
@@ -29,6 +30,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourses
         }catch (e: TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -58,6 +60,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourses
         }catch (e: TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -85,6 +88,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourses
         }catch (e: TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -102,6 +106,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourses
         }catch (e: TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }
@@ -119,6 +124,7 @@ class IndividualCreaterUseCase @Inject constructor(private val individualCourses
         }catch (e: TimeoutException){
             isSuccess.invoke(ErrorEnum.TIMEOUTERROR)
         }catch (e:Exception){
+            if(e is CancellationException) throw e
             isSuccess.invoke(ErrorEnum.UNKNOWNERROR)
         }
     }

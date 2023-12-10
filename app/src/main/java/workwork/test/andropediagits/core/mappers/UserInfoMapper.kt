@@ -15,6 +15,7 @@ fun UserSignInModel.toUserInfoLocalEntity(): UserInfoEntity {
         userLanguage = userlanguage ?: "eng",
         andropointCount = andropointCount ?: 0,
         strikeModeDay = strikeModeDay ?: 0,
-        isInfinity = isInfinitys
+        isInfinity = isInfinitys,
+        heartsCount = heartsCount
     )
 }

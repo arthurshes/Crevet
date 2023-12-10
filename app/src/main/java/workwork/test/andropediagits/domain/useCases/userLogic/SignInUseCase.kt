@@ -139,7 +139,8 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
             userLogicRepo.insertUserInfoLocal(userInfoEntity)
             val userSignInModel = UserSignInModel(
                 token = userInfoEntity.token,
-                name = userInfoEntity.name
+                name = userInfoEntity.name,
+                heartsCount = 0
             )
           val response =  userLogicRepo.sendUserInfo(userSignInModel)
             if(response.codeAnswer==212){
@@ -156,6 +157,7 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
                     andropointCount = userInfo.andropointCount ?: 0,
                     strikeModeDay = userInfo.strikeModeDay ?: 0,
                     isInfinity = isInfinitys,
+                    heartsCount = userInfo?.heartsCount ?: 0
                 )
                 userLogicRepo.updateUserInfoLocal(updateUserLocalInf)
             }

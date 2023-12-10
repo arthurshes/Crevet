@@ -1,6 +1,7 @@
 package workwork.test.andropediagits.core.utils
 
 object Constatns {
+    const val DEFAULT_HEART_COUNT = 1
 //
 //    const val BASE_URL = "http://10.0.2.2:8080/"\
     const val INDI_COURSE_NOT_BUY = 1839549323

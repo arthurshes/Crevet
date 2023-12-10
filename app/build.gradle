@@ -18,8 +18,8 @@ android {
         applicationId "workwork.test.andropediagits"
         minSdk 27
         targetSdk 33
-        versionCode 40
-        versionName "4.9"
+        versionCode 42
+        versionName "5.1"
 
         testInstrumentationRunner "workwork.test.andropediagits.HiltTestRunner"
 
@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     implementation 'com.my.target:mytarget-sdk:5.19.0'
 
@@ -80,8 +81,8 @@ dependencies {
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.13.0"
 
     implementation 'com.google.android.gms:play-services-base:18.2.0'
-    implementation "com.android.billingclient:billing-ktx:6.0.1"
-    implementation "com.android.billingclient:billing:6.0.1"
+    implementation "com.android.billingclient:billing-ktx:6.1.0"
+    implementation "com.android.billingclient:billing:6.1.0"
     // Fragment
     implementation 'androidx.fragment:fragment-ktx:1.5.7'
     implementation 'com.google.android.gms:play-services-auth:20.7.0'

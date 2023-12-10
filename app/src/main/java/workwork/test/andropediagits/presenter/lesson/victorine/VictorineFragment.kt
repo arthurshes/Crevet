@@ -35,6 +35,7 @@ import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.exception.ErrorStateView
 import workwork.test.andropediagits.core.utils.Constatns
+import workwork.test.andropediagits.core.utils.Constatns.DEFAULT_HEART_COUNT
 import workwork.test.andropediagits.core.utils.CustomTimerUtil
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntity
@@ -50,6 +51,7 @@ import kotlin.time.Duration.Companion.nanoseconds
 
 @AndroidEntryPoint
 class VictorineFragment : Fragment() {
+    private var heartCount = DEFAULT_HEART_COUNT
 private var backPressedOnce = false
     private var IsFeedback = false
     private var timerObser: Observer<Long>? = null
@@ -81,6 +83,9 @@ private var backPressedOnce = false
     private var victorineEnded = false
     private var victorineExit = false
     private var victorineSec: Long = 0
+    private var isInfinityHearts = false
+    private var isUseNextTest = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,7 +93,98 @@ private var backPressedOnce = false
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentVictorineBinding.inflate(inflater, container, false)
+//        viewModel.getHeartsUser({
+//            heartCount = heartCount.plus(it)
+//        })
+        setUpHearts()
         return binding?.root
+    }
+
+
+    private fun setUpHearts(){
+        viewModel.getHeartsUser({ heartCountUseCaes->
+            heartCount = heartCount.plus(heartCountUseCaes) ?: 0
+        },{isInfinity->
+            isInfinityHearts = isInfinity
+        },{state->
+            when(state){
+                ErrorEnum.SUCCESS->{
+                    startTimerFun()
+                }
+
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            setUpHearts()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            setUpHearts()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            setUpHearts()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            setUpHearts()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            setUpHearts()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.OFFLINEMODE->{
+                    startTimerFun()
+                }
+                ErrorEnum.OFFLINETHEMEBUY->{
+                    startTimerFun()
+                }
+            }
+
+        })
     }
 
 
@@ -98,6 +194,7 @@ private var backPressedOnce = false
             override fun handleOnBackPressed() {
 
             }}
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         initCircleView(binding!!)
         val nightDrawle = ContextCompat.getDrawable(requireContext(), R.drawable.progress_bar_custom_night)
@@ -140,7 +237,7 @@ private var backPressedOnce = false
             Log.d("fkprkfprpfkrpkfprkfprkf", it.toString())
         }
 
-        startTimerFun()
+
 
         viewModel.thisThemeIsPassed(args.uniqueThemeId) {
             isThemePassed = it
@@ -489,6 +586,15 @@ private var backPressedOnce = false
         if (currentAnswer?.isCorrectAnswer == true) {
             correctAnswers++
         } else {
+            if(!isInfinityHearts) {
+                heartCount--
+            }
+
+            if(heartCount==0&&isUseNextTest){
+
+            }else if(heartCount==0&&!isUseNextTest){
+                ///Предложтьб
+            }
             misstakeAnswers++
         }
         viewModel.checkAnswer(item!![numberItem], { resultAnswer ->
@@ -678,12 +784,20 @@ private var backPressedOnce = false
                         if (isThemePassed) {
                             requireActivity().runOnUiThread {
                                 ShowDialogHelper.showDialogReplayTest(requireContext(), {
+                                    binding?.dimViewVictorine?.visibility =View.VISIBLE
+                                    ShowDialogHelper.loadDialog(requireContext(),{
+                                        binding?.dimViewVictorine?.visibility =View.GONE
+                                    })
                                     strikeModeTreatmentResult()
                                 }, misstakeAnswers, victorinesQuestionsCount)
                             }
                         } else {
                             requireActivity().runOnUiThread {
                                 ShowDialogHelper.showDialogSuccessTest(requireContext(), {
+                                    binding?.dimViewVictorine?.visibility =View.VISIBLE
+                                    ShowDialogHelper.loadDialog(requireContext(),{
+                                        binding?.dimViewVictorine?.visibility =View.GONE
+                                    })
                                     strikeModeTreatmentResult()
                                 },misstakeAnswers,victorinesQuestionsCount)
                             }
@@ -714,6 +828,8 @@ private var backPressedOnce = false
                         IsFeedback = true
                         Log.d("victorineTestResultState", "term tw")
                         requireActivity().runOnUiThread {
+
+
                             ShowDialogHelper.showDialogFailTest(
                                 requireContext(),
                                 correctAnswers,
@@ -721,6 +837,10 @@ private var backPressedOnce = false
                                 victorinesQuestionsCount,
                                 dateUnlockTheme,
                                 {
+                                    binding?.dimViewVictorine?.visibility =View.VISIBLE
+                                    ShowDialogHelper.loadDialog(requireContext(),{
+                                        binding?.dimViewVictorine?.visibility =View.GONE
+                                    })
                                     strikeModeTreatmentResult()
                                 },
                                 isTimerOut
@@ -876,6 +996,10 @@ private var backPressedOnce = false
         viewModel.strikeModeProgress({ resultStrikeMode ->
             Log.d("victorineTestResultStateSimpleTreamtResult", resultStrikeModeDay.toString())
             if (resultStrikeModeDay == 0 && !isNextFlag) {
+                requireActivity().runOnUiThread {
+                    ShowDialogHelper.closeDialogLoadData()
+                }
+
                 isNextFlag = true
                 if(IsFeedback){
                     requireActivity().runOnUiThread {
@@ -906,15 +1030,25 @@ private var backPressedOnce = false
                     }
 
                     ErrorEnum.OFFLINEMODE -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
                         strikeModeAndropointTreatmentResult(resultStrikeModeDay)
                     }
 
                     ErrorEnum.OFFLINETHEMEBUY -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
                         strikeModeAndropointTreatmentResult(resultStrikeModeDay)
                     }
 
                     ErrorEnum.NOTNETWORK -> {
                         requireActivity().runOnUiThread {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        requireActivity().runOnUiThread {
+
                             binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogNotNetworkError(
                                 requireContext(),{
@@ -929,6 +1063,10 @@ private var backPressedOnce = false
 
                     ErrorEnum.ERROR -> {
                         requireActivity().runOnUiThread {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        requireActivity().runOnUiThread {
+
                             binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogUnknownError(
                                 requireContext(),{
@@ -942,6 +1080,9 @@ private var backPressedOnce = false
                     }
 
                     ErrorEnum.UNKNOWNERROR -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
                         requireActivity().runOnUiThread {
                             binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogUnknownError(
@@ -957,6 +1098,9 @@ private var backPressedOnce = false
 
                     ErrorEnum.TIMEOUTERROR -> {
                         requireActivity().runOnUiThread {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
+                        requireActivity().runOnUiThread {
                             binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogTimeOutError(
                                 requireContext(),{
@@ -970,6 +1114,9 @@ private var backPressedOnce = false
                     }
 
                     ErrorEnum.NULLPOINTERROR -> {
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.closeDialogLoadData()
+                        }
                         requireActivity().runOnUiThread {
                             binding?.dimViewVictorine?.visibility = View.VISIBLE
                             ShowDialogHelper.showDialogUnknownError(
@@ -1015,6 +1162,9 @@ private var backPressedOnce = false
                         when (checkkState) {
                             ErrorEnum.NOTNETWORK -> {
                                 requireActivity().runOnUiThread {
+                                    ShowDialogHelper.closeDialogLoadData()
+                                }
+                                requireActivity().runOnUiThread {
                                     binding?.dimViewVictorine?.visibility = View.VISIBLE
                                     ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                                         strikeModeAndropointTreatmentResult(resultStrikeModeDay)
@@ -1026,6 +1176,9 @@ private var backPressedOnce = false
                             }
 
                             ErrorEnum.ERROR -> {
+                                requireActivity().runOnUiThread {
+                                    ShowDialogHelper.closeDialogLoadData()
+                                }
                                 requireActivity().runOnUiThread {
                                     binding?.dimViewVictorine?.visibility = View.VISIBLE
                                     ShowDialogHelper.showDialogUnknownError(requireContext(),{
@@ -1047,6 +1200,10 @@ private var backPressedOnce = false
                                     isPromoActual.toString()
                                 )
                                 requireActivity().runOnUiThread {
+                                    requireActivity().runOnUiThread {
+                                        ShowDialogHelper.closeDialogLoadData()
+                                    }
+                                    binding?.dimViewVictorine?.visibility = View.VISIBLE
                                     if(subscribeActual){
                                         ShowDialogHelper.showDialogStrikeMode(
                                             requireContext(),
@@ -1054,6 +1211,7 @@ private var backPressedOnce = false
                                             layoutInflater,
                                             subscribeActual,
                                             {
+                                                binding?.dimViewVictorine?.visibility = View.GONE
                                                 if(!nextThemeFrag){
                                                     val action =
                                                         VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
@@ -1069,6 +1227,7 @@ private var backPressedOnce = false
 
                                             },
                                             {
+                                                binding?.dimViewVictorine?.visibility = View.GONE
                                                 if(!nextThemeFrag) {
                                                     val action =
                                                         VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
@@ -1089,6 +1248,9 @@ private var backPressedOnce = false
                                             when(promoState){
                                                 ErrorEnum.NOTNETWORK -> {
                                                     requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.closeDialogLoadData()
+                                                    }
+                                                    requireActivity().runOnUiThread {
                                                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                                                         ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                                                             strikeModeAndropointTreatmentResult(resultStrikeModeDay)
@@ -1101,6 +1263,9 @@ private var backPressedOnce = false
 
                                                 ErrorEnum.ERROR -> {
                                                     requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.closeDialogLoadData()
+                                                    }
+                                                    requireActivity().runOnUiThread {
                                                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                                                         ShowDialogHelper.showDialogUnknownError(requireContext(),{
                                                             strikeModeAndropointTreatmentResult(resultStrikeModeDay)
@@ -1111,36 +1276,52 @@ private var backPressedOnce = false
                                                     }
                                                 }
                                                 ErrorEnum.SUCCESS -> {
-                                                    ShowDialogHelper.showDialogStrikeMode(
-                                                        requireContext(),
-                                                        resultStrikeModeDay,
-                                                        layoutInflater,
-                                                        isPromoActual,
-                                                        {
-                                                            val action =
-                                                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
-                                                                    args.courseNumber,
-                                                                    args.courseNameReal,
-                                                                    feedbackVisible = true
-                                                                )
-                                                            binding?.root?.let {
-                                                                Navigation.findNavController(it).navigate(action)
+                                                    requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.closeDialogLoadData()
+                                                    }
+                                                    requireActivity().runOnUiThread {
+                                                        binding?.dimViewVictorine?.visibility =
+                                                            View.VISIBLE
+                                                        ShowDialogHelper.showDialogStrikeMode(
+                                                            requireContext(),
+                                                            resultStrikeModeDay,
+                                                            layoutInflater,
+                                                            isPromoActual,
+                                                            {
+                                                                binding?.dimViewVictorine?.visibility =
+                                                                    View.GONE
+                                                                val action =
+                                                                    VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                                                        args.courseNumber,
+                                                                        args.courseNameReal,
+                                                                        feedbackVisible = true
+                                                                    )
+                                                                binding?.root?.let {
+                                                                    Navigation.findNavController(it)
+                                                                        .navigate(action)
+                                                                }
+                                                            },
+                                                            {
+                                                                binding?.dimViewVictorine?.visibility =
+                                                                    View.GONE
+                                                                val action =
+                                                                    VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
+                                                                        args.courseNumber,
+                                                                        args.courseNameReal,
+                                                                        premiumVisible = true
+                                                                    )
+                                                                binding?.root?.let {
+                                                                    Navigation.findNavController(it)
+                                                                        .navigate(action)
+                                                                }
                                                             }
-                                                        },
-                                                        {
-                                                            val action =
-                                                                VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
-                                                                    args.courseNumber,
-                                                                    args.courseNameReal,
-                                                                    premiumVisible = true
-                                                                )
-                                                            binding?.root?.let {
-                                                                Navigation.findNavController(it).navigate(action)
-                                                            }
-                                                        }
-                                                    )
+                                                        )
+                                                    }
                                                 }
                                                 ErrorEnum.UNKNOWNERROR -> {
+                                                    requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.closeDialogLoadData()
+                                                    }
                                                     requireActivity().runOnUiThread {
                                                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                                                         ShowDialogHelper.showDialogUnknownError(requireContext(),{
@@ -1153,6 +1334,9 @@ private var backPressedOnce = false
                                                 }
 
                                                 ErrorEnum.TIMEOUTERROR -> {
+                                                    requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.closeDialogLoadData()
+                                                    }
                                                     requireActivity().runOnUiThread {
                                                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                                                         ShowDialogHelper.showDialogTimeOutError(
@@ -1168,6 +1352,9 @@ private var backPressedOnce = false
 
                                                 ErrorEnum.NULLPOINTERROR -> {
                                                     requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.closeDialogLoadData()
+                                                    }
+                                                    requireActivity().runOnUiThread {
                                                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                                                         ShowDialogHelper.showDialogUnknownError(
                                                             requireContext(),{
@@ -1181,6 +1368,9 @@ private var backPressedOnce = false
                                                 }
 
                                                 ErrorEnum.OFFLINEMODE -> {
+                                                    requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.closeDialogLoadData()
+                                                    }
                                                     requireActivity().runOnUiThread {
 
                                                         ShowDialogHelper.showDialogAttentionStrikeMode(
@@ -1201,6 +1391,9 @@ private var backPressedOnce = false
                                                 }
 
                                                 ErrorEnum.OFFLINETHEMEBUY -> {
+                                                    requireActivity().runOnUiThread {
+                                                        ShowDialogHelper.closeDialogLoadData()
+                                                    }
                                                     requireActivity().runOnUiThread {
                                                         ShowDialogHelper.showDialogAttentionStrikeMode(
                                                             requireContext(),
@@ -1229,6 +1422,9 @@ private var backPressedOnce = false
 
                             ErrorEnum.UNKNOWNERROR -> {
                                 requireActivity().runOnUiThread {
+                                    ShowDialogHelper.closeDialogLoadData()
+                                }
+                                requireActivity().runOnUiThread {
                                     binding?.dimViewVictorine?.visibility = View.VISIBLE
                                     ShowDialogHelper.showDialogUnknownError(requireContext(),{
                                         strikeModeAndropointTreatmentResult(resultStrikeModeDay)
@@ -1240,6 +1436,9 @@ private var backPressedOnce = false
                             }
 
                             ErrorEnum.TIMEOUTERROR -> {
+                                requireActivity().runOnUiThread {
+                                    ShowDialogHelper.closeDialogLoadData()
+                                }
                                 requireActivity().runOnUiThread {
                                     binding?.dimViewVictorine?.visibility = View.VISIBLE
                                     ShowDialogHelper.showDialogTimeOutError(
@@ -1255,6 +1454,9 @@ private var backPressedOnce = false
 
                             ErrorEnum.NULLPOINTERROR -> {
                                 requireActivity().runOnUiThread {
+                                    ShowDialogHelper.closeDialogLoadData()
+                                }
+                                requireActivity().runOnUiThread {
                                     binding?.dimViewVictorine?.visibility = View.VISIBLE
                                     ShowDialogHelper.showDialogUnknownError(
                                         requireContext(),{
@@ -1268,6 +1470,9 @@ private var backPressedOnce = false
                             }
 
                             ErrorEnum.OFFLINEMODE -> {
+                                requireActivity().runOnUiThread {
+                                    ShowDialogHelper.closeDialogLoadData()
+                                }
                                 requireActivity().runOnUiThread {
 
                                     ShowDialogHelper.showDialogAttentionStrikeMode(
@@ -1288,6 +1493,9 @@ private var backPressedOnce = false
                             }
 
                             ErrorEnum.OFFLINETHEMEBUY -> {
+                                requireActivity().runOnUiThread {
+                                    ShowDialogHelper.closeDialogLoadData()
+                                }
                                 requireActivity().runOnUiThread {
                                     ShowDialogHelper.showDialogAttentionStrikeMode(
                                         requireContext(),
@@ -1311,6 +1519,9 @@ private var backPressedOnce = false
 
                 ErrorEnum.OFFLINEMODE -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
+                    requireActivity().runOnUiThread {
                         ShowDialogHelper.showDialogAttentionStrikeMode(requireContext(), {
                             strikeModeTreatmentResult()
                         }) {
@@ -1325,6 +1536,9 @@ private var backPressedOnce = false
                 }
 
                 ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.showDialogAttentionStrikeMode(requireContext(), {
                             strikeModeAndropointTreatmentResult(resultStrikeModeDay)
@@ -1341,6 +1555,9 @@ private var backPressedOnce = false
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
+                    requireActivity().runOnUiThread {
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             strikeModeAndropointTreatmentResult(resultStrikeModeDay)
@@ -1352,6 +1569,9 @@ private var backPressedOnce = false
                 }
 
                 ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
                     requireActivity().runOnUiThread {
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(requireContext(),{
@@ -1365,6 +1585,9 @@ private var backPressedOnce = false
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
+                    requireActivity().runOnUiThread {
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             strikeModeAndropointTreatmentResult(resultStrikeModeDay)
@@ -1376,6 +1599,9 @@ private var backPressedOnce = false
                 }
 
                 ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
                     requireActivity().runOnUiThread {
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogTimeOutError(
@@ -1390,6 +1616,9 @@ private var backPressedOnce = false
                 }
 
                 ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
                     requireActivity().runOnUiThread {
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(

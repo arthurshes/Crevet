@@ -549,11 +549,12 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                         if (googleMobileAdsConsentManager?.canRequestAds == true) {
                             loadRewardedAd()
                         }
+                        dismiss()
                     }
 
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                         Log.d("TAG", "Ad failed to show.")
-
+                        Toast.makeText(requireContext(),R.string.no_ads_view,Toast.LENGTH_SHORT).show()
                         rewardedAd = null
                     }
 
@@ -732,9 +733,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
                     ).show()
                 }
             }
-            requireActivity().runOnUiThread {
-                dismiss()
-            }
+
         })
     }
 
@@ -783,7 +782,7 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
             }
 
             override fun onDismiss(p0: com.my.target.ads.RewardedAd) {
-                Log.d("adsTargetTest","onDismiss")
+                    dismiss()
             }
 
             override fun onReward(p0: Reward, p1: com.my.target.ads.RewardedAd) {

@@ -114,6 +114,7 @@ class CacheUseCase @Inject constructor(private val courseRepo: CourseRepo, priva
                 andropointCount = userInfo.andropointCount ?: 0,
                 strikeModeDay = userInfo.strikeModeDay ?: 0,
                 isInfinity = isInfinitys,
+                heartsCount = userInfo.heartsCount
             )
             userLogicRepo.updateUserInfoLocal(updateUserLocalInf)
 

@@ -44,6 +44,24 @@ object ShowDialogHelper {
     private var isCloseDialog = false
     private var isFailDialog = false
     private var isDeleteDialog = false
+    private var isDialogLoad = false
+
+    fun showVictorineBuyHeartDialog(){
+
+    }
+
+    fun loadDialog(context: Context,isClose: () -> Unit) {
+        if(!isDialogLoad) {
+            isDialogLoad = true
+            dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+            dialog?.setContentView(R.layout.load_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog?.show()
+        }
+        dialog?.setOnDismissListener {
+            isDialogLoad = false
+        }
+    }
 
 
     fun showDialogDeleteDataAcc(context: Context,delete:(()->Unit),close: (() -> Unit)){

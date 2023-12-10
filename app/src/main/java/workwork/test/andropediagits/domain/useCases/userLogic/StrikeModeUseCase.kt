@@ -113,7 +113,8 @@ class StrikeModeUseCase @Inject constructor(private val repo: UserLogicRepo, pri
                     strikeModeDay = strikeDay,
                     lastOpenCourse = myInfo.lastOpenCourse,
                     lastOpenTheme = myInfo.lastOpenTheme,
-                    phoneBrand = myInfo.phoneBrand
+                    phoneBrand = myInfo.phoneBrand,
+                    heartsCount = myInfo?.heartsCount ?: 0
                 )
                 repo.updateUserInfoLocal(updateUserInfo)
 
@@ -126,7 +127,8 @@ class StrikeModeUseCase @Inject constructor(private val repo: UserLogicRepo, pri
                     strikeModeDay = strikeDay,
                     lastCourseNumber = myInfo.lastOpenCourse,
                     lastThemeNumber = myInfo.lastOpenTheme,
-                    isInfinity = infinityToInt(myInfo.isInfinity ?: false)
+                    isInfinity = infinityToInt(myInfo.isInfinity ?: false),
+                    heartsCount = myInfo.heartsCount ?: 0
                 )
                 repo.updateUserInfo(userSignInModel)
             }
