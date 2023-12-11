@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    app:cardCornerRadius="20dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_dialog"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            style="@style/ConstraintLightAndBlack"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="20dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/you_run_out_of_tries"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:theme="@style/Text_black_white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/LottieViewHeart"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="16dp"
+                   app:lottie_rawRes="@raw/heart_animationl"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+
+
+                    />
+
+                <ProgressBar
+                    android:id="@+id/progressBarApttem"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="22dp"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_bar_custom"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/LottieViewHeart" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnWatchAdHeart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="70dp"
+                    app:cardBackgroundColor="#1290D8"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/progressBarApttem">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/ads_icons" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:padding="10dp"
+                            android:text="@string/watch_ad_hearts"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/heart" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnHeartFirst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintStart_toStartOf="@+id/btnWatchAdHeart"
+                    app:layout_constraintTop_toBottomOf="@id/btnWatchAdHeart">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/gradient_heart"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:padding="5dp"
+                            android:text="+1"
+                            android:textColor="#FFFFFF"
+                            android:textSize="25dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/heart" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnHeartSecond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintEnd_toEndOf="@+id/btnWatchAdHeart"
+                    app:layout_constraintStart_toStartOf="@+id/btnWatchAdHeart"
+                    app:layout_constraintTop_toBottomOf="@id/btnWatchAdHeart">
+
+                    <LinearLayout
+                        style="@style/subscription"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:padding="5dp"
+                            android:text="+2"
+                            android:textColor="#FFFFFF"
+                            android:textSize="25dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/heart" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnWatchAdBSfef"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintEnd_toEndOf="@+id/btnWatchAdHeart"
+                    app:layout_constraintStart_toEndOf="@+id/btnHeartSecond"
+                    app:layout_constraintTop_toTopOf="@+id/btnHeartSecond">
+
+                    <LinearLayout
+                        style="@style/subscription"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:padding="5dp"
+                            android:text="+3"
+                            android:textColor="#FFFFFF"
+                            android:textSize="25dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/heart" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnContinueHeart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="70dp"
+
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="#10EE0C"
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnHeartSecond">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <TextView    android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"    android:layout_gravity="center"
+                            android:gravity="center|center_horizontal|center_vertical"    android:padding="10dp"
+                            android:text="@string/continue__"    android:textColor="#FFFFFF"
+                            android:textSize="16dp"    android:textStyle="bold" />
+                        <ImageView
+                            android:layout_width="20dp"    android:layout_height="20dp"
+                            android:layout_gravity="center"    android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/andropoint" /><TextView
+                        android:id="@+id/tvCountHeart"    android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"    android:layout_gravity="center"
+                        android:gravity="center|center_horizontal|center_vertical"    android:padding="10dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16dp"    android:textStyle="bold" />
+                        <ImageView    android:layout_width="20dp"
+                            android:layout_height="20dp"    android:layout_gravity="center"
+                            android:layout_marginEnd="5dp"    android:layout_weight="1"
+                            android:src="@drawable/heart" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

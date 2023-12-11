@@ -1,4 +1,8 @@
 <resources>
+    <string name="heart_setting">Попытки</string>
+    <string name="count_heart">У вас сейчас: COUNT_HEART</string>
+    <string name="attempts">ПОПЫТКИ</string>
+    <string name="you_run_out_of_tries">У вас закончились попытки</string>
     <string name="delete_account_ok">Удалить</string>
     <string name="delete_account_cancel">Отмена</string>
     <string name="delete_account_question">Вы точно хотите удалить данные?</string>
@@ -55,6 +59,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="watch_ad_2">Смотреть рекламу -2ч </string>
+    <string name="watch_ad_hearts">Смотреть рекламу +1</string>
+    <string name="continue__">Продолжить COUNT_ANDROPOINT-</string>
     <string name="buy">Купить</string>
     <string name="skip_delay">Пропустить задержку</string>
     <string name="delaySH">Задержка до DATA</string>

@@ -1,4 +1,9 @@
 <resources>
+    <string name="heart_setting">Attempts</string>
+
+    <string name="count_heart">You currently have: COUNT_HEART</string>
+    <string name="attempts">ATTEMPTS</string>
+    <string name="you_run_out_of_tries">You\'ve run out of attempts</string>
     <string name="delete_account_ok">Delete</string>
     <string name="delete_account_cancel">Cancel</string>
     <string name="delete_account_question">Are you sure you want to delete your data?</string>
@@ -9,6 +14,8 @@
     <string name="recommended_for_russian_federation">*Recommended for the Russian Federation</string>
     <string name="way_ad">Type of advertising</string>
     <string name="delete_my_account_data">Delete account</string>
+    <string name="watch_ad_hearts">Watch ad +1</string>
+    <string name="continue__">Continue COUNT_ANDROPOINT-</string>
     <string name="google_sing_up">Sign Up in Google</string>
     <string name="back_press_again_exit">Click again to exit</string>
     <string name="defaul_web_client_id">395678996298-0p708in0t58gpo81d5geevbskl67733n.apps.googleusercontent.com</string>

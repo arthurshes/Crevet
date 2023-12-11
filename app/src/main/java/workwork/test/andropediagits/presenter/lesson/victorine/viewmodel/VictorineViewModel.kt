@@ -141,9 +141,9 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 //    suspend fun putUniqueThemeIdForGetCVictorineAnswerVariant(uniqueThemeId:Int){
 //            _allVictorineAnswerVariantByTheme = coursesRepo.searchVictorineAnswerVariantsWithQuestionId(uniqueThemeId)
 //    }
-    fun checkTestResult(uniqueThemeId: Int, result: (ErrorStateView) -> Unit, dateUnlock: (String) -> Unit, correctCount:Int, misstakesAnswersC:Int, isTimerOut:Boolean) {
+    fun checkTestResult(uniqueThemeId: Int, result: (ErrorStateView) -> Unit, dateUnlock: (String) -> Unit, correctCount:Int, misstakesAnswersC:Int, isTimerOut:Boolean,heartCount: Int) {
         viewModelScope.launch {
-            themeUseCase.checkTestResults(uniqueThemeId,{result(it)},{dateUnlock(it)}, correctAnswerTstCo = correctCount, misstakesAnswersC = misstakesAnswersC, isTimerOut = isTimerOut)
+            themeUseCase.checkTestResults(uniqueThemeId,{result(it)},{dateUnlock(it)}, correctAnswerTstCo = correctCount, misstakesAnswersC = misstakesAnswersC, isTimerOut = isTimerOut, heartsCount = heartCount)
         }
     }
      fun addAndropoints(result: (ErrorEnum) -> Unit) {

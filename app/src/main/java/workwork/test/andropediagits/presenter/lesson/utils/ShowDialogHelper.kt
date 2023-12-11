@@ -1,10 +1,17 @@
 package workwork.test.andropediagits.presenter.lesson.utils
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ClipDrawable
+import android.graphics.drawable.LayerDrawable
 import android.media.Image
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -16,6 +23,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
@@ -44,10 +52,145 @@ object ShowDialogHelper {
     private var isCloseDialog = false
     private var isFailDialog = false
     private var isDeleteDialog = false
+    private val totalTime = 20000
     private var isDialogLoad = false
+    private val colorTransitionTime1 = 5000
+    private val colorTransitionTime2 = 5000
+    private val color3 = Color.RED
+    private val color2 = Color.YELLOW
+    private val color1 = Color.GREEN
 
-    fun showVictorineBuyHeartDialog(){
 
+     fun startProgressBarAnimation(context: Context) {
+        dialog = Dialog(context)
+        dialog?.setContentView(R.layout.out_attempts_dialog)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+         dialog?.setCancelable(false)
+        val progressBar = dialog?.findViewById<ProgressBar>(R.id.progressBarApttem)
+
+        val progressDrawable = progressBar?.progressDrawable as LayerDrawable
+        val progressLayer = progressDrawable.findDrawableByLayerId(android.R.id.progress) as ClipDrawable
+
+       val progressAnimator = ValueAnimator.ofInt(progressBar.max, 0)
+        progressAnimator.duration = totalTime.toLong()
+        // Создаем анимацию изменения цвета
+        val colorAnimator = ValueAnimator.ofObject(
+        ArgbEvaluator(),        color1,
+        color2,
+        color3    )
+        // Инвертируем порядок цветов    colorAnimator.setIntValues(color3, color2, color1)
+        colorAnimator.duration = colorTransitionTime1.toLong()+ colorTransitionTime2.toLong()+ 7000
+        colorAnimator.repeatCount = 2 // Повторяем анимацию три раза, чтобы охватить всё время
+        colorAnimator.repeatMode = ValueAnimator.REVERSE // Обратное повторение
+        // Добавляем слушатель для обновления цвета и прогресса при изменении анимации
+        progressAnimator.addUpdateListener { animator ->
+            val value = animator.animatedValue as Int
+            progressBar.progress = value
+        }
+
+    colorAnimator.addUpdateListener { animator ->        val color = animator.animatedValue as Int
+       progressLayer.drawable?.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN)
+    }
+    // Добавляем слушатель для обновления цвета при завершении анимации изменения цвета
+    colorAnimator.addListener(object : AnimatorListenerAdapter() {        override fun onAnimationEnd(animation: Animator) {
+        super.onAnimationEnd(animation)            // Сбрасываем фильтр цвета при завершении анимации
+        progressLayer.drawable?.clearColorFilter()        }
+    })
+   progressAnimator.start()
+    colorAnimator.start()
+        dialog?.show()
+}
+
+
+    // @SuppressLint("SuspiciousIndentation")
+    fun showDialogBuyAndropointsOrHeart(
+        context: Context,
+        watchAd: () -> Unit,
+        pay: () -> Unit,
+        money: (String) -> Unit,
+        productCount: (String) -> Unit,
+        isAndropointsBuy:Boolean=true
+    ) {
+        if (!isAndropointShow) {
+            dialog = Dialog(context)
+            isAndropointShow = true
+            dialog?.setContentView(R.layout.buy_andropoints_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val newDrawable = ContextCompat.getDrawable(context, R.drawable.heart)
+            val btnPay = dialog?.findViewById<CardView>(R.id.btnPay)
+            val tvLastPayCost = dialog?.findViewById<TextView>(R.id.tvLastPayCost)
+            val cardBuyOneAndropoint = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneAndropoint)
+            val cardBuyTenAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyTenAndropoints)
+            val imageFirst = dialog?.findViewById<ImageView>(R.id.imageFirst)
+            val cardBuyOneHundredAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneHundredAndropoints)
+            val cardBuyInfinityAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyInfinityAndropoints)
+            val tvLastCountProducts = dialog?.findViewById<TextView>(R.id.tvLastCountProducts)
+            val tvCountAndropointsBuyOneAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyOneAndropoint)
+            val tvCountMoneyBuyOneAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneAndropoint)
+            val tvCountAndropointsBuyTenAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyTenAndropoint)
+            val tvCountMoneyBuyTenAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyTenAndropoint)
+            val tvCountAndropointsOneHundredAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsOneHundredAndropoint)
+            val tvCountMoneyBuyOneHundredAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneHundredAndropoint)
+            val tvCountAndropointsInfinityAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsInfinityAndropoint)
+            val tvCountMoneyBuyInfinityAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyInfinityAndropoint)
+            val btnWatchAd = dialog?.findViewById<CardView>(R.id.btnWatchAd)
+            val imageSecond = dialog?.findViewById<ImageView>(R.id.imageSecond)
+            val imageThird = dialog?.findViewById<ImageView>(R.id.imageThird)
+            val imageAd = dialog?.findViewById<ImageView>(R.id.imageAd)
+            val imageResult = dialog?.findViewById<ImageView>(R.id.imageResult)
+            val imageHeartFirst = dialog?.findViewById<ImageView>(R.id.imageHeartFirst)
+            val imageHeartSecond = dialog?.findViewById<ImageView>(R.id.imageHeartSecond)
+            val imageHeartThird = dialog?.findViewById<ImageView>(R.id.imageHeartThird)
+            val haveHeartBlock = dialog?.findViewById<LinearLayout>(R.id.haveHeartBlock)
+
+            cardBuyOneAndropoint?.setOnClickListener {
+                tvLastCountProducts?.text = tvCountAndropointsBuyOneAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text
+            }
+            cardBuyTenAndropoints?.setOnClickListener {
+                tvLastCountProducts?.text = tvCountAndropointsBuyTenAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text
+            }
+            cardBuyOneHundredAndropoints?.setOnClickListener {
+                tvLastCountProducts?.text = tvCountAndropointsOneHundredAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text
+            }
+            cardBuyInfinityAndropoints?.setOnClickListener {
+                tvLastCountProducts?.text = tvCountAndropointsInfinityAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
+            }
+            btnPay?.setOnClickListener {
+                money.invoke(tvLastPayCost?.text.toString().replace("$", ""))
+                productCount.invoke(tvLastCountProducts?.text.toString())
+                pay.invoke()
+                dialog = null
+            }
+            btnWatchAd?.setOnClickListener {
+                dialog?.dismiss()
+                dialog = null
+                watchAd.invoke()
+            }
+            if (!isAndropointsBuy){
+                imageFirst?.setImageDrawable(newDrawable)
+                imageSecond?.setImageDrawable(newDrawable)
+                imageThird?.setImageDrawable(newDrawable)
+                imageAd?.setImageDrawable(newDrawable)
+                imageResult?.setImageDrawable(newDrawable)
+                cardBuyInfinityAndropoints?.visibility = View.GONE
+                imageHeartFirst?.visibility = View.VISIBLE
+                imageHeartSecond?.visibility = View.VISIBLE
+                imageHeartThird?.visibility = View.VISIBLE
+                haveHeartBlock?.visibility = View.VISIBLE
+                tvCountMoneyBuyOneAndropoint?.text="5"
+                tvCountMoneyBuyTenAndropoint?.text="40"
+                tvCountMoneyBuyOneHundredAndropoint?.text="200"
+            }
+
+            dialog?.show()
+        }
+        dialog?.setOnDismissListener {
+            isAndropointShow = false
+        }
     }
 
     fun loadDialog(context: Context,isClose: () -> Unit) {
@@ -879,61 +1022,60 @@ object ShowDialogHelper {
         watchAd: () -> Unit,
         pay: () -> Unit,
         money: (String) -> Unit,
-        andropoints: (String) -> Unit
+        productCount: (String) -> Unit,
+        isAndropointsBuy:Boolean=true
     ) {
-        if(!isAndropointShow) {
+        if (!isAndropointShow) {
             dialog = Dialog(context)
             isAndropointShow = true
             dialog?.setContentView(R.layout.buy_andropoints_dialog)
             dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            val newDrawable = ContextCompat.getDrawable(context, R.drawable.heart)
             val btnPay = dialog?.findViewById<CardView>(R.id.btnPay)
             val tvLastPayCost = dialog?.findViewById<TextView>(R.id.tvLastPayCost)
             val cardBuyOneAndropoint = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneAndropoint)
-            val cardBuyTenAndropoints =
-                dialog?.findViewById<LinearLayout>(R.id.cardBuyTenAndropoints)
-            val cardBuyOneHundredAndropoints =
-                dialog?.findViewById<LinearLayout>(R.id.cardBuyOneHundredAndropoints)
-            val cardBuyInfinityAndropoints =
-                dialog?.findViewById<LinearLayout>(R.id.cardBuyInfinityAndropoints)
-            val tvLastCountAndropoint = dialog?.findViewById<TextView>(R.id.tvLastCountAndropoint)
-            val tvCountAndropointsBuyOneAndropoint =
-                dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyOneAndropoint)
-            val tvCountMoneyBuyOneAndropoint =
-                dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneAndropoint)
-            val tvCountAndropointsBuyTenAndropoint =
-                dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyTenAndropoint)
-            val tvCountMoneyBuyTenAndropoint =
-                dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyTenAndropoint)
-            val tvCountAndropointsOneHundredAndropoint =
-                dialog?.findViewById<TextView>(R.id.tvCountAndropointsOneHundredAndropoint)
-            val tvCountMoneyBuyOneHundredAndropoint =
-                dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneHundredAndropoint)
-            val tvCountAndropointsInfinityAndropoint =
-                dialog?.findViewById<TextView>(R.id.tvCountAndropointsInfinityAndropoint)
-            val tvCountMoneyBuyInfinityAndropoint =
-                dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyInfinityAndropoint)
+            val cardBuyTenAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyTenAndropoints)
+            val imageFirst = dialog?.findViewById<ImageView>(R.id.imageFirst)
+            val cardBuyOneHundredAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyOneHundredAndropoints)
+            val cardBuyInfinityAndropoints = dialog?.findViewById<LinearLayout>(R.id.cardBuyInfinityAndropoints)
+            val tvLastCountProducts = dialog?.findViewById<TextView>(R.id.tvLastCountProducts)
+            val tvCountAndropointsBuyOneAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyOneAndropoint)
+            val tvCountMoneyBuyOneAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneAndropoint)
+            val tvCountAndropointsBuyTenAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsBuyTenAndropoint)
+            val tvCountMoneyBuyTenAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyTenAndropoint)
+            val tvCountAndropointsOneHundredAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsOneHundredAndropoint)
+            val tvCountMoneyBuyOneHundredAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyOneHundredAndropoint)
+            val tvCountAndropointsInfinityAndropoint = dialog?.findViewById<TextView>(R.id.tvCountAndropointsInfinityAndropoint)
+            val tvCountMoneyBuyInfinityAndropoint = dialog?.findViewById<TextView>(R.id.tvCountMoneyBuyInfinityAndropoint)
             val btnWatchAd = dialog?.findViewById<CardView>(R.id.btnWatchAd)
+            val imageSecond = dialog?.findViewById<ImageView>(R.id.imageSecond)
+            val imageThird = dialog?.findViewById<ImageView>(R.id.imageThird)
+            val imageAd = dialog?.findViewById<ImageView>(R.id.imageAd)
+            val imageResult = dialog?.findViewById<ImageView>(R.id.imageResult)
+            val imageHeartFirst = dialog?.findViewById<ImageView>(R.id.imageHeartFirst)
+            val imageHeartSecond = dialog?.findViewById<ImageView>(R.id.imageHeartSecond)
+            val imageHeartThird = dialog?.findViewById<ImageView>(R.id.imageHeartThird)
+            val haveHeartBlock = dialog?.findViewById<LinearLayout>(R.id.haveHeartBlock)
+
             cardBuyOneAndropoint?.setOnClickListener {
-                tvLastCountAndropoint?.text = tvCountAndropointsBuyOneAndropoint?.text
+                tvLastCountProducts?.text = tvCountAndropointsBuyOneAndropoint?.text
                 tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text
             }
             cardBuyTenAndropoints?.setOnClickListener {
-                tvLastCountAndropoint?.text = tvCountAndropointsBuyTenAndropoint?.text
+                tvLastCountProducts?.text = tvCountAndropointsBuyTenAndropoint?.text
                 tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text
             }
             cardBuyOneHundredAndropoints?.setOnClickListener {
-                tvLastCountAndropoint?.text = tvCountAndropointsOneHundredAndropoint?.text
+                tvLastCountProducts?.text = tvCountAndropointsOneHundredAndropoint?.text
                 tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text
             }
             cardBuyInfinityAndropoints?.setOnClickListener {
-                tvLastCountAndropoint?.text = tvCountAndropointsInfinityAndropoint?.text
+                tvLastCountProducts?.text = tvCountAndropointsInfinityAndropoint?.text
                 tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
             }
             btnPay?.setOnClickListener {
                 money.invoke(tvLastPayCost?.text.toString().replace("$", ""))
-                andropoints.invoke(
-                    tvLastCountAndropoint?.text.toString().replace("$", "")
-                )
+                productCount.invoke(tvLastCountProducts?.text.toString())
                 pay.invoke()
                 dialog = null
             }
@@ -941,6 +1083,21 @@ object ShowDialogHelper {
                 dialog?.dismiss()
                 dialog = null
                 watchAd.invoke()
+            }
+            if (!isAndropointsBuy){
+                imageFirst?.setImageDrawable(newDrawable)
+                imageSecond?.setImageDrawable(newDrawable)
+                imageThird?.setImageDrawable(newDrawable)
+                imageAd?.setImageDrawable(newDrawable)
+                imageResult?.setImageDrawable(newDrawable)
+                cardBuyInfinityAndropoints?.visibility = View.GONE
+                imageHeartFirst?.visibility = View.VISIBLE
+                imageHeartSecond?.visibility = View.VISIBLE
+                imageHeartThird?.visibility = View.VISIBLE
+                haveHeartBlock?.visibility = View.VISIBLE
+                tvCountMoneyBuyOneAndropoint?.text="5"
+                tvCountMoneyBuyTenAndropoint?.text="40"
+                tvCountMoneyBuyOneHundredAndropoint?.text="200"
             }
 
             dialog?.show()

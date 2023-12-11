@@ -76,6 +76,16 @@ class HeartsUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         try {
             val userInfo = userLogicRepo.getUserInfoLocal()
             if(userInfo.heartsCount ?: 0>=minusHeartCount) {
+
+                val userSignInModel = UserSignInModel(
+                    name = userInfo.name,
+                    image = userInfo.image,
+                    andropointCount = userInfo.andropointCount,
+                    heartsCount = userInfo.heartsCount?.minus(minusHeartCount) ?: 0,
+                    token = userInfo.token,
+                    userlanguage = userInfo.userLanguage
+                )
+                userLogicRepo.updateUserInfo(userSignInModel)
                 val userInfoEntity = UserInfoEntity(
                     token = userInfo.token,
                     andropointCount = userInfo.andropointCount,
@@ -90,15 +100,6 @@ class HeartsUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
                     name = userInfo.name
                 )
                 userLogicRepo.updateUserInfoLocal(userInfoEntity)
-                val userSignInModel = UserSignInModel(
-                    name = userInfo.name,
-                    image = userInfo.image,
-                    andropointCount = userInfo.andropointCount,
-                    heartsCount = userInfo.heartsCount?.minus(minusHeartCount) ?: 0,
-                    token = userInfo.token,
-                    userlanguage = userInfo.userLanguage
-                )
-                userLogicRepo.updateUserInfo(userSignInModel)
                 isEnding.invoke(false)
             }else{
                 isEnding.invoke(true)

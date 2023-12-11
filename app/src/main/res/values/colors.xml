@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="red">#FF0000</color>
+    <color name="green">#11FF00</color>
     <color name="chose_way_ads">#FEDE01</color>
     <color name="timer_deafult">#404040</color>
     <color name="comment_code">#7F7F7F</color><color name="function_code">#F7C067</color>

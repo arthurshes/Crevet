@@ -1,5 +1,6 @@
 package workwork.test.andropediagits.presenter.lesson.victorine
 
+import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.SharedPreferences
 import android.content.res.Configuration
@@ -194,7 +195,7 @@ private var backPressedOnce = false
             override fun handleOnBackPressed() {
 
             }}
-
+        binding?.tvCountHeart?.text = "x ${heartCount}"
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         initCircleView(binding!!)
         val nightDrawle = ContextCompat.getDrawable(requireContext(), R.drawable.progress_bar_custom_night)
@@ -557,6 +558,117 @@ private var backPressedOnce = false
         }
     }
 
+    private fun minusHeart(){
+        var isEnd = false
+        viewModel.minusHeart(1,{state->
+            when(state){
+                ErrorEnum.SUCCESS -> {
+                      if(isEnd&&heartCount<1&&!isUseNextTest){
+                          /////выводим повотрить попытку
+                          requireActivity().runOnUiThread {
+                              ShowDialogHelper.startProgressBarAnimation(requireContext())
+                          }
+
+                      }
+                }
+
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            minusHeart()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            minusHeart()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            minusHeart()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            minusHeart()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            minusHeart()
+                        }) {
+
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+
+                }
+
+                ErrorEnum.OFFLINEMODE->{
+
+                }
+                ErrorEnum.OFFLINETHEMEBUY->{
+
+                }
+            }
+        },{
+            isEnd = it
+        })
+    }
+
+    private fun decrementAndAnimate() {
+//        val currentValue = binding?.tvCountHeart?.?.replace("x ","").toString().toInt()
+//        val newValue = currentValue - 1    // Анимация: новое число появляется чуть выше, а старая цифра уходит чуть ниже
+        val moveUp = ObjectAnimator.ofFloat(binding?.tvCountHeart, "translationY", -30f)
+        moveUp.duration = 400
+        val moveDown = ObjectAnimator.ofFloat(binding?.tvCountHeart, "translationY", 0f)
+        moveDown.duration = 400
+        moveUp.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator) {
+                binding?.tvCountHeart?.setTextColor(ContextCompat.getColor(requireContext(),R.color.red))        }
+            override fun onAnimationEnd(animation: Animator) {
+                binding?.tvCountHeart?.text = "x "+heartCount.toString()
+                binding?.tvCountHeart?.setTextColor(ContextCompat.getColor(requireContext(),R.color.white))
+                moveDown.start()
+            }
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
+        })
+        moveUp.start()
+    }
+
     private fun checkResultAnswer(
         numberItem: Int,
         item: List<VictorineAnswerVariantEntity>?
@@ -586,14 +698,17 @@ private var backPressedOnce = false
         if (currentAnswer?.isCorrectAnswer == true) {
             correctAnswers++
         } else {
-            if(!isInfinityHearts) {
+            if(!isInfinityHearts&&heartCount>0) {
                 heartCount--
+                minusHeart()
+                decrementAndAnimate()
             }
 
             if(heartCount==0&&isUseNextTest){
-
+                checkTestTreatmentResult(victorinesQuestions ?: emptyList(),false)
             }else if(heartCount==0&&!isUseNextTest){
                 ///Предложтьб
+                ShowDialogHelper.startProgressBarAnimation(requireContext())
             }
             misstakeAnswers++
         }
@@ -880,7 +995,7 @@ private var backPressedOnce = false
         }, {
             dateUnlockTheme?.invoke(it)
             Log.d("misstakeDialog", "dateTest:${it}")
-        }, correctAnswers, misstakeAnswers, isTimerOut)
+        }, correctAnswers, misstakeAnswers, isTimerOut,heartCount)
 
     }
 

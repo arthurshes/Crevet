@@ -136,6 +136,9 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+
+
+
     <ImageView
         android:id="@+id/imageViewAndropointNAv"
         android:layout_width="50dp"

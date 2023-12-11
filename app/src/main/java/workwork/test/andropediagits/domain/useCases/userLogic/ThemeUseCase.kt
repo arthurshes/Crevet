@@ -227,7 +227,7 @@ class ThemeUseCase @Inject constructor(
 
 /////Пока незнаю как рвботает, проверка результатов викторин и интерактива
     @SuppressLint("SuspiciousIndentation")
-    suspend fun checkTestResults(uniqueThemeId:Int, isSuccess: ((ErrorStateView) -> Unit), dateUnlockTheme:((String)->Unit)?=null, interactiveMisstakeCount:((String)->Unit)?=null, buythemesId:((List<Int>)->Unit)?=null, correctAnswerTstCo:Int?=null, misstakesAnswersC:Int?=null, isTimerOut:Boolean) {
+    suspend fun checkTestResults(uniqueThemeId:Int, isSuccess: ((ErrorStateView) -> Unit), dateUnlockTheme:((String)->Unit)?=null, interactiveMisstakeCount:((String)->Unit)?=null, buythemesId:((List<Int>)->Unit)?=null, correctAnswerTstCo:Int?=null, misstakesAnswersC:Int?=null, isTimerOut:Boolean,heartsCount:Int) {
         try {
             val theme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
 
@@ -236,7 +236,7 @@ class ThemeUseCase @Inject constructor(
             /// 10-2+0 = 8
             ///
 //            var correctVictorineAnswer = correctAnswerTstCo
-            var misstakeVictorine =   0
+            var misstakeVictorine =  0
 
             val victorineQuestionCount = theme.victorineQuestionCount  /// 10
             if(misstakesAnswersC!=null){
@@ -264,7 +264,7 @@ class ThemeUseCase @Inject constructor(
                 isSuccess.invoke(ErrorStateView.NEXTTHEME)
                 return
             }
-                if (victorineQuestionCount == correctAnswerTstCo&&misstakeVictorine == 0) {
+                if (victorineQuestionCount == correctAnswerTstCo&&misstakeVictorine == 0&&heartsCount>0) {
                     Log.d("jsonWalterWhite","next theme")
 
                     val updateTheme = ThemeEntity(
@@ -533,11 +533,66 @@ class ThemeUseCase @Inject constructor(
                                     return
                                 }
                             }
-                           ///Если нет подписок
+
+                        ///Если нет подписок
                         if(theme.isThemePassed){
                             isSuccess.invoke(ErrorStateView.NEXTTHEME)
                             return
                         }
+
+                        if(heartsCount>=1){
+                            val updateTheme = ThemeEntity(
+                                uniqueThemeId =  theme.uniqueThemeId,
+                                themeName = theme.themeName,
+                                themeNumber = theme.themeNumber,
+                                courseNumber = theme.courseNumber,
+                                lessonsCount = theme.lessonsCount,
+                                lastUpdateDate = theme.lastUpdateDate,
+                                termHourse = null,
+                                termDateApi = null,
+                                victorineMistakeAnswer = theme.victorineMistakeAnswer,
+                                victorineCorrectAnswer = theme.victorineCorrectAnswer,
+                                interactiveCodeMistakes = theme.interactiveCodeMistakes,
+                                interactiveCodeCorrect = theme.interactiveCodeCorrect,
+                                interactiveQuestionCount = theme.interactiveQuestionCount,
+                                victorineQuestionCount = theme.victorineQuestionCount,
+                                vicotineTestId = theme.vicotineTestId,
+                                interactiveTestId = theme.interactiveTestId,
+                                imageTheme = theme.imageTheme,
+                                isOpen = theme.isOpen,
+                                duoDate = theme.duoDate,
+                                victorineDate = theme.victorineDate,
+                                isVictorine = theme.isVictorine,
+                                isDuoInter = theme.isDuoInter,
+                                isFav = theme.isFav,
+                                isThemePassed = true,
+                                possibleToOpenThemeFree = theme.possibleToOpenThemeFree,
+                                lastCourseTheme = theme.lastCourseTheme,
+                                themePrice = theme.themePrice
+                            )
+                            courseRepo.updateTheme(updateTheme)
+                            isSuccess.invoke(ErrorStateView.NEXTTHEME)
+                            if(!theme.lastCourseTheme){
+                                openNextTheme(uniqueThemeId,{errorState->
+                                    when(errorState){
+                                        ErrorEnum.NOTNETWORK -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                        ErrorEnum.ERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                        ErrorEnum.SUCCESS -> isSuccess.invoke(ErrorStateView.SUCCESS)
+                                        ErrorEnum.UNKNOWNERROR -> isSuccess.invoke(ErrorStateView.ERROR)
+                                        ErrorEnum.TIMEOUTERROR -> isSuccess.invoke(ErrorStateView.TRYAGAIN)
+                                        ErrorEnum.NULLPOINTERROR -> isSuccess.invoke(ErrorStateView.ERROR)
+                                        ErrorEnum.OFFLINEMODE -> isSuccess.invoke(ErrorStateView.OFFLINE)
+                                        ErrorEnum.OFFLINETHEMEBUY -> isSuccess.invoke(ErrorStateView.OFFLINEBUYTHEME)
+                                    }
+                                },{ uniqueIds->
+                                    buythemesId?.invoke(uniqueIds)
+                                })
+                            }
+                            isSuccess.invoke(ErrorStateView.NEXTTHEME)
+                            return
+                        }
+
+
                             isSuccess.invoke(ErrorStateView.TERM)
                         Log.d("termHourseThemeSendApi",misstakeVictorine.toString()+"misstakes")
                         ////last update version

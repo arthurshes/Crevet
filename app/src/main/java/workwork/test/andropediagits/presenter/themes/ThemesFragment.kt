@@ -1203,6 +1203,21 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 })
             }
 
+            R.id.id_heart_buy ->{
+                ShowDialogHelper.showDialogBuyAndropoints(
+                    requireContext(),{
+
+                    },{
+
+                    },{
+
+                    },{
+
+                    },
+                    isAndropointsBuy = false
+                )
+            }
+
         }
         return true
     }
