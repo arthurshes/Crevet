@@ -4,10 +4,7 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,21 +14,14 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
 
 
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.core.review.ReviewManagerFactory
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.exception.ErrorStateView
@@ -43,12 +33,9 @@ import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntit
 import workwork.test.andropediagits.databinding.FragmentVictorineBinding
 import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeState
 import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
-import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper.showDialogClue
 import workwork.test.andropediagits.presenter.lesson.victorine.customview.AnimatedCircleView
 
 import workwork.test.andropediagits.presenter.lesson.victorine.viewmodel.VictorineViewModel
-import javax.inject.Inject
-import kotlin.time.Duration.Companion.nanoseconds
 
 @AndroidEntryPoint
 class VictorineFragment : Fragment() {
@@ -566,7 +553,7 @@ private var backPressedOnce = false
                       if(isEnd&&heartCount<1&&!isUseNextTest){
                           /////выводим повотрить попытку
                           requireActivity().runOnUiThread {
-                              ShowDialogHelper.startProgressBarAnimation(requireContext())
+                              ShowDialogHelper.startProgressBarAnimation(requireContext(),resources,{},{},{},{})
                           }
 
                       }
@@ -708,13 +695,13 @@ private var backPressedOnce = false
                 checkTestTreatmentResult(victorinesQuestions ?: emptyList(),false)
             }else if(heartCount==0&&!isUseNextTest){
                 ///Предложтьб
-                ShowDialogHelper.startProgressBarAnimation(requireContext(),{heartCount->
+                ShowDialogHelper.startProgressBarAnimation(requireContext(),resources, { heartCount->
 
-                },{andropointCount->
+                }, { andropointCount->
 
                 }, adWatch = {
 
-                },{
+                }, {
 
                 })
             }
