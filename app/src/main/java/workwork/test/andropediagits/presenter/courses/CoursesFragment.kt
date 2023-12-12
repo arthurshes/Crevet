@@ -757,6 +757,7 @@ class CoursesFragment (): Fragment(){
         })
     }
 
+
     override fun onStart() {
         super.onStart()
         obServer?.let { viewModel.allCourses.observe(this, it) }

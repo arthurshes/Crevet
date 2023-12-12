@@ -708,7 +708,15 @@ private var backPressedOnce = false
                 checkTestTreatmentResult(victorinesQuestions ?: emptyList(),false)
             }else if(heartCount==0&&!isUseNextTest){
                 ///Предложтьб
-                ShowDialogHelper.startProgressBarAnimation(requireContext())
+                ShowDialogHelper.startProgressBarAnimation(requireContext(),{heartCount->
+
+                },{andropointCount->
+
+                }, adWatch = {
+
+                },{
+
+                })
             }
             misstakeAnswers++
         }

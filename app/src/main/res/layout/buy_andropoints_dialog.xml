@@ -77,14 +77,14 @@
                     android:textStyle="bold"
                     android:theme="@style/Text_black_white" />
                 <ImageView
-                    android:id="@+id/imageHeartFirst"
+                    android:id="@+id/imageAndropointFirst"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_marginEnd="8dp"
                     android:visibility="gone"
                     android:layout_marginBottom="5dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/heart"
+                    android:src="@drawable/andropoint"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/cardView3"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -128,14 +128,14 @@
                     android:textStyle="bold"
                     android:theme="@style/Text_black_white" />
                 <ImageView
-                    android:id="@+id/imageHeartSecond"
+                    android:id="@+id/imageAndropointSecond"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="5dp"
                     android:visibility="gone"
                     android:layout_gravity="center"
-                    android:src="@drawable/heart"
+                    android:src="@drawable/andropoint"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/cardView3"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -177,13 +177,13 @@
                     android:textStyle="bold"
                     android:theme="@style/Text_black_white" />
                 <ImageView
-                    android:id="@+id/imageHeartThird"
+                    android:id="@+id/imageAndropointThird"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="5dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/heart"
+                    android:src="@drawable/andropoint"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/cardView3"
@@ -230,7 +230,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/btnWatchAd"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:cardBackgroundColor="#1290D8"
                 app:cardCornerRadius="5dp">
 
@@ -244,12 +244,10 @@
                     android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/textView19"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="#1290D8"
                         android:text="@string/watch_ad"
-
                         android:textColor="@color/white"
                         android:textStyle="bold" />
 
@@ -269,17 +267,19 @@
 
             <LinearLayout
                 android:id="@+id/haveHeartBlock"
-                android:visibility="gone"
+                android:visibility="invisible"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
+
                 <TextView
+                    style="@style/Text_black_white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/count_heart"
-                    style="@style/Text_black_white"
                     android:textStyle="bold" />
+
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -395,7 +395,15 @@
                             android:padding="5dp"
                             android:text="0.11$"
                             android:textColor="@color/white" />
-
+                        <ImageView
+                            android:id="@+id/imageResultBuy"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="8dp"
+                            android:visibility="gone"
+                            android:src="@drawable/andropoint"
+                            />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>

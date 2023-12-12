@@ -1012,6 +1012,12 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("state_key_theme", viewModel.currentState)
