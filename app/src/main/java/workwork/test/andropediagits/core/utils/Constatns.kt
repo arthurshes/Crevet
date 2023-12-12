@@ -13,8 +13,8 @@ object Constatns {
     const val LANGUAGE_KEY = "language_key"
 //    const val TIME_BASE_URL = "http://worldtimeapi.org/"
     const val CORRECT_ANSWER_ANDROPOINT_COUNT = 2
-    const val MY_API_KEY = "gT23HUiKoOLi0wqBkLOgB4329874"
-//const val MY_API_KEY = "gT23HUiKoOLi0wqBkLOgB43298742222"
+
+    const val MY_API_KEY = "gngjoh34565249bvj3"
     const val PASSWORD_MAX_LENGHT = 23
     const val VICTORINE_REMUNERATION = 25
     const val INTERACTIVE_REMUNERATION = 70
