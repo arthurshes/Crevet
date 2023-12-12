@@ -8,11 +8,11 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.LayerDrawable
-import android.media.Image
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
@@ -27,15 +27,13 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
-import org.w3c.dom.Text
 
 import workwork.test.andropediagits.R
-import workwork.test.andropediagits.databinding.StrikeModeDialogBinding
 import workwork.test.andropediagits.domain.googbilling.BillingManager
 import workwork.test.andropediagits.domain.googbilling.PayState
 import workwork.test.andropediagits.presenter.reset.DatePickerFragment
@@ -52,142 +50,134 @@ object ShowDialogHelper {
     private var isCloseDialog = false
     private var isFailDialog = false
     private var isDeleteDialog = false
-    private val totalTime = 20000
+    private const val totalTime = 20000
     private var isDialogLoad = false
     private val colorTransitionTime1 = 5000
-    private val colorTransitionTime2 = 5000
-    private val color3 = Color.RED
-    private val color2 = Color.YELLOW
-    private val color1 = Color.GREEN
+    private const val colorTransitionTime2 = 5000
+    private const val color3 = Color.RED
+    private const val color2 = Color.YELLOW
+    private const val color1 = Color.GREEN
 
 
-     fun startProgressBarAnimation(context: Context,buyHeartCount:((Int)->Unit),andropointCount:((Int)->Unit),adWatch:(()->Unit),isClose:(()->Unit)) {
+    fun startProgressBarAnimation(
+        context: Context,
+        resources: Resources,
+        buyHeartCount: (Int) -> Unit,
+        andropointCount: (Int) -> Unit,
+        adWatch: () -> Unit,
+        isClose: () -> Unit
+    ) {
         dialog = Dialog(context)
         dialog?.setContentView(R.layout.out_attempts_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-         dialog?.setCancelable(false)
-         var currentHeartCount = 1
+        dialog?.setCancelable(false)
+        var currentHeartCount = 1
+        val currentTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val progressBar = dialog?.findViewById<ProgressBar>(R.id.progressBarApttem)
-        val btnAdsWatch = dialog?.findViewById<CardView>(R.id.btnWatchAdHeart)
-         val btnOneHeart = dialog?.findViewById<CardView>(R.id.btnHeartFirst)
-         val btnTwoHeart = dialog?.findViewById<CardView>(R.id.btnHeartSecond)
-         val btnThree = dialog?.findViewById<CardView>(R.id.btnWatchAdBSfef)
-         val btnBuyHeart = dialog?.findViewById<CardView>(R.id.btnContinueHeart)
-
-         btnOneHeart?.setOnClickListener {
-             if(currentHeartCount==2){
-
-             }
-             if(currentHeartCount==3){
-
-             }
-             if(currentHeartCount!=1) {
-                 btnOneHeart?.background =
-                     ContextCompat.getDrawable(context, R.drawable.gradient_heart)
-                 currentHeartCount = 1
-             }
-         }
+        val btnWatchAdHeart = dialog?.findViewById<CardView>(R.id.btnWatchAdHeart)
+        val btnHeartFirst = dialog?.findViewById<CardView>(R.id.btnHeartFirst)
+        val btnHeartSecond = dialog?.findViewById<CardView>(R.id.btnHeartSecond)
+        val btnHeartThird = dialog?.findViewById<CardView>(R.id.btnHeartThird)
+        val btnBuyHeart = dialog?.findViewById<CardView>(R.id.btnBuyHeart)
+        val tvCountAndopoint = dialog?.findViewById<TextView>(R.id.tvCountAndopoint)
+        val tvCountHeart = dialog?.findViewById<TextView>(R.id.tvCountHeart)
+        btnHeartFirst?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
+        val themeColorRes = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) R.color.subscriptionNight else R.color.subscriptionLight
+        btnHeartFirst?.setOnClickListener {
+            btnHeartFirst.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
+            btnHeartThird?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+            btnHeartSecond?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+            tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-3")
+            tvCountHeart?.text ="|  +1"
+            currentHeartCount = 1
+        }
 
 
-         btnTwoHeart?.setOnClickListener {
+        btnHeartSecond?.setOnClickListener {
+            btnHeartSecond.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
+            btnHeartThird?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+            btnHeartFirst?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+            tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-5")
+            tvCountHeart?.text ="|  +2"
+            currentHeartCount = 2
+        }
 
-             if(currentHeartCount==1){
+        btnHeartThird?.setOnClickListener {
+            btnHeartThird.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
+            btnHeartSecond?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+            tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-7")
+            btnHeartFirst?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+            tvCountHeart?.text ="|  +3"
+            currentHeartCount = 3
+        }
 
-             }
-             if(currentHeartCount==3){
+        btnWatchAdHeart?.setOnClickListener {
+            dialog?.dismiss()
+            dialog = null
+            adWatch.invoke()
+        }
 
-             }
-
-             if(currentHeartCount!=2) {
-                 btnTwoHeart?.background =
-                     ContextCompat.getDrawable(context, R.drawable.gradient_heart)
-                 currentHeartCount = 2
-             }
-         }
-
-         btnThree?.setOnClickListener {
-             if(currentHeartCount==1){
-
-             }
-             if(currentHeartCount==2){
-
-             }
-             if(currentHeartCount!=3) {
-                 btnThree?.background =
-                     ContextCompat.getDrawable(context, R.drawable.gradient_heart)
-                 currentHeartCount = 3
-             }
-         }
-
-         btnAdsWatch?.setOnClickListener {
-             dialog?.dismiss()
-             dialog = null
-             adWatch.invoke()
-         }
-
-         btnBuyHeart?.setOnClickListener {
-             dialog?.dismiss()
-             dialog = null
-             buyHeartCount.invoke(currentHeartCount)
-             if(currentHeartCount==1){
-                 andropointCount.invoke(3)
-             }
-             if(currentHeartCount==2){
-                 andropointCount.invoke(5)
-             }
-             if(currentHeartCount==1){
-                 andropointCount.invoke(7)
-             }
-         }
+        btnBuyHeart?.setOnClickListener {
+            dialog?.dismiss()
+            dialog = null
+            buyHeartCount.invoke(currentHeartCount)
+            if (currentHeartCount == 1) {
+                andropointCount.invoke(3)
+            }
+            if (currentHeartCount == 2) {
+                andropointCount.invoke(5)
+            }
+            if (currentHeartCount == 3) {
+                andropointCount.invoke(7)
+            }
+        }
+        startProgressBar(isClose,progressBar)
+    }
+    private fun startProgressBar(isClose: () -> Unit, progressBar: ProgressBar?) {
         val progressDrawable = progressBar?.progressDrawable as LayerDrawable
-        val progressLayer = progressDrawable.findDrawableByLayerId(android.R.id.progress) as ClipDrawable
+        val progressLayer =
+            progressDrawable.findDrawableByLayerId(android.R.id.progress) as ClipDrawable
 
-       val progressAnimator = ValueAnimator.ofInt(progressBar.max, 0)
+        val progressAnimator = ValueAnimator.ofInt(progressBar.max, 0)
         progressAnimator.duration = totalTime.toLong()
-        // Создаем анимацию изменения цвета
-        val colorAnimator = ValueAnimator.ofObject(
-        ArgbEvaluator(),        color1,
-        color2,
-        color3    )
-        // Инвертируем порядок цветов    colorAnimator.setIntValues(color3, color2, color1)
-        colorAnimator.duration = colorTransitionTime1.toLong()+ colorTransitionTime2.toLong()+ 7000
-        colorAnimator.repeatCount = 2 // Повторяем анимацию три раза, чтобы охватить всё время
-        colorAnimator.repeatMode = ValueAnimator.REVERSE // Обратное повторение
-        // Добавляем слушатель для обновления цвета и прогресса при изменении анимации
+        val colorAnimator = ValueAnimator.ofObject(ArgbEvaluator(), color1, color2, color3)
+        colorAnimator.duration =
+            colorTransitionTime1.toLong() + colorTransitionTime2.toLong() + 7000
+        colorAnimator.repeatCount = 2
+        colorAnimator.repeatMode = ValueAnimator.REVERSE
         progressAnimator.addUpdateListener { animator ->
             val value = animator.animatedValue as Int
             progressBar.progress = value
         }
-
-    colorAnimator.addUpdateListener { animator ->        val color = animator.animatedValue as Int
-       progressLayer.drawable?.setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN)
-    }
-    // Добавляем слушатель для обновления цвета при завершении анимации изменения цвета
-    colorAnimator.addListener(object : AnimatorListenerAdapter() {        override fun onAnimationEnd(animation: Animator) {
-        super.onAnimationEnd(animation)            // Сбрасываем фильтр цвета при завершении анимации
-        progressLayer.drawable?.clearColorFilter()        }
-    })
-   progressAnimator.start()
-    colorAnimator.start()
+        colorAnimator.addUpdateListener { animator ->
+            val color = animator.animatedValue as Int
+            progressLayer.drawable?.let {
+                val wrappedDrawable = DrawableCompat.wrap(it)
+                DrawableCompat.setTint(wrappedDrawable, color)
+            }
+        }
+        colorAnimator.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                super.onAnimationEnd(animation)
+                progressLayer.drawable?.clearColorFilter()
+            }
+        })
+        progressAnimator.start()
+        colorAnimator.start()
         dialog?.show()
 
 
-         progressAnimator.addUpdateListener { animator ->
-             val value = animator.animatedValue as Int
-             progressBar.progress = value
+        progressAnimator.addUpdateListener { animator ->
+            val value = animator.animatedValue as Int
+            progressBar.progress = value
 
-             // Проверяем, достиг ли прогресс-бар значения 0
-             if (value == 0) {
-                 // Выполняем действия, когда прогресс равен 0
-                 // Например, вызываем функцию или отображаем сообщение
-               dialog?.dismiss()
-                 dialog = null
-                 isClose.invoke()
-             }
-         }
-
-}
-
+            if (value == 0) {
+                dialog?.dismiss()
+                dialog = null
+                isClose.invoke()
+            }
+        }
+    }
 
 
 
@@ -230,291 +220,118 @@ object ShowDialogHelper {
         }
     }
 
-    fun showDialogChooseWay(    context: Context,
-                                googleAd: () -> Unit, ruAd: () -> Unit,    googlePay: (() -> Unit)? = null,
-                                ruPay: (() -> Unit)? = null,    choiceAd: Boolean, currentGoogleSelect: Boolean? = false
+    fun showDialogChooseWay(
+        context: Context,
+        googleAd: () -> Unit, ruAd: () -> Unit, googlePay: (() -> Unit)? = null,
+        ruPay: (() -> Unit)? = null, choiceAd: Boolean, currentGoogleSelect: Boolean? = false
     ) {
         if (!dialogChooseWay) {
-        val currentTheme =
-            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            val currentTheme =
+                context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
             dialogChooseWay = true
             var isGoogleWay = false
             var isRuWay = false
-        dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.choose_way_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialog?.setCancelable(false)
-        val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
-        val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
-        val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
+            dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+            dialog?.setContentView(R.layout.choose_way_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog?.setCancelable(false)
+            val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
+            val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
+            val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
 
-        val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
+            val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
             val tvRu = dialog?.findViewById<TextView>(R.id.tvRu)
-        val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
+            val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
             if (currentGoogleSelect == true) {
-            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
-            } else {                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
-            }
-            btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+                if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+                    btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+                } else {
+                    btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
+                }
+                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
                 btnContinueChooseWay?.isClickable = true
-        } else {
-                btnContinueChooseWay?.isClickable = true
-            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-            btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
-            btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
-        } else {                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background) }
-            btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
-        }
-        if (choiceAd) {            btnGoogleChoice?.setOnClickListener {
-            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {                        btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
-            }                    else {
-
-                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)                    }
-            btnGoogleChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
-            btnContinueChooseWay?.alpha = 1.0F
-            btnContinueChooseWay?.isClickable = true
-            isGoogleWay = true
-            isRuWay = false
-        }
-            btnRuChoice?.setOnClickListener {
-            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
             } else {
-                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
-            }
-            btnRuChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
-            btnContinueChooseWay?.alpha = 1.0F
-            btnContinueChooseWay?.isClickable = true
-            isGoogleWay = false
-                isRuWay = true
-            }
-            btnContinueChooseWay?.setOnClickListener {                dialog?.dismiss()
-                dialog = null
-
-                if(currentGoogleSelect==false&&!isGoogleWay&&!isRuWay){
-                    ruAd.invoke()
-                }else
-
-                if(currentGoogleSelect==true&&!isGoogleWay&&!isRuWay){
-                    googleAd.invoke()
-                }else if (isGoogleWay) {
-                    googleAd.invoke()
-                }
-                if(isRuWay){
-                    ruAd.invoke()
-                }
-            }        } else {
-            tvWay?.text = context.getString(R.string.select_pay_type)
-            tvGoogle?.text = "Google pay"
-            tvRu?.text = context.getString(R.string.yukassa)
-            btnGoogleChoice?.setOnClickListener {
-                btnContinueChooseWay?.alpha = 1.0F
                 btnContinueChooseWay?.isClickable = true
-                isGoogleWay = true            }
-            btnRuChoice?.setOnClickListener {                btnContinueChooseWay?.alpha = 1.0F
-                btnContinueChooseWay?.isClickable = true
-                isGoogleWay = false
+                if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+                    btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+                    btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+                } else {
+                    btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
+                }
+                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
             }
-            btnContinueChooseWay?.setOnClickListener {
-                dialog?.dismiss()
-                dialog = null
-                if (isGoogleWay) {                    googlePay?.invoke()
-                } else {                    ruPay?.invoke()
-                }            }
-        }    }
+            if (choiceAd) {
+                btnGoogleChoice?.setOnClickListener {
+                    if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+                        btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+                    } else {
+                        btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
+                    }
+                    btnGoogleChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+                    btnContinueChooseWay?.alpha = 1.0F
+                    btnContinueChooseWay?.isClickable = true
+                    isGoogleWay = true
+                    isRuWay = false
+                }
+                btnRuChoice?.setOnClickListener {
+                    if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
+                        btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
+                    } else {
+                        btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
+                    }
+                    btnRuChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
+                    btnContinueChooseWay?.alpha = 1.0F
+                    btnContinueChooseWay?.isClickable = true
+                    isGoogleWay = false
+                    isRuWay = true
+                }
+                btnContinueChooseWay?.setOnClickListener {
+                    dialog?.dismiss()
+                    dialog = null
+
+                    if (currentGoogleSelect == false && !isGoogleWay && !isRuWay) {
+                        ruAd.invoke()
+                    } else
+
+                        if (currentGoogleSelect == true && !isGoogleWay && !isRuWay) {
+                            googleAd.invoke()
+                        } else if (isGoogleWay) {
+                            googleAd.invoke()
+                        }
+                    if (isRuWay) {
+                        ruAd.invoke()
+                    }
+                }
+            } else {
+                tvWay?.text = context.getString(R.string.select_pay_type)
+                tvGoogle?.text = "Google pay"
+                tvRu?.text = context.getString(R.string.yukassa)
+                btnGoogleChoice?.setOnClickListener {
+                    btnContinueChooseWay?.alpha = 1.0F
+                    btnContinueChooseWay?.isClickable = true
+                    isGoogleWay = true
+                }
+                btnRuChoice?.setOnClickListener {
+                    btnContinueChooseWay?.alpha = 1.0F
+                    btnContinueChooseWay?.isClickable = true
+                    isGoogleWay = false
+                }
+                btnContinueChooseWay?.setOnClickListener {
+                    dialog?.dismiss()
+                    dialog = null
+                    if (isGoogleWay) {
+                        googlePay?.invoke()
+                    } else {
+                        ruPay?.invoke()
+                    }
+                }
+            }
+        }
         dialog?.show()
         dialog?.setOnDismissListener {
             dialogChooseWay = false
         }
     }
-
-
-
-//    fun showDialogChooseWay(    context: Context,
-//                                googleAd: () -> Unit, ruAd: () -> Unit,    googlePay: (() -> Unit)? = null,
-//                                ruPay: (() -> Unit)? = null,    choiceAd: Boolean, currentGoogleSelect: Boolean?=false
-//    ) {
-//        if (!isDialogSuccess) {
-//        val currentTheme =  context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-//        isDialogSuccess = true
-//        var isGoogleWay = false
-//        dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-//        dialog?.setContentView(R.layout.choose_way_dialog)
-//        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-//        dialog?.setCancelable(false)
-//        val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
-//        val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
-//        val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
-//        val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
-//        val tvRu = dialog?.findViewById<TextView>(R.id.tvRu)
-//        val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
-//        if (currentGoogleSelect == true) {
-//            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-//                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
-//            } else {
-//                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
-//            }
-//            btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
-//        } else {
-//            if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-//                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
-//            } else {
-//                btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
-//            }
-//            btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
-//        }
-//        if (choiceAd) {
-//            btnGoogleChoice?.setOnClickListener {
-//            if (!isGoogleWay) {
-//
-//                if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-//                btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
-//                } else { btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background) }
-//                btnGoogleChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)                }
-//            btnContinueChooseWay?.alpha = 1.0F
-//            btnContinueChooseWay?.isClickable = true
-//            isGoogleWay = true            }
-//            btnRuChoice?.setOnClickListener {
-//                if (isGoogleWay) {
-//                if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
-//                    btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
-//                } else {
-//                    btnGoogleChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background)
-//                }
-//                    btnRuChoice.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
-//            }
-//                btnContinueChooseWay?.alpha = 1.0F
-//                btnContinueChooseWay?.isClickable = true
-//                isGoogleWay = false
-//            }
-//            btnContinueChooseWay?.setOnClickListener {                dialog?.dismiss()
-//                dialog = null
-//                if (isGoogleWay) {
-//                    googleAd.invoke()
-//                } else {
-//                    ruAd.invoke()
-//                }
-//            }        } else {
-//            tvWay?.text = context.getString(R.string.select_pay_type)
-//            tvGoogle?.text = "Google pay"
-//            tvRu?.text = context.getString(R.string.yukassa)
-//            btnGoogleChoice?.setOnClickListener {
-//                btnContinueChooseWay?.alpha = 1.0F
-//                btnContinueChooseWay?.isClickable = true
-//                isGoogleWay = true            }
-//            btnRuChoice?.setOnClickListener {                btnContinueChooseWay?.alpha = 1.0F
-//                btnContinueChooseWay?.isClickable = true
-//                isGoogleWay = false
-//            }
-//            btnContinueChooseWay?.setOnClickListener {
-//                dialog?.dismiss()
-//                dialog = null
-//                if (isGoogleWay) {
-//                    googlePay?.invoke()
-//                } else {
-//                    ruPay?.invoke()                }
-//            }        }
-//    }
-//        dialog?.show()
-//    }
-
-
-//    fun showDialogChooseWay(    context: Context,
-//                                googleAd: () -> Unit,    ruAd: () -> Unit,
-//                                googlePay: (() -> Unit)?=null,
-//                                ruPay:( () -> Unit)?=null,
-//                                choiceAd: Boolean,currentGoogleSelect:Boolean?=null)
-//
-//    {
-//        if (!isDialogSuccess) {
-//            val currentTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-//            isDialogSuccess = true
-//            var isGoogleWay = false
-//            dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-//            dialog?.setContentView(R.layout.choose_way_dialog)
-//            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-//            dialog?.setCancelable(false)
-//
-//            val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
-//            val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
-//            val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
-//            val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
-//            val tvRu = dialog?.findViewById<TextView>(R.id.tvRu)
-//            val btnRuChoice = dialog?.findViewById<LinearLayout>(R.id.btnRuChoice)
-//            if(currentGoogleSelect == true){
-//                if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
-//                    btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
-//                }else{
-//                    btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
-//                }
-//                btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
-//            }else{
-//                if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
-//                    btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
-//                }else{
-//                    btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
-//                }
-//                btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
-//            }
-//            if (choiceAd) {
-//                btnGoogleChoice?.setOnClickListener {
-//                    if(!isGoogleWay){
-//                        if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
-//                            btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
-//                        }else{
-//                            btnRuChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
-//                        }
-//                        btnGoogleChoice.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
-//                    }
-//                    btnContinueChooseWay?.alpha= 1.0F
-//                    btnContinueChooseWay?.isClickable= true
-//                    isGoogleWay = true
-//                }
-//                btnRuChoice?.setOnClickListener {
-//                    if(isGoogleWay){
-//                        if(currentTheme == Configuration.UI_MODE_NIGHT_YES){
-//                            btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_night )
-//                        }else{
-//                            btnGoogleChoice?.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background )
-//                        }
-//                        btnRuChoice.background = ContextCompat.getDrawable(context,R.drawable.button_edges_background_yellow )
-//                    }
-//                    btnContinueChooseWay?.alpha= 1.0F
-//                    btnContinueChooseWay?.isClickable= true
-//                    isGoogleWay = false
-//
-//                }
-//                btnContinueChooseWay?.setOnClickListener {
-//                    dialog?.dismiss()
-//                    dialog = null
-//                    if (isGoogleWay) {
-//                        googleAd.invoke()                }
-//                    else {
-//                        ruAd.invoke()
-//                    }
-//                }
-//            }else{
-//                tvWay?.text = context.getString(R.string.select_pay_type)
-//                tvGoogle?.text = "Google pay"
-//                tvRu?.text = context.getString(R.string.yukassa)
-//                btnGoogleChoice?.setOnClickListener {
-//                    btnContinueChooseWay?.alpha= 1.0F
-//                    btnContinueChooseWay?.isClickable= true
-//                    isGoogleWay = true            }
-//                btnRuChoice?.setOnClickListener {                btnContinueChooseWay?.alpha= 1.0F
-//                    btnContinueChooseWay?.isClickable= true
-//                    isGoogleWay = false
-//                }
-//                btnContinueChooseWay?.setOnClickListener {
-//                    dialog?.dismiss()
-//                    dialog = null
-//                    if (isGoogleWay) {
-//                        googlePay?.invoke()
-//                    }else {                    ruPay?.invoke()
-//                    }            }
-//            }    }
-//        dialog?.show()}
-
 
     fun supportDialog(context: Context,clickTikTok:(()->Unit),clickYoutube:(()->Unit),clickTelegram:(()->Unit),dialogClose:(()->Unit)){
         dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
@@ -685,7 +502,7 @@ object ShowDialogHelper {
             }
         }
 
-        dialog?.setOnDismissListener {
+        dialog.setOnDismissListener {
             isDialogStrikeShow = false
         }
 
@@ -750,7 +567,6 @@ object ShowDialogHelper {
         val tvPastDayFour = cardPastDayFour.findViewById<TextView>(R.id.tvPastDay)
         val tvPastDayFive = cardPastDayFive.findViewById<TextView>(R.id.tvPastDay)
         val tvPastDaySix = cardPastDaySix.findViewById<TextView>(R.id.tvPastDay)
-        val tvPastDaySeven = cardPastDaySeven.findViewById<TextView>(R.id.tvPastDay)
 
 
 
@@ -907,21 +723,21 @@ object ShowDialogHelper {
 
     fun showDialogReplayTest(context: Context,close: () -> Unit,mistakeTest: Int,size: Int){
         val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.test_replay_dialog_result)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.setContentView(R.layout.test_replay_dialog_result)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         if (!isDialogReplay){
             isDialogReplay = true
 
 
-            val dialogButton = dialog?.findViewById<CardView>(R.id.btnContinueReplay)
-            val success_text_result = dialog?.findViewById<TextView>(R.id.success_text_result_replay)
-            success_text_result?.text = context.getString(R.string.count_mistake).replace("6", (size - mistakeTest).toString()).replace("10", size.toString())
+            val dialogButton = dialog.findViewById<CardView>(R.id.btnContinueReplay)
+            val successTextResult = dialog.findViewById<TextView>(R.id.success_text_result_replay)
+            successTextResult?.text = context.getString(R.string.count_mistake).replace("6", (size - mistakeTest).toString()).replace("10", size.toString())
             dialogButton?.setOnClickListener {
                     dialog.dismiss()
             }
             dialog.show()
         }
-        dialog?.setOnDismissListener {
+        dialog.setOnDismissListener {
             isDialogReplay = false
             close.invoke()
         }
@@ -957,9 +773,9 @@ object ShowDialogHelper {
 
                 }
             }
-            dialog?.show()
+            dialog.show()
         }
-        dialog?.setOnDismissListener {
+        dialog.setOnDismissListener {
             isDialogSuccess = false
             close.invoke()
         }
@@ -967,36 +783,33 @@ object ShowDialogHelper {
 
     fun showDialogFailTest(context: Context, correctTest:Int,mistakeTest: Int, size: Int, dateTerm: String,isClose:(()->Unit),isTimerOut:Boolean) {
        val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.test_fail_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialog?.setCancelable(false)
+        dialog.setContentView(R.layout.test_fail_dialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.setCancelable(false)
         if(!isFailDialog){
             isFailDialog = true
-            val dialogCountMistakes = dialog?.findViewById<TextView>(R.id.tvCountMistake)
-            val dialogTerm = dialog?.findViewById<TextView>(R.id.term_fail_test)
-            val dialogClose = dialog?.findViewById<ImageButton>(R.id.buttonLockFailDialog)
+            val dialogCountMistakes = dialog.findViewById<TextView>(R.id.tvCountMistake)
+            val dialogTerm = dialog.findViewById<TextView>(R.id.term_fail_test)
+            val dialogClose = dialog.findViewById<ImageButton>(R.id.buttonLockFailDialog)
             dialogClose?.setOnClickListener {
                 dialogClose.isClickable = false
                 dialog.dismiss()
             }
-            var misstakes = 0
-            misstakes = if(isTimerOut){
+            var mistakes = 0
+            mistakes = if(isTimerOut){
                 val mistaketimer = size - (correctTest+mistakeTest)
                 mistaketimer + mistakeTest
             }else{
                 mistakeTest
             }
 
-            Log.d("misstakeDialog","size:${size} mistakeTest:${misstakes} dateTerm:${dateTerm}")
-            val test=context.getString(R.string.count_mistake).replace("6", (size - misstakes).toString())
+            Log.d("misstakeDialog","size:${size} mistakeTest:${mistakes} dateTerm:${dateTerm}")
+            val test=context.getString(R.string.count_mistake).replace("6", (size - mistakes).toString())
             dialogCountMistakes?.text = test.replace("10", size.toString())
-//        dialogCountMistakes?.text = context.getString(R.string.count_mistake).replace("6", (size - misstakes).toString())
-//        dialogCountMistakes?.text = context.getString(R.string.count_mistake).replace("10", size.toString())
-//        dialogCountMistakes?.text = context.getString(R.string.count_mistake).replace("6", (size - misstakes).toString()).replace("10", size.toString())
             dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA",dateTerm.toString())
-            dialog?.show()
+            dialog.show()
         }
-       dialog?.setOnDismissListener {
+       dialog.setOnDismissListener {
            isFailDialog = false
            isClose.invoke()
        }
@@ -1005,12 +818,11 @@ object ShowDialogHelper {
 
     fun showDialogTerm(context: Context, dateTerm: String) {
         val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.text_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val dialogTermDescription = dialog?.findViewById<TextView>(R.id.tvTermDescription)
-        dialogTermDescription?.text =
-            context.getString(R.string.term_description).replace("DATA",dateTerm.toString())
-        dialog?.show()
+        dialog.setContentView(R.layout.text_dialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        val dialogTermDescription = dialog.findViewById<TextView>(R.id.tvTermDescription)
+        dialogTermDescription?.text = context.getString(R.string.term_description).replace("DATA",dateTerm)
+        dialog.show()
 
     }
 
@@ -1113,23 +925,23 @@ object ShowDialogHelper {
 
     fun showDialogClue(context: Context, text: String,close:(()->Unit)) {
         val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.text_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.setContentView(R.layout.text_dialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         if(!isClueShow){
             isClueShow = true
-            val dialogTermDescription = dialog?.findViewById<TextView>(R.id.tvClueDescription)
-            val btnClose = dialog?.findViewById<CardView>(R.id.btnCloseClueDialog)
+            val dialogTermDescription = dialog.findViewById<TextView>(R.id.tvClueDescription)
+            val btnClose = dialog.findViewById<CardView>(R.id.btnCloseClueDialog)
             btnClose?.setOnClickListener {
                 dialog.dismiss()
-                close?.invoke()
+                close.invoke()
             }
             dialogTermDescription?.text = text
-            dialog?.show()
+            dialog.show()
         }
 
-        dialog?.setOnDismissListener {
+        dialog.setOnDismissListener {
             isClueShow = false
-            close?.invoke()
+            close.invoke()
         }
     }
 
@@ -1176,6 +988,7 @@ object ShowDialogHelper {
 
     }
 
+    @SuppressLint("SetTextI18n")
     fun showDialogBuy(
         context: Context,
         priceRub:Int,
@@ -1201,7 +1014,7 @@ object ShowDialogHelper {
             if (priceAndropoint==null) {
                 cardAndropointPossibly?.visibility = View.GONE
             }
-            tvPriceToRub?.text = priceRub.toString()+"$"
+            tvPriceToRub?.text = "$priceRub$"
             btnAndroBuy?.text = priceAndropoint.toString()
             btnAndroBuy?.setOnClickListener {
                 pressAndro.invoke()
@@ -1213,7 +1026,7 @@ object ShowDialogHelper {
 
         dialog?.setOnDismissListener {
             isShowDialogBuy = false
-            dialogDissMiss?.invoke()
+            dialogDissMiss.invoke()
         }
 
     }
@@ -1230,14 +1043,14 @@ object ShowDialogHelper {
 
         val dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         var date = "02/02/2020"
-        dialog?.setContentView(R.layout.forget_date_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val tvQuestionDialogDate = dialog?.findViewById<TextView>(R.id.tvQuestionDialogDate)
+        dialog.setContentView(R.layout.forget_date_dialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        val tvQuestionDialogDate = dialog.findViewById<TextView>(R.id.tvQuestionDialogDate)
         val tvSelectedDateForgetDialog =
-            dialog?.findViewById<TextView>(R.id.tvSelectedDateForgetDialog)
+            dialog.findViewById<TextView>(R.id.tvSelectedDateForgetDialog)
 
-        val btnSelectDateForgetDialog = dialog?.findViewById<CardView>(R.id.btnSelectDateForgetDialog)
-        val btnReadyForgetDialog = dialog?.findViewById<CardView>(R.id.btnReadyForgetDialog)
+        val btnSelectDateForgetDialog = dialog.findViewById<CardView>(R.id.btnSelectDateForgetDialog)
+        val btnReadyForgetDialog = dialog.findViewById<CardView>(R.id.btnReadyForgetDialog)
         tvQuestionDialogDate?.text = textQuestion
         btnReadyForgetDialog?.setOnClickListener {
             dialog.dismiss()
@@ -1268,7 +1081,6 @@ object ShowDialogHelper {
     ) {
 
         dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-//        val binding = SelectDateDialogBinding.inflate(layoutInflater)
         var date="02/02/2020"
         dialog?.setContentView(R.layout.select_date_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -1288,31 +1100,24 @@ object ShowDialogHelper {
         btnReadyDialog?.setOnClickListener {
 
 
-            if (edClueDialog?.text.toString().trim()!=""&& date!="02/02/2020") {
-                val textTemp=edClueDialog?.text.toString().trimEnd()+"!!!TEMPWORD!!!"+date
+            if (edClueDialog?.text.toString().trim() != "" && date != "02/02/2020") {
+                val textTemp = edClueDialog?.text.toString().trimEnd() + "!!!TEMPWORD!!!" + date
                 dialog?.dismiss()
                 dialog = null
                 isSelectDateAndClue.invoke(textTemp)
-            }else if(edClueDialog?.text.toString().trim()==""){
+            } else if (edClueDialog?.text.toString().trim() == "") {
                 if (edClueDialog != null) {
-                    ErrorHelper.showEmailErrorFeedback(
-                        context,
-                        edClueDialog,
-                        errorDrawable =R.drawable.ic_clue_error,
-                        oldDrawable=R.drawable.ic_clue_gray
-                    )
+                    ErrorHelper.showEmailErrorFeedback(context, edClueDialog, errorDrawable = R.drawable.ic_clue_error, oldDrawable = R.drawable.ic_clue_gray)
                 }
                 tvErrorClueDateDialog?.visibility = View.VISIBLE
-                tvErrorClueDateDialog?.postDelayed({tvErrorClueDateDialog?.visibility = View.GONE }, 3000)
-            }else if( date=="02/02/2020"){
-                Toast.makeText(context,context.getString(R.string.choose_another_date), Toast.LENGTH_SHORT).show()
+                tvErrorClueDateDialog?.postDelayed({ tvErrorClueDateDialog.visibility = View.GONE }, 3000)
+            } else if (date == "02/02/2020") {
+                Toast.makeText(context, context.getString(R.string.choose_another_date), Toast.LENGTH_SHORT).show()
             }
         }
         btnSelectDateDialog?.setOnClickListener {
             if (tvSelectedDateDialog != null) {
-                datePicker(requireActivity,viewLifecycleOwner,tvSelectedDateDialog){
-                    date=it
-                }
+                datePicker(requireActivity,viewLifecycleOwner,tvSelectedDateDialog){ date=it }
             }
         }
 
@@ -1350,11 +1155,11 @@ object ShowDialogHelper {
         selectedKeyword: (String) -> Unit
     ) {
         val dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        dialog?.setContentView(R.layout.forget_keyword_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        val tvQuestionKeywordForgetDialog = dialog?.findViewById<TextView>(R.id.tvQuestionKeywordForgetDialog)
-        val edKeywordForgetDialog = dialog?.findViewById<EditText>(R.id.edKeywordForgetDialog)
-        val btnReadyKeywordForgetDialog = dialog?.findViewById<CardView>(R.id.btnReadyKeywordForgetDialog)
+        dialog.setContentView(R.layout.forget_keyword_dialog)
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        val tvQuestionKeywordForgetDialog = dialog.findViewById<TextView>(R.id.tvQuestionKeywordForgetDialog)
+        val edKeywordForgetDialog = dialog.findViewById<EditText>(R.id.edKeywordForgetDialog)
+        val btnReadyKeywordForgetDialog = dialog.findViewById<CardView>(R.id.btnReadyKeywordForgetDialog)
         val currentTheme = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         val textColor: Int = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
             ContextCompat.getColor(context, R.color.white)
@@ -1411,7 +1216,7 @@ object ShowDialogHelper {
                     )
                 }
                 tvErrorKeyword?.visibility = View.VISIBLE
-                tvErrorKeyword?.postDelayed({tvErrorKeyword?.visibility = View.GONE }, 3000)
+                tvErrorKeyword?.postDelayed({tvErrorKeyword.visibility = View.GONE }, 3000)
             }
             if (edClueDialogKeyword?.text.toString().trim()==""){
                 if (edClueDialogKeyword != null) {
@@ -1423,7 +1228,7 @@ object ShowDialogHelper {
                     )
                 }
                 tvErrorClueKeywordDialog?.visibility = View.VISIBLE
-                tvErrorClueKeywordDialog?.postDelayed({tvErrorClueKeywordDialog?.visibility = View.GONE }, 3000)
+                tvErrorClueKeywordDialog?.postDelayed({tvErrorClueKeywordDialog.visibility = View.GONE }, 3000)
             }
         }
 

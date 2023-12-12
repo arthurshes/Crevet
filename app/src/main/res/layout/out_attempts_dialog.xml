@@ -47,16 +47,15 @@
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_marginTop="16dp"
-                   app:lottie_rawRes="@raw/heart_animationl"
-                    app:lottie_autoPlay="true"
-                    app:lottie_loop="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView18" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView18"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/heart_animationl" />
 
 
-
-                    />
+                />
 
                 <ProgressBar
                     android:id="@+id/progressBarApttem"
@@ -110,6 +109,7 @@
                             android:textColor="#FFFFFF"
                             android:textSize="16dp"
                             android:textStyle="bold" />
+
                         <ImageView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
@@ -198,7 +198,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/btnWatchAdBSfef"
+                    android:id="@+id/btnHeartThird"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -235,7 +235,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/btnContinueHeart"
+                    android:id="@+id/btnBuyHeart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -256,24 +256,44 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-                        <TextView    android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"    android:layout_gravity="center"
-                            android:gravity="center|center_horizontal|center_vertical"    android:padding="10dp"
-                            android:text="@string/continue__"    android:textColor="#FFFFFF"
-                            android:textSize="16dp"    android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvCountAndopoint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:padding="10dp"
+                            android:text="Продолжить -6"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
                         <ImageView
-                            android:layout_width="20dp"    android:layout_height="20dp"
-                            android:layout_gravity="center"    android:layout_marginEnd="5dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="5dp"
                             android:layout_weight="1"
-                            android:src="@drawable/andropoint" /><TextView
-                        android:id="@+id/tvCountHeart"    android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"    android:layout_gravity="center"
-                        android:gravity="center|center_horizontal|center_vertical"    android:padding="10dp"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16dp"    android:textStyle="bold" />
-                        <ImageView    android:layout_width="20dp"
-                            android:layout_height="20dp"    android:layout_gravity="center"
-                            android:layout_marginEnd="5dp"    android:layout_weight="1"
+                            android:src="@drawable/andropoint" />
+
+                        <TextView
+                            android:id="@+id/tvCountHeart"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="|  +1"
+                            android:gravity="center|center_horizontal|center_vertical"
+                            android:padding="10dp"
+                            android:textColor="#FFFFFF"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1"
                             android:src="@drawable/heart" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

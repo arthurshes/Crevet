@@ -39,14 +39,13 @@ class BottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       billingManager?.premiumBuyWithTerm = {subscribeTerm->
-           buySubscribeTreatmentResult(subscribeTerm)
-       }
+        billingManager?.premiumBuyWithTerm = { subscribeTerm ->
+            buySubscribeTreatmentResult(subscribeTerm)
+        }
         val currentTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-
-            binding?.tvOneMonthMonth?.setTextColor(requireContext().getColor(R.color.white))
-            binding?.tvOneMonthPeriod?.setTextColor(requireContext().getColor(R.color.white))
-            binding?.tvOnePrice?.setTextColor(requireContext().getColor(R.color.white))
+        binding?.tvOneMonthMonth?.setTextColor(requireContext().getColor(R.color.white))
+        binding?.tvOneMonthPeriod?.setTextColor(requireContext().getColor(R.color.white))
+        binding?.tvOnePrice?.setTextColor(requireContext().getColor(R.color.white))
 
 
         binding?.oneMonthSubscription?.let { binding?.tvOneMonthMonth?.let { it1 ->
