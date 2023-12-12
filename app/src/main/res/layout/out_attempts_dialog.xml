@@ -66,7 +66,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="22dp"
                     android:max="100"
-                    android:progressDrawable="@drawable/progress_bar_custom"
+                    android:progressDrawable="@drawable/progress_custom_attempts"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -132,6 +132,7 @@
                     app:layout_constraintTop_toBottomOf="@id/btnWatchAdHeart">
 
                     <LinearLayout
+                        android:id="@+id/btnHeartFirstLinear"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/gradient_heart"
@@ -171,6 +172,7 @@
                     app:layout_constraintTop_toBottomOf="@id/btnWatchAdHeart">
 
                     <LinearLayout
+                        android:id="@+id/btnHeartSecondLinear"
                         style="@style/subscription"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -208,6 +210,7 @@
                     app:layout_constraintTop_toTopOf="@+id/btnHeartSecond">
 
                     <LinearLayout
+                        android:id="@+id/btnHeartThirdLinear"
                         style="@style/subscription"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

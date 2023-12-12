@@ -39,6 +39,7 @@ import workwork.test.andropediagits.domain.googbilling.PayState
 import workwork.test.andropediagits.presenter.reset.DatePickerFragment
 
 object ShowDialogHelper {
+    private var progressAnimator:ValueAnimator?=null
     private var dialog: Dialog? = null
     private var isDialogStrikeShow = false
     private var isDialogSuccess = false
@@ -52,100 +53,122 @@ object ShowDialogHelper {
     private var isDeleteDialog = false
     private const val totalTime = 20000
     private var isDialogLoad = false
+    private var isAptempDialog = false
     private val colorTransitionTime1 = 5000
     private const val colorTransitionTime2 = 5000
     private const val color3 = Color.RED
     private const val color2 = Color.YELLOW
     private const val color1 = Color.GREEN
 
-
-    fun startProgressBarAnimation(
+    fun showDialogApptempHeartVictorine(
         context: Context,
         resources: Resources,
         buyHeartCount: (Int) -> Unit,
         andropointCount: (Int) -> Unit,
         adWatch: () -> Unit,
-        isClose: () -> Unit
+        isClose: () -> Unit,andropointUser:Int
     ) {
-        dialog = Dialog(context)
-        dialog?.setContentView(R.layout.out_attempts_dialog)
-        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        dialog?.setCancelable(false)
-        var currentHeartCount = 1
-        val currentTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        val progressBar = dialog?.findViewById<ProgressBar>(R.id.progressBarApttem)
-        val btnWatchAdHeart = dialog?.findViewById<CardView>(R.id.btnWatchAdHeart)
-        val btnHeartFirst = dialog?.findViewById<CardView>(R.id.btnHeartFirst)
-        val btnHeartSecond = dialog?.findViewById<CardView>(R.id.btnHeartSecond)
-        val btnHeartThird = dialog?.findViewById<CardView>(R.id.btnHeartThird)
-        val btnBuyHeart = dialog?.findViewById<CardView>(R.id.btnBuyHeart)
-        val tvCountAndopoint = dialog?.findViewById<TextView>(R.id.tvCountAndopoint)
-        val tvCountHeart = dialog?.findViewById<TextView>(R.id.tvCountHeart)
-        btnHeartFirst?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
-        val themeColorRes = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) R.color.subscriptionNight else R.color.subscriptionLight
-        btnHeartFirst?.setOnClickListener {
-            btnHeartFirst.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
-            btnHeartThird?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-            btnHeartSecond?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-            tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-3")
-            tvCountHeart?.text ="|  +1"
-            currentHeartCount = 1
-        }
-
-
-        btnHeartSecond?.setOnClickListener {
-            btnHeartSecond.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
-            btnHeartThird?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-            btnHeartFirst?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-            tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-5")
-            tvCountHeart?.text ="|  +2"
-            currentHeartCount = 2
-        }
-
-        btnHeartThird?.setOnClickListener {
-            btnHeartThird.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
-            btnHeartSecond?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-            tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-7")
-            btnHeartFirst?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-            tvCountHeart?.text ="|  +3"
-            currentHeartCount = 3
-        }
-
-        btnWatchAdHeart?.setOnClickListener {
-            dialog?.dismiss()
-            dialog = null
-            adWatch.invoke()
-        }
-
-        btnBuyHeart?.setOnClickListener {
-            dialog?.dismiss()
-            dialog = null
-            buyHeartCount.invoke(currentHeartCount)
-            if (currentHeartCount == 1) {
-                andropointCount.invoke(3)
+        if(!isAptempDialog){
+            isAptempDialog = true
+            dialog = Dialog(context)
+            dialog?.setContentView(R.layout.out_attempts_dialog)
+            dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            dialog?.setCancelable(false)
+            var currentHeartCount = 1
+            val currentTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+            val progressBar = dialog?.findViewById<ProgressBar>(R.id.progressBarApttem)
+            val btnWatchAdHeart = dialog?.findViewById<CardView>(R.id.btnWatchAdHeart)
+            val btnHeartFirst = dialog?.findViewById<CardView>(R.id.btnHeartFirst)
+            val btnHeartSecond = dialog?.findViewById<CardView>(R.id.btnHeartSecond)
+            val btnHeartThird = dialog?.findViewById<CardView>(R.id.btnHeartThird)
+            val linearHeartOne = dialog?.findViewById<LinearLayout>(R.id.btnHeartFirstLinear)
+            val linearHeartTwo = dialog?.findViewById<LinearLayout>(R.id.btnHeartSecondLinear)
+            val linearHeartThree = dialog?.findViewById<LinearLayout>(R.id.btnHeartThirdLinear)
+            val btnBuyHeart = dialog?.findViewById<CardView>(R.id.btnBuyHeart)
+            val tvCountAndopoint = dialog?.findViewById<TextView>(R.id.tvCountAndopoint)
+            val tvCountHeart = dialog?.findViewById<TextView>(R.id.tvCountHeart)
+            linearHeartOne?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
+            val themeColorRes = if (currentTheme == Configuration.UI_MODE_NIGHT_YES) R.color.subscriptionNight else R.color.subscriptionLight
+            btnHeartFirst?.setOnClickListener {
+                linearHeartOne?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
+                linearHeartTwo?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+                linearHeartThree?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+                tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-3")
+                tvCountHeart?.text ="|  +1"
+                currentHeartCount = 1
             }
-            if (currentHeartCount == 2) {
-                andropointCount.invoke(5)
+
+
+            btnHeartSecond?.setOnClickListener {
+                linearHeartTwo?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
+                linearHeartThree?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+                linearHeartOne?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+                tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-5")
+                tvCountHeart?.text ="|  +2"
+                currentHeartCount = 2
             }
-            if (currentHeartCount == 3) {
-                andropointCount.invoke(7)
+
+            btnHeartThird?.setOnClickListener {
+                linearHeartThree?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
+                linearHeartOne?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+                tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-7")
+                linearHeartTwo?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+                tvCountHeart?.text ="|  +3"
+                currentHeartCount = 3
             }
+
+            btnWatchAdHeart?.setOnClickListener {
+                progressAnimator?.cancel()
+                dialog?.dismiss()
+                dialog = null
+                adWatch.invoke()
+            }
+
+            btnBuyHeart?.setOnClickListener {
+
+                buyHeartCount.invoke(currentHeartCount)
+                if (currentHeartCount == 1) {
+                    if(andropointUser>3){
+                        progressAnimator?.cancel()
+                        dialog?.dismiss()
+                        dialog = null
+                    }
+                    andropointCount.invoke(3)
+                }
+                if (currentHeartCount == 2) {
+                    if(andropointUser>5){
+                        progressAnimator?.cancel()
+                        dialog?.dismiss()
+                        dialog = null
+                    }
+                    andropointCount.invoke(5)
+                }
+                if (currentHeartCount == 3) {
+                    if(andropointUser>7){
+                        progressAnimator?.cancel()
+                        dialog?.dismiss()
+                        dialog = null
+                    }
+                    andropointCount.invoke(7)
+                }
+            }
+            startProgressBar(isClose,progressBar)
         }
-        startProgressBar(isClose,progressBar)
+
     }
     private fun startProgressBar(isClose: () -> Unit, progressBar: ProgressBar?) {
         val progressDrawable = progressBar?.progressDrawable as LayerDrawable
         val progressLayer =
             progressDrawable.findDrawableByLayerId(android.R.id.progress) as ClipDrawable
 
-        val progressAnimator = ValueAnimator.ofInt(progressBar.max, 0)
-        progressAnimator.duration = totalTime.toLong()
+       progressAnimator = ValueAnimator.ofInt(progressBar.max, 0)
+        progressAnimator?.duration = totalTime.toLong()
         val colorAnimator = ValueAnimator.ofObject(ArgbEvaluator(), color1, color2, color3)
         colorAnimator.duration =
             colorTransitionTime1.toLong() + colorTransitionTime2.toLong() + 7000
         colorAnimator.repeatCount = 2
         colorAnimator.repeatMode = ValueAnimator.REVERSE
-        progressAnimator.addUpdateListener { animator ->
+        progressAnimator?.addUpdateListener { animator ->
             val value = animator.animatedValue as Int
             progressBar.progress = value
         }
@@ -162,22 +185,24 @@ object ShowDialogHelper {
                 progressLayer.drawable?.clearColorFilter()
             }
         })
-        progressAnimator.start()
+        progressAnimator?.start()
         colorAnimator.start()
         dialog?.show()
 
 
-        progressAnimator.addUpdateListener { animator ->
+        progressAnimator?.addUpdateListener { animator ->
             val value = animator.animatedValue as Int
             progressBar.progress = value
 
             if (value == 0) {
+                Log.d("ijy4iotjbioy6jojby","okvoptkbpoykokokbyo")
                 dialog?.dismiss()
                 dialog = null
                 isClose.invoke()
             }
         }
     }
+
 
 
 
@@ -191,11 +216,13 @@ object ShowDialogHelper {
         }
         dialog?.setOnDismissListener {
             isDialogLoad = false
+            isClose.invoke()
         }
     }
 
 
-    fun showDialogDeleteDataAcc(context: Context,delete:(()->Unit),close: (() -> Unit)){
+    @SuppressLint("SuspiciousIndentation")
+    fun showDialogDeleteDataAcc(context: Context, delete:(()->Unit), close: (() -> Unit)){
         dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog?.setContentView(R.layout.delete_account_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -721,7 +748,7 @@ object ShowDialogHelper {
 
     }
 
-    fun showDialogReplayTest(context: Context,close: () -> Unit,mistakeTest: Int,size: Int){
+    fun showDialogReplayTest(context: Context,close: () -> Unit,correctTest: Int,size: Int){
         val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog.setContentView(R.layout.test_replay_dialog_result)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -731,7 +758,13 @@ object ShowDialogHelper {
 
             val dialogButton = dialog.findViewById<CardView>(R.id.btnContinueReplay)
             val successTextResult = dialog.findViewById<TextView>(R.id.success_text_result_replay)
-            successTextResult?.text = context.getString(R.string.count_mistake).replace("6", (size - mistakeTest).toString()).replace("10", size.toString())
+            successTextResult?.text = context.getString(R.string.count_mistake).replace("6", (correctTest).toString()).replace("10", size.toString())
+//            if(heartCount==0){
+//                successTextResult?.text = context.getString(R.string.count_mistake).replace("6", (mistakeTest).toString()).replace("10", size.toString())
+//            }else {
+//                successTextResult?.text = context.getString(R.string.count_mistake)
+//                    .replace("6", (size - mistakeTest).toString()).replace("10", size.toString())
+//            }
             dialogButton?.setOnClickListener {
                     dialog.dismiss()
             }
@@ -743,7 +776,7 @@ object ShowDialogHelper {
         }
     }
 
-    fun showDialogSuccessTest(context: Context, close: () -> Unit,mistakeTest: Int, size: Int) {
+    fun showDialogSuccessTest(context: Context, close: () -> Unit,correctTest: Int, size: Int) {
         val dialog = Dialog(context,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         dialog.setContentView(R.layout.test_success_dialog)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -752,7 +785,7 @@ object ShowDialogHelper {
             val dialogButton = dialog.findViewById<CardView>(R.id.btnContinue)
             val success_text_result = dialog.findViewById<TextView>(R.id.success_text_result)
             val addTextAndropoints = dialog.findViewById<TextView>(R.id.textViewAddAndropointsSuccess)
-            success_text_result?.text = context.getString(R.string.count_mistake).replace("6", (size - mistakeTest).toString()).replace("10", size.toString())
+            success_text_result?.text = context.getString(R.string.count_mistake).replace("6", (correctTest).toString()).replace("10", size.toString())
             dialogButton?.isClickable = false
             var buttonEnable = false
             var buttonClick = false
@@ -795,18 +828,27 @@ object ShowDialogHelper {
                 dialogClose.isClickable = false
                 dialog.dismiss()
             }
-            var mistakes = 0
-            mistakes = if(isTimerOut){
-                val mistaketimer = size - (correctTest+mistakeTest)
-                mistaketimer + mistakeTest
+            if(isTimerOut){
+                var mistakes = 0
+                mistakes = if(isTimerOut){
+                    val mistaketimer = size - (correctTest+mistakeTest)
+                    mistaketimer + mistakeTest
+                }else{
+                    mistakeTest
+                }
+                val test=context.getString(R.string.count_mistake).replace("6", (size - mistakes).toString())
+                dialogCountMistakes?.text = test.replace("10", size.toString())
+                dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA",dateTerm.toString())
             }else{
-                mistakeTest
+                val test=context.getString(R.string.count_mistake).replace("6", (correctTest).toString())
+                dialogCountMistakes?.text = test.replace("10", size.toString())
+                dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA",dateTerm.toString())
             }
 
-            Log.d("misstakeDialog","size:${size} mistakeTest:${mistakes} dateTerm:${dateTerm}")
-            val test=context.getString(R.string.count_mistake).replace("6", (size - mistakes).toString())
-            dialogCountMistakes?.text = test.replace("10", size.toString())
-            dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA",dateTerm.toString())
+
+
+
+
             dialog.show()
         }
        dialog.setOnDismissListener {

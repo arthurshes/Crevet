@@ -2,6 +2,7 @@ package workwork.test.andropediagits.presenter.lesson.victorine
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
@@ -10,6 +11,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
@@ -31,6 +35,7 @@ import workwork.test.andropediagits.core.utils.CustomTimerUtil
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntity
 import workwork.test.andropediagits.databinding.FragmentVictorineBinding
+import workwork.test.andropediagits.domain.useCases.userLogic.state.BuyForAndropointStates
 import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeState
 import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
 import workwork.test.andropediagits.presenter.lesson.victorine.customview.AnimatedCircleView
@@ -39,6 +44,7 @@ import workwork.test.andropediagits.presenter.lesson.victorine.viewmodel.Victori
 
 @AndroidEntryPoint
 class VictorineFragment : Fragment() {
+    private var heartAndropointMinus = false
     private var heartCount = DEFAULT_HEART_COUNT
 private var backPressedOnce = false
     private var IsFeedback = false
@@ -90,18 +96,30 @@ private var backPressedOnce = false
 
 
     private fun setUpHearts(){
+        binding?.dimViewVictorine?.visibility = View.VISIBLE
+        ShowDialogHelper.loadDialog(requireContext(),{
+            binding?.dimViewVictorine?.visibility = View.GONE
+        })
+        var heartCountUseCaesvar = 0
         viewModel.getHeartsUser({ heartCountUseCaes->
-            heartCount = heartCount.plus(heartCountUseCaes) ?: 0
+            heartCountUseCaesvar = heartCountUseCaes
         },{isInfinity->
             isInfinityHearts = isInfinity
         },{state->
             when(state){
                 ErrorEnum.SUCCESS->{
+
+                    heartCount = heartCount?.plus(heartCountUseCaesvar) ?: 2
                     startTimerFun()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                        animateNumber(binding?.tvCountHeart,requireContext(),"x ${heartCount}")
+                    }
                 }
 
                 ErrorEnum.NOTNETWORK -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
                             setUpHearts()
@@ -114,6 +132,7 @@ private var backPressedOnce = false
 
                 ErrorEnum.ERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             setUpHearts()
@@ -127,6 +146,7 @@ private var backPressedOnce = false
 
                 ErrorEnum.NULLPOINTERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             setUpHearts()
@@ -140,6 +160,7 @@ private var backPressedOnce = false
 
                 ErrorEnum.TIMEOUTERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogTimeOutError(requireContext(),{
                             setUpHearts()
@@ -153,6 +174,7 @@ private var backPressedOnce = false
 
                 ErrorEnum.UNKNOWNERROR -> {
                     requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
                         binding?.dimViewVictorine?.visibility = View.VISIBLE
                         ShowDialogHelper.showDialogUnknownError(requireContext(),{
                             setUpHearts()
@@ -165,10 +187,14 @@ private var backPressedOnce = false
                 }
 
                 ErrorEnum.OFFLINEMODE->{
-                    startTimerFun()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
                 }
                 ErrorEnum.OFFLINETHEMEBUY->{
-                    startTimerFun()
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.closeDialogLoadData()
+                    }
                 }
             }
 
@@ -182,7 +208,7 @@ private var backPressedOnce = false
             override fun handleOnBackPressed() {
 
             }}
-        binding?.tvCountHeart?.text = "x ${heartCount}"
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         initCircleView(binding!!)
         val nightDrawle = ContextCompat.getDrawable(requireContext(), R.drawable.progress_bar_custom_night)
@@ -552,9 +578,294 @@ private var backPressedOnce = false
                 ErrorEnum.SUCCESS -> {
                       if(isEnd&&heartCount<1&&!isUseNextTest){
                           /////выводим повотрить попытку
-                          requireActivity().runOnUiThread {
-                              ShowDialogHelper.startProgressBarAnimation(requireContext(),resources,{},{},{},{})
+                          CustomTimerUtil.stopTimer()
+                          var buyHeartCounts = 0
+                          var buyAndroStates:BuyForAndropointStates?=null
+                          viewModel.getAndropoint { userAndropointCount ->
+                              requireActivity().runOnUiThread {
+                                  ShowDialogHelper.showDialogApptempHeartVictorine(
+                                      requireContext(),
+                                      resources,
+                                      { buyHeartCount ->
+                                          buyHeartCounts = buyHeartCount
+                                      },
+                                      { andropointCount ->
+
+                                          viewModel.buyAndropointHeart({ state ->
+                                              when (state) {
+                                                  ErrorEnum.NOTNETWORK -> {
+                                                      requireActivity().runOnUiThread {
+                                                          binding?.dimViewVictorine?.visibility =
+                                                              View.VISIBLE
+                                                          ShowDialogHelper.showDialogNotNetworkError(
+                                                              requireContext(),
+                                                              {
+                                                                  minusHeart()
+                                                              }) {
+                                                              binding?.dimViewVictorine?.visibility =
+                                                                  View.GONE
+                                                          }
+                                                      }
+
+                                                  }
+
+                                                  ErrorEnum.ERROR -> {
+                                                      requireActivity().runOnUiThread {
+                                                          binding?.dimViewVictorine?.visibility =
+                                                              View.VISIBLE
+                                                          ShowDialogHelper.showDialogUnknownError(
+                                                              requireContext(),
+                                                              {
+                                                                  minusHeart()
+                                                              }) {
+
+                                                              binding?.dimViewVictorine?.visibility =
+                                                                  View.GONE
+                                                          }
+                                                      }
+
+                                                  }
+
+                                                  ErrorEnum.SUCCESS -> {
+                                                      when (buyAndroStates) {
+                                                          BuyForAndropointStates.YESMONEY -> {
+                                                              isUseNextTest = true
+                                                              viewModel.buyHeart({ heartState ->
+                                                                  when (heartState) {
+                                                                      ErrorEnum.NOTNETWORK -> {
+                                                                          requireActivity().runOnUiThread {
+                                                                              binding?.dimViewVictorine?.visibility =
+                                                                                  View.VISIBLE
+                                                                              ShowDialogHelper.showDialogNotNetworkError(
+                                                                                  requireContext(),
+                                                                                  {
+                                                                                      minusHeart()
+                                                                                  }) {
+                                                                                  binding?.dimViewVictorine?.visibility =
+                                                                                      View.GONE
+                                                                              }
+                                                                          }
+
+                                                                      }
+
+                                                                      ErrorEnum.ERROR -> {
+                                                                          requireActivity().runOnUiThread {
+                                                                              binding?.dimViewVictorine?.visibility =
+                                                                                  View.VISIBLE
+                                                                              ShowDialogHelper.showDialogUnknownError(
+                                                                                  requireContext(),
+                                                                                  {
+                                                                                      minusHeart()
+                                                                                  }) {
+
+                                                                                  binding?.dimViewVictorine?.visibility =
+                                                                                      View.GONE
+                                                                              }
+                                                                          }
+
+                                                                      }
+
+                                                                      ErrorEnum.SUCCESS -> {
+                                                                          heartCount =
+                                                                              buyHeartCounts
+                                                                          requireActivity().runOnUiThread {
+                                                                              animateNumber(
+                                                                                  binding?.tvCountHeart,
+                                                                                  requireContext(),
+                                                                                  "x ${heartCount}"
+                                                                              )
+                                                                          }
+
+                                                                          CustomTimerUtil.startTimer(
+                                                                              victorineSec
+                                                                          ) {
+                                                                              Log.d(
+                                                                                  "checkTestTreatmentResultUse",
+                                                                                  "MinusHEartshowApttempTimer"
+                                                                              )
+                                                                              checkTestTreatmentResult(
+                                                                                  victorinesQuestions
+                                                                                      ?: emptyList(),
+                                                                                  true
+                                                                              )
+                                                                          }
+                                                                      }
+
+                                                                      ErrorEnum.UNKNOWNERROR -> {
+                                                                          requireActivity().runOnUiThread {
+                                                                              binding?.dimViewVictorine?.visibility =
+                                                                                  View.VISIBLE
+                                                                              ShowDialogHelper.showDialogUnknownError(
+                                                                                  requireContext(),
+                                                                                  {
+                                                                                      minusHeart()
+                                                                                  }) {
+
+                                                                                  binding?.dimViewVictorine?.visibility =
+                                                                                      View.GONE
+                                                                              }
+                                                                          }
+
+                                                                      }
+
+                                                                      ErrorEnum.TIMEOUTERROR -> {
+                                                                          requireActivity().runOnUiThread {
+                                                                              binding?.dimViewVictorine?.visibility =
+                                                                                  View.VISIBLE
+                                                                              ShowDialogHelper.showDialogTimeOutError(
+                                                                                  requireContext(),
+                                                                                  {
+                                                                                      minusHeart()
+                                                                                  }) {
+
+                                                                                  binding?.dimViewVictorine?.visibility =
+                                                                                      View.GONE
+                                                                              }
+                                                                          }
+
+                                                                      }
+
+                                                                      ErrorEnum.NULLPOINTERROR -> {
+                                                                          requireActivity().runOnUiThread {
+                                                                              binding?.dimViewVictorine?.visibility =
+                                                                                  View.VISIBLE
+                                                                              ShowDialogHelper.showDialogUnknownError(
+                                                                                  requireContext(),
+                                                                                  {
+                                                                                      minusHeart()
+                                                                                  }) {
+
+                                                                                  binding?.dimViewVictorine?.visibility =
+                                                                                      View.GONE
+                                                                              }
+                                                                          }
+
+                                                                      }
+
+                                                                      ErrorEnum.OFFLINEMODE -> {
+
+                                                                      }
+
+                                                                      ErrorEnum.OFFLINETHEMEBUY -> {
+
+                                                                      }
+                                                                  }
+                                                              }, buyHeartCounts)
+                                                          }
+
+                                                          BuyForAndropointStates.NOMONEY -> {
+                                                              requireActivity().runOnUiThread {
+                                                                  Toast.makeText(
+                                                                      requireContext(),
+                                                                      R.string.node_money_andropoint,
+                                                                      Toast.LENGTH_SHORT
+                                                                  ).show()
+                                                              }
+                                                          }
+
+                                                          null -> {
+                                                              requireActivity().runOnUiThread {
+                                                                  Toast.makeText(
+                                                                      requireContext(),
+                                                                      R.string.node_money_andropoint,
+                                                                      Toast.LENGTH_SHORT
+                                                                  ).show()
+                                                              }
+                                                          }
+                                                      }
+                                                  }
+
+                                                  ErrorEnum.UNKNOWNERROR -> {
+                                                      requireActivity().runOnUiThread {
+                                                          binding?.dimViewVictorine?.visibility =
+                                                              View.VISIBLE
+                                                          ShowDialogHelper.showDialogUnknownError(
+                                                              requireContext(),
+                                                              {
+                                                                  minusHeart()
+                                                              }) {
+
+                                                              binding?.dimViewVictorine?.visibility =
+                                                                  View.GONE
+                                                          }
+                                                      }
+
+                                                  }
+
+                                                  ErrorEnum.TIMEOUTERROR -> {
+                                                      requireActivity().runOnUiThread {
+                                                          binding?.dimViewVictorine?.visibility =
+                                                              View.VISIBLE
+                                                          ShowDialogHelper.showDialogTimeOutError(
+                                                              requireContext(),
+                                                              {
+                                                                  minusHeart()
+                                                              }) {
+
+                                                              binding?.dimViewVictorine?.visibility =
+                                                                  View.GONE
+                                                          }
+                                                      }
+
+                                                  }
+
+                                                  ErrorEnum.NULLPOINTERROR -> {
+                                                      requireActivity().runOnUiThread {
+                                                          binding?.dimViewVictorine?.visibility =
+                                                              View.VISIBLE
+                                                          ShowDialogHelper.showDialogUnknownError(
+                                                              requireContext(),
+                                                              {
+                                                                  minusHeart()
+                                                              }) {
+
+                                                              binding?.dimViewVictorine?.visibility =
+                                                                  View.GONE
+                                                          }
+                                                      }
+
+                                                  }
+
+                                                  ErrorEnum.OFFLINEMODE -> {
+
+                                                  }
+
+                                                  ErrorEnum.OFFLINETHEMEBUY -> {
+
+                                                  }
+                                              }
+                                          }, { buyState ->
+                                              buyAndroStates = buyState
+                                          }, andropointCount)
+
+
+                                      },
+                                      {
+                                          isUseNextTest = true
+                                          CustomTimerUtil.startTimer(victorineSec) {
+                                              Log.d(
+                                                  "checkTestTreatmentResultUse",
+                                                  "MinusHEartshowApttempTimer"
+                                              )
+                                              checkTestTreatmentResult(
+                                                  victorinesQuestions ?: emptyList(), true
+                                              )
+                                          }
+                                      },
+                                      {
+                                          Log.d(
+                                              "checkTestTreatmentResultUse",
+                                              "MinusHEartshowApttempClose"
+                                          )
+                                          checkTestTreatmentResult(
+                                              victorinesQuestions ?: emptyList(), false
+                                          )
+                                      },
+                                      andropointUser = userAndropointCount
+                                  )
+                              }
                           }
+
 
                       }
                 }
@@ -635,13 +946,30 @@ private var backPressedOnce = false
         })
     }
 
+    private fun animateNumber(textView: TextView?, context: Context, newValue:String) {
+        // Анимация: уменьшаем alpha при нажатии на кнопку
+        val fadeIn: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
+        fadeIn.duration = 200
+        val fadeOut: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
+        fadeOut.duration = 200
+        fadeOut.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                textView?.text = newValue          //  textView?.setTextColor(ContextCompat.getColor(context,R.color.white))
+                textView?.startAnimation(fadeIn)        }
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+        textView?.startAnimation(fadeOut)
+    }
+
+
     private fun decrementAndAnimate() {
 //        val currentValue = binding?.tvCountHeart?.?.replace("x ","").toString().toInt()
 //        val newValue = currentValue - 1    // Анимация: новое число появляется чуть выше, а старая цифра уходит чуть ниже
-        val moveUp = ObjectAnimator.ofFloat(binding?.tvCountHeart, "translationY", -30f)
-        moveUp.duration = 400
+        val moveUp = ObjectAnimator.ofFloat(binding?.tvCountHeart, "translationY", -25f)
+        moveUp.duration = 200
         val moveDown = ObjectAnimator.ofFloat(binding?.tvCountHeart, "translationY", 0f)
-        moveDown.duration = 400
+        moveDown.duration = 200
         moveUp.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
                 binding?.tvCountHeart?.setTextColor(ContextCompat.getColor(requireContext(),R.color.red))        }
@@ -690,20 +1018,213 @@ private var backPressedOnce = false
                 minusHeart()
                 decrementAndAnimate()
             }
-
+       Log.d("ATG@)(*!)@#","heartCount:${heartCount}")
+            Log.d("ATG@)(*!)@#","isUseNextTest:${isUseNextTest}")
             if(heartCount==0&&isUseNextTest){
+                Log.d("checkTestTreatmentResultUse","if(heartCount==0&&isUseNextTest)")
                 checkTestTreatmentResult(victorinesQuestions ?: emptyList(),false)
             }else if(heartCount==0&&!isUseNextTest){
                 ///Предложтьб
-                ShowDialogHelper.startProgressBarAnimation(requireContext(),resources, { heartCount->
+                CustomTimerUtil.stopTimer()
+                var buyHeartCounts = 0
+                var buyAndroStates:BuyForAndropointStates?=null
+                viewModel.getAndropoint { userAndropointCount->
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogApptempHeartVictorine(requireContext(),resources,{buyHeartCount->
+                            buyHeartCounts = buyHeartCount
 
-                }, { andropointCount->
+                        },{andropointCount->
 
-                }, adWatch = {
+                            viewModel.buyAndropointHeart({state->
+                                when(state){
+                                    ErrorEnum.NOTNETWORK -> {
+                                        requireActivity().runOnUiThread {
+                                            binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                            ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                                minusHeart()
+                                            }) {
+                                                binding?.dimViewVictorine?.visibility = View.GONE
+                                            }
+                                        }
 
-                }, {
+                                    }
 
-                })
+                                    ErrorEnum.ERROR -> {
+                                        requireActivity().runOnUiThread {
+                                            binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                minusHeart()
+                                            }) {
+
+                                                binding?.dimViewVictorine?.visibility = View.GONE
+                                            }
+                                        }
+
+                                    }
+                                    ErrorEnum.SUCCESS -> {
+                                        when(buyAndroStates){
+                                            BuyForAndropointStates.YESMONEY -> {
+                                                isUseNextTest = true
+                                                viewModel.buyHeart({ heartState->
+                                                    when(heartState){
+                                                        ErrorEnum.NOTNETWORK -> {
+                                                            requireActivity().runOnUiThread {
+                                                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                                                    minusHeart()
+                                                                }) {
+                                                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                                                }
+                                                            }
+
+                                                        }
+
+                                                        ErrorEnum.ERROR -> {
+                                                            requireActivity().runOnUiThread {
+                                                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                                    minusHeart()
+                                                                }) {
+
+                                                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                                                }
+                                                            }
+
+                                                        }
+                                                        ErrorEnum.SUCCESS -> {
+                                                            heartCount = buyHeartCounts
+                                                            requireActivity().runOnUiThread {
+                                                                animateNumber(binding?.tvCountHeart,requireContext(),"x ${heartCount}")
+                                                            }
+
+                                                            CustomTimerUtil.startTimer(victorineSec){
+                                                                Log.d(
+                                                                    "checkTestTreatmentResultUse",
+                                                                    "checkAnswerTimer"
+                                                                )
+                                                                checkTestTreatmentResult(victorinesQuestions ?: emptyList(), true)
+                                                            }
+                                                        }
+                                                        ErrorEnum.UNKNOWNERROR -> {
+                                                            requireActivity().runOnUiThread {
+                                                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                                    minusHeart()
+                                                                }) {
+
+                                                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                                                }
+                                                            }
+
+                                                        }
+                                                        ErrorEnum.TIMEOUTERROR -> {
+                                                            requireActivity().runOnUiThread {
+                                                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                                                    minusHeart()
+                                                                }) {
+
+                                                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                                                }
+                                                            }
+
+                                                        }
+                                                        ErrorEnum.NULLPOINTERROR -> {
+                                                            requireActivity().runOnUiThread {
+                                                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                                    minusHeart()
+                                                                }) {
+
+                                                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                                                }
+                                                            }
+
+                                                        }
+                                                        ErrorEnum.OFFLINEMODE->{
+
+                                                        }
+                                                        ErrorEnum.OFFLINETHEMEBUY->{
+
+                                                        }
+                                                    }
+                                                },buyHeartCounts)
+                                            }
+                                            BuyForAndropointStates.NOMONEY -> {
+                                                requireActivity().runOnUiThread {
+                                                    Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                            null -> {
+                                                requireActivity().runOnUiThread {
+                                                    Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                        }
+                                    }
+                                    ErrorEnum.UNKNOWNERROR -> {
+                                        requireActivity().runOnUiThread {
+                                            binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                minusHeart()
+                                            }) {
+
+                                                binding?.dimViewVictorine?.visibility = View.GONE
+                                            }
+                                        }
+
+                                    }
+                                    ErrorEnum.TIMEOUTERROR -> {
+                                        requireActivity().runOnUiThread {
+                                            binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                            ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                                minusHeart()
+                                            }) {
+
+                                                binding?.dimViewVictorine?.visibility = View.GONE
+                                            }
+                                        }
+
+                                    }
+                                    ErrorEnum.NULLPOINTERROR -> {
+                                        requireActivity().runOnUiThread {
+                                            binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                            ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                                minusHeart()
+                                            }) {
+
+                                                binding?.dimViewVictorine?.visibility = View.GONE
+                                            }
+                                        }
+
+                                    }
+                                    ErrorEnum.OFFLINEMODE->{
+
+                                    }
+                                    ErrorEnum.OFFLINETHEMEBUY->{
+
+                                    }
+                                }
+                            },{buyState->
+                                buyAndroStates = buyState
+                            },andropointCount)
+
+
+                        },{
+                            isUseNextTest = true
+                            CustomTimerUtil.startTimer(victorineSec) {
+                                checkTestTreatmentResult(victorinesQuestions ?: emptyList(), true)
+                            }
+                        },{
+                            Log.d(
+                                "checkTestTreatmentResultUse",
+                                "closeCheckAnswer"
+                            )
+                            checkTestTreatmentResult(victorinesQuestions ?: emptyList(),false)
+                        },userAndropointCount)
+                    }
+                }
+
             }
             misstakeAnswers++
         }
@@ -866,6 +1387,10 @@ private var backPressedOnce = false
         if (clickCount == victorines.size) {
             binding?.btnNext?.isEnabled = false
             CustomTimerUtil.stopTimer()
+            Log.d(
+                "checkTestTreatmentResultUse",
+                "updateProgressBarWithAnimation"
+            )
             checkTestTreatmentResult(victorines, false)
         }
     }
@@ -899,7 +1424,7 @@ private var backPressedOnce = false
                                         binding?.dimViewVictorine?.visibility =View.GONE
                                     })
                                     strikeModeTreatmentResult()
-                                }, misstakeAnswers, victorinesQuestionsCount)
+                                }, correctAnswers, victorinesQuestionsCount)
                             }
                         } else {
                             requireActivity().runOnUiThread {

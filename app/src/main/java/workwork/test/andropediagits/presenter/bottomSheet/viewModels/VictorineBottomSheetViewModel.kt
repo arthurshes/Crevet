@@ -1,5 +1,6 @@
 package workwork.test.andropediagits.presenter.bottomSheet.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
@@ -21,42 +22,45 @@ import javax.inject.Inject
 class VictorineBottomSheetViewModel @Inject constructor(private val andropointUseCase: AndropointUseCase,private val themeUseCase: ThemeUseCase, private val adsUseCase: AdsUseCase,private val courseRepo: CourseRepo,private val userLogicRepo: UserLogicRepo): ViewModel() {
 
     fun getMyAdsProvider(adsProvider:((AdsProviderEntity)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             adsProvider.invoke(userLogicRepo.getMyAdsProvider())
         }
     }
 
-    fun termExistCheckLocal(uniqueThemeId: Int,isExist:((Boolean)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
-            val theme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
-            if(theme.termDateApi==null&&theme.termHourse==null){
-                isExist.invoke(true)
-            }else{
-                isExist.invoke(false)
-            }
+    suspend fun termExistCheckLocal(uniqueThemeId: Int,isExist:((Boolean)->Unit)){
+        val theme = courseRepo.searchThemeWithUniwueId(uniqueThemeId)
+        Log.d("TAG442555", "termExistCheckLocal:${theme}")
+        if(theme.termDateApi==null&&theme.termHourse==null){
+            Log.d("TAG442555", "termExistCheckLocal:${true}")
+            isExist.invoke(true)
+        }else{
+            Log.d("TAG442555", "termExistCheckLocal:${false}")
+            isExist.invoke(false)
         }
+
+
     }
 
     fun spendAndropoints(minusAndropoint:Int,isSucces: (ErrorEnum) -> Unit,isAndropointState:((BuyForAndropointStates)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             andropointUseCase.spendAndropoints(SpendAndropointState.SKIPDELAY,isSucces,isAndropointState, andropointMinusCount = minusAndropoint)
         }
     }
 
     fun adsView(isSuccess: ((ErrorEnum) -> Unit), isVictorine:Boolean){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             adsUseCase.viewAds(isSuccess,isVictorine)
         }
     }
 
     fun checkLimitActual(isSuccess: ((ErrorEnum) -> Unit), isLimitActual:((Boolean)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             adsUseCase.checkTermLimit(isSuccess, isLimitActual)
         }
     }
 
     fun minus2HoursTermAds(isSuccess: ((ErrorEnum) -> Unit),uniqueThemeId: Int,remainingHours:((String)->Unit)){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             themeUseCase.watchAdsToDisableDelay(uniqueThemeId,isSuccess,remainingHours)
         }
     }

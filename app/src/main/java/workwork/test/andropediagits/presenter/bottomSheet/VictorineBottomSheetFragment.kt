@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 
@@ -27,6 +28,7 @@ import com.my.target.ads.Reward
 import com.my.target.common.models.IAdLoadingError
 
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.utils.Constatns
@@ -95,7 +97,12 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
         val isThemePassed = arguments?.getBoolean("isThemePassed") ?: false
         val courseNameReal = arguments?.getString("courseNameReal", "")
 
+
+        Log.d("TAG442555", "isTermVar:${isTermVar}")
+        Log.d("TAG442555", "terString:${terString}")
+        Log.d("TAG442555", "isTermVar:${isTermVar}")
         if (isTermVar) {
+
             binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
             isTermVictorine = false
         } else {
@@ -109,19 +116,23 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
             }
 
             else {
+                Log.d("TAG442555", "isThemePassed:${isThemePassed}")
+                Log.d("TAG442555", "uniqueCurrentThemeId:${uniqueCurrentThemeId}")
                 if (!isThemePassed) {
-                    viewModel.termExistCheckLocal(uniqueCurrentThemeId ?: 2) {
-                        if (it) {
-                            binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
-                            isTermVictorine = false
-                        } else {
-                            isTermVictorine = true
-                            binding?.linearTermVictorineSheet?.visibility = View.VISIBLE
+                      lifecycleScope.launch {
+                          viewModel.termExistCheckLocal(uniqueCurrentThemeId ?: 2) {
+                              Log.d("TAG442555", "termExistCheckLocal:${it}")
+                              if (it) {
+                                  binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
+                                  isTermVictorine = false
+                              } else {
+                                  isTermVictorine = true
+                                  binding?.linearTermVictorineSheet?.visibility = View.VISIBLE
 
-                            binding?.termTextViewVictorineBottom?.text = terString
-                        }
-                    }
-
+                                  binding?.termTextViewVictorineBottom?.text = terString
+                              }
+                          }
+                      }
                 }
 
             }

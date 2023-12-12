@@ -133,7 +133,7 @@ class HeartsUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }
     }
 
-    suspend fun buyHearts(heartCount:Int,IsSuccess:((ErrorEnum)->Unit),isHearBuy:((Boolean)->Unit)){
+    suspend fun buyHearts(heartCount:Int,IsSuccess:((ErrorEnum)->Unit),isHearBuy:((Boolean)->Unit)?=null){
         try {
             val userInfo = userLogicRepo.getUserInfoLocal()
             if(98 >=userInfo.heartsCount ?: 0){
@@ -160,9 +160,9 @@ class HeartsUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
                 userlanguage = userInfo.userLanguage
             )
             userLogicRepo.updateUserInfo(userSignInModel)
-            isHearBuy.invoke(true)
+            isHearBuy?.invoke(true)
         }else{
-            isHearBuy.invoke(false)
+            isHearBuy?.invoke(false)
         }
             IsSuccess.invoke(ErrorEnum.SUCCESS)
         }catch (e:IOException){

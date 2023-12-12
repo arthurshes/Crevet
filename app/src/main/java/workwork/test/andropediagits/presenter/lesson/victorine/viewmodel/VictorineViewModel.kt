@@ -36,6 +36,13 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 //     var _allVictorineAnswerVariantByTheme: List<VictorineAnswerVariantEntity>?=null
 
     ///new func
+
+    fun getAndropoint(andropoints:((Int)->Unit)){
+        viewModelScope.launch {
+            andropoints.invoke(userLogicRepo.getUserInfoLocal().andropointCount ?: 0)
+        }
+    }
+
     fun getHeartsUser(heartCount:((Int)->Unit),isInfinity:((Boolean)->Unit),isSuccess:((ErrorEnum)->Unit)){
         viewModelScope.launch {
             heartsUseCase.getHeartUser(isInfinity,heartCount,isSuccess)
@@ -48,9 +55,19 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
         }
     }
 
-    fun buyHeart(isSucces: ((ErrorEnum) -> Unit),heartCount:Int,isHeartBuy:((Boolean)->Unit)){
+    fun buyAndropointHeart(isSuccess:((ErrorEnum)->Unit), isAndropointState:((BuyForAndropointStates)->Unit),andropointMinusCount: Int){
         viewModelScope.launch {
-            heartsUseCase.buyHearts(heartCount,isSucces,isHeartBuy)
+
+
+                andropointUseCase.spendAndropoints(SpendAndropointState.THEMEOPENING,isSuccess,isAndropointState, andropointMinusCount = andropointMinusCount)
+
+
+        }
+    }
+
+    fun buyHeart(isSucces: ((ErrorEnum) -> Unit),heartCount:Int){
+        viewModelScope.launch {
+            heartsUseCase.buyHearts(heartCount,isSucces)
         }
     }
     ///new func
