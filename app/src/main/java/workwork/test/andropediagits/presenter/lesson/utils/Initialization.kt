@@ -10,6 +10,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.text.util.Linkify
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -69,6 +70,7 @@ object Initialization {
             if (text != null) {
 
                 textView.visibility = View.VISIBLE
+                Linkify.addLinks(textView, Linkify.WEB_URLS)
                val textReplace = text.replace(Regex("\\d+\\.?(?==)"), "")
 
                 textView.text = OptimizationText.searchTitles(textReplace)

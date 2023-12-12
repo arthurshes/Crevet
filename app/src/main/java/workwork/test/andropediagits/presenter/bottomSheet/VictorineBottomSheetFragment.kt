@@ -109,19 +109,18 @@ class VictorineBottomSheetFragment : BottomSheetDialogFragment() {
             }
 
             else {
-
                 if (!isThemePassed) {
-                    viewModel.termExistCheckLocal(uniqueCurrentThemeId ?: 2,{
-                        if(it){
+                    viewModel.termExistCheckLocal(uniqueCurrentThemeId ?: 2) {
+                        if (it) {
                             binding?.linearTermVictorineSheet?.visibility = View.INVISIBLE
                             isTermVictorine = false
-                        }else{
+                        } else {
                             isTermVictorine = true
                             binding?.linearTermVictorineSheet?.visibility = View.VISIBLE
 
                             binding?.termTextViewVictorineBottom?.text = terString
                         }
-                    })
+                    }
 
                 }
 
