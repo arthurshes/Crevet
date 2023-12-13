@@ -933,6 +933,7 @@ object ShowDialogHelper {
                 money.invoke(tvLastPayCost?.text.toString().replace("$", ""))
                 productCount.invoke(tvLastCountProducts?.text.toString())
                 pay.invoke()
+                dialog?.dismiss()
                 dialog = null
             }
             btnWatchAd?.setOnClickListener {
