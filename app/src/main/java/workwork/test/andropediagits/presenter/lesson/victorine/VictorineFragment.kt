@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -22,9 +24,18 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.preference.PreferenceManager
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 
 import com.google.android.material.snackbar.Snackbar
+import com.my.target.ads.Reward
+import com.my.target.common.models.IAdLoadingError
 import dagger.hilt.android.AndroidEntryPoint
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
@@ -32,6 +43,7 @@ import workwork.test.andropediagits.core.exception.ErrorStateView
 import workwork.test.andropediagits.core.utils.Constatns
 import workwork.test.andropediagits.core.utils.Constatns.DEFAULT_HEART_COUNT
 import workwork.test.andropediagits.core.utils.CustomTimerUtil
+import workwork.test.andropediagits.core.utils.GoogleAdManager
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntity
 import workwork.test.andropediagits.databinding.FragmentVictorineBinding
@@ -41,13 +53,20 @@ import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
 import workwork.test.andropediagits.presenter.lesson.victorine.customview.AnimatedCircleView
 
 import workwork.test.andropediagits.presenter.lesson.victorine.viewmodel.VictorineViewModel
+import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class VictorineFragment : Fragment() {
+    private var adTarget: com.my.target.ads.RewardedAd? = null
+    private var isLoading = false
+    private var startTimerViewAds = false
     private var heartAndropointMinus = false
     private var heartCount = DEFAULT_HEART_COUNT
 private var backPressedOnce = false
     private var IsFeedback = false
+    private var googleMobileAdsConsentManager: GoogleAdManager? = null
+    private var rewardedAd: RewardedAd? = null
+    private var isMobileAdsInitializeCalled = AtomicBoolean(false)
     private var timerObser: Observer<Long>? = null
     private var binding: FragmentVictorineBinding? = null
     private var clickCount = 0
@@ -80,6 +99,12 @@ private var backPressedOnce = false
     private var isInfinityHearts = false
     private var isUseNextTest = false
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.action_menu, menu)
+        val moreMenu = menu.findItem(R.id.action_more)
+        moreMenu.isVisible = googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,10 +115,16 @@ private var backPressedOnce = false
 //        viewModel.getHeartsUser({
 //            heartCount = heartCount.plus(it)
 //        })
+        googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
+        adTarget = com.my.target.ads.RewardedAd(1455175, requireContext())
         setUpHearts()
         return binding?.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     private fun setUpHearts(){
         binding?.dimViewVictorine?.visibility = View.VISIBLE
@@ -1211,6 +1242,7 @@ private var backPressedOnce = false
 
 
                         },{
+
                             isUseNextTest = true
                             CustomTimerUtil.startTimer(victorineSec) {
                                 checkTestTreatmentResult(victorinesQuestions ?: emptyList(), true)
@@ -1368,6 +1400,237 @@ private var backPressedOnce = false
 
     }
 
+    private fun checkLimitActualTreatmentResult(andropointAds:Boolean) {
+        viewModel.getMyAdsProvider { adsProviderEntity ->
+            if(adsProviderEntity.selectedGoogle){
+                var isActualNotTerm = false
+                viewModel.checkLimitActual({ state ->
+                    when (state) {
+                        ErrorEnum.SUCCESS -> {
+                            Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
+                            Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
+                            if (isActualNotTerm) {
+                                if (startTimerViewAds) {
+                                    requireActivity().runOnUiThread {
+                                        Toast.makeText(requireContext(), getString(R.string.advertising_will_be_available_through), Toast.LENGTH_SHORT).show()
+                                    }
+
+                                } else {
+                                    showRewardedVideo(andropointAds)
+                                }
+                            } else {
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(requireContext(), getString(R.string.advertising_limit_has_been_reached), Toast.LENGTH_SHORT).show()
+                                }
+
+                            }
+                        }
+
+                        ErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        else -> {}
+                    }
+                }, {
+                    isActualNotTerm = it
+                })
+            }
+            if(adsProviderEntity.selectedLMyTarger){
+                var isActualNotTerm = false
+                viewModel.checkLimitActual({ state ->
+                    when (state) {
+                        ErrorEnum.SUCCESS -> {
+                            Log.d("adsViewCount", "isActualTerm:${isActualNotTerm}")
+                            Log.d("adsViewCount", "isStartTimer:${startTimerViewAds}")
+                            if (isActualNotTerm) {
+                                if (startTimerViewAds) {
+                                    requireActivity().runOnUiThread {
+                                        Toast.makeText(requireContext(), getString(R.string.advertising_will_be_available_through), Toast.LENGTH_SHORT).show()
+                                    }
+
+                                } else {
+
+                                    initAd(andropointAds)
+
+
+                                }
+                            } else {
+                                requireActivity().runOnUiThread {
+                                    Toast.makeText(requireContext(), getString(R.string.advertising_limit_has_been_reached), Toast.LENGTH_SHORT).show()
+                                }
+
+                            }
+                        }
+
+                        ErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    checkLimitActualTreatmentResult(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        else -> {}
+                    }
+                }, {
+                    isActualNotTerm = it
+                })
+
+            }
+
+        }
+
+    }
+
+    private fun showRewardedVideo(andropointAds: Boolean) {
+        if (rewardedAd != null) {
+            rewardedAd?.fullScreenContentCallback =
+                object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        Log.d("TAG", "Ad was dismissed.")
+                        rewardedAd = null
+                        if (googleMobileAdsConsentManager?.canRequestAds == true) { loadRewardedAd() }
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        Log.d("TAG", "Ad failed to show.")
+                        rewardedAd = null
+                    }
+
+                    override fun onAdShowedFullScreenContent() {
+                        Log.d("TAG", "Ad showed fullscreen content.")
+                    }
+                }
+
+            rewardedAd?.show(requireActivity()) {
+                if(andropointAds) {
+                    addHeartAds()
+                }else{
+                    addHeartAds()
+                }
+                Log.d("TAG", "User earned the reward.")
+            }
+            adsViewTreatmentResult()
+        }
+    }
+
+    private fun loadRewardedAd() {
+        if (rewardedAd == null) {
+            isLoading = true
+            val adRequest = AdRequest.Builder().build()
+            RewardedAd.load(requireContext(),
+                Constatns.AD_UNIT_ID, adRequest, object : RewardedAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Log.d("TAG", adError.message)
+                    isLoading = false
+                    rewardedAd = null
+                }
+
+                override fun onAdLoaded(ad: RewardedAd) {
+                    Log.d("TAG", "Ad was loaded.")
+                    rewardedAd = ad
+                    isLoading = false
+                }
+            }
+            )
+        }
+    }
+
+    private fun initializeMobileAdsSdk() {
+        if (isMobileAdsInitializeCalled.getAndSet(true)) { return }
+        MobileAds.initialize(requireContext()) {}
+        loadRewardedAd()
+    }
+
     private fun initCircleView(binding: FragmentVictorineBinding) {
         animatedCircleViewFirst = binding.optionFirst.animatedCircleView
         animatedCircleViewSecond = binding.optionSecond.animatedCircleView
@@ -1403,6 +1666,265 @@ private var backPressedOnce = false
 //            }
 //        }
 //    }
+
+    private fun initAd(andropointAds: Boolean) {
+
+        // Устанавливаем слушатель событий
+        adTarget?.setListener(object : com.my.target.ads.RewardedAd.RewardedAdListener {
+
+            override fun onLoad(p0: com.my.target.ads.RewardedAd) {
+                adTarget?.show()
+                viewModel.adsView { state->
+                    when(state){
+                        ErrorEnum.NOTNETWORK -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                                    initAd(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.ERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    initAd(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.SUCCESS -> Log.d("forkfoktogktg","SUCCESMAMBET")
+                        ErrorEnum.UNKNOWNERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    initAd(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.TIMEOUTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                                    initAd(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.NULLPOINTERROR -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                                    initAd(andropointAds)
+                                }) {
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }
+                            }
+                        }
+                        ErrorEnum.OFFLINEMODE -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                                },{
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }) }
+                        }
+                        ErrorEnum.OFFLINETHEMEBUY -> {
+                            requireActivity().runOnUiThread {
+                                binding?.dimViewVictorine?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                                },{
+                                    binding?.dimViewVictorine?.visibility = View.GONE
+                                }) }
+                        }
+                    }
+                }
+            }
+
+            override fun onNoAd(p0: IAdLoadingError, p1: com.my.target.ads.RewardedAd) {
+                Toast.makeText(requireContext(),R.string.no_ads_view,Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onClick(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onClick")
+            }
+
+            override fun onDismiss(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onDismiss")
+            }
+
+            override fun onReward(p0: Reward, p1: com.my.target.ads.RewardedAd) {
+                if(andropointAds) {
+                    addHeartAds()
+                }else{
+                    addHeartAds()
+                }
+            }
+
+            override fun onDisplay(p0: com.my.target.ads.RewardedAd) {
+                Log.d("adsTargetTest","onDisplay")
+            }
+        })
+
+        // Запускаем загрузку данных
+        adTarget?.load()
+    }
+
+    private fun adsViewTreatmentResult() {
+        viewModel.adsView { state ->
+            when (state) {
+                ErrorEnum.SUCCESS -> {}
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.NULLPOINTERROR -> {
+                    binding?.dimViewVictorine?.visibility = View.VISIBLE
+                    requireActivity().runOnUiThread {
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.OFFLINEMODE ->{
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        })
+                    }
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogOffline(requireContext(),{
+
+                        },{
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addHeartAds(){
+
+        viewModel.buyHeart2(1,{
+            when(it){
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            addHeartAds()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.SUCCESS -> {
+                    Toast.makeText(requireContext(),R.string.success_award_credited,Toast.LENGTH_SHORT).show()
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewVictorine?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewVictorine?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.OFFLINEMODE -> {
+
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> {
+
+                }
+            }
+        },{
+
+        })
+    }
+
 
     private fun checkTestTreatmentResult(victorines: List<VictorineEntity>, isTimerOut: Boolean) {
         victorineEnded = true

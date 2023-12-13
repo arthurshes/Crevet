@@ -59,6 +59,7 @@ import workwork.test.andropediagits.databinding.FragmentThemesBinding
 import workwork.test.andropediagits.domain.googbilling.BillingManager
 import workwork.test.andropediagits.domain.googbilling.PayState
 import workwork.test.andropediagits.domain.useCases.userLogic.state.AddAndropoints
+import workwork.test.andropediagits.domain.useCases.userLogic.state.BuyForAndropointStates
 import workwork.test.andropediagits.domain.useCases.userLogic.state.LanguagesEnum
 import workwork.test.andropediagits.presenter.bottomSheet.BottomSheet
 import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
@@ -216,7 +217,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
         countAndropoints?.setOnClickListener {
             ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager)
-            { checkLimitActualTreatmentResult() }
+            { checkLimitActualTreatmentResult(true) }
         }
 
         billingManager?.infinityAndropoints = {
@@ -274,7 +275,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
         andropointIcon?.setOnClickListener {
             ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager)
-            { checkLimitActualTreatmentResult() }
+            { checkLimitActualTreatmentResult(true) }
         }
 
         adapter?.checkTermThemeUniqueThemeId = { uniqueThemeID ->
@@ -303,7 +304,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
         textAddAndropoint?.setOnClickListener {
             ShowDialogHelper.showDialogBuyAndropointsImplementation(requireContext(),billingManager)
-            { checkLimitActualTreatmentResult() } }
+            { checkLimitActualTreatmentResult(true) } }
 
         btnPremiumDrawer?.setOnClickListener {
             if(!premiumVisible){
@@ -844,7 +845,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
 
 
-    private fun checkLimitActualTreatmentResult() {
+    private fun checkLimitActualTreatmentResult(andropointAds:Boolean) {
         viewModel.getMyAdsProvider { adsProviderEntity ->
             if(adsProviderEntity.selectedGoogle){
                 var isActualNotTerm = false
@@ -860,7 +861,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                                     }
 
                                 } else {
-                                    showRewardedVideo()
+                                        showRewardedVideo(andropointAds)
                                 }
                             } else {
                                 requireActivity().runOnUiThread {
@@ -874,7 +875,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -884,7 +885,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -894,7 +895,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -904,7 +905,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogTimeOutError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -914,7 +915,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -940,7 +941,10 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                                     }
 
                                 } else {
-                                    initAd()
+
+                                        initAd(andropointAds)
+
+
                                 }
                             } else {
                                 requireActivity().runOnUiThread {
@@ -954,7 +958,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -964,7 +968,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -974,7 +978,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -984,7 +988,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogTimeOutError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -994,7 +998,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    checkLimitActualTreatmentResult()
+                                    checkLimitActualTreatmentResult(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -1210,23 +1214,379 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             }
 
             R.id.id_heart_buy ->{
-                ShowDialogHelper.showDialogBuyAndropoints(
-                    requireContext(),{
+                viewModel.getMyHearts{heartsCounts->
+                    ShowDialogHelper.showDialogBuyAndropoints(
+                        requireContext(),{
+                            viewModel.getMyHearts{
+                                if(99>it){
+                                    checkLimitActualTreatmentResult(false)
+                                } else{
+                                    requireActivity().runOnUiThread {
+                                        Toast.makeText(requireContext(),R.string.heart_limit,Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
 
-                    },{
+                        },{
 
-                    },{
+                        },{
 
-                    },{
+                        },{
+                             if(it=="1"){
+                                 var buyForAndropointStates:BuyForAndropointStates?=null
+                                 var heartBuyVar = false
+                                 viewModel.minusAndropoint({state->
+                                     when(state){
+                                         ErrorEnum.NOTNETWORK -> {
+                                             requireActivity().runOnUiThread {
+                                                 Toast.makeText(
+                                                     requireContext(),
+                                                     R.string.not_connected_internet,
+                                                     Toast.LENGTH_SHORT
+                                                 ).show()
+                                             }
+                                         }
+                                         ErrorEnum.ERROR -> {
+                                             requireActivity().runOnUiThread {
+                                                 Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                             }
+                                         }
+                                         ErrorEnum.SUCCESS -> {
+                                             when(buyForAndropointStates){
+                                                 BuyForAndropointStates.YESMONEY -> {
+                                                     countAndropoints?.text = countAndropoints?.text?.toString()?.toInt()?.minus(3)?.toString()
+                                                     viewModel.buyHeart(1,{stateHEart->
+                                                       when(stateHEart){
+                                                           ErrorEnum.NOTNETWORK -> {
+                                                             requireActivity().runOnUiThread {
+                                                                 Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                             }
+                                                           }
+                                                           ErrorEnum.ERROR -> {
+                                                               requireActivity().runOnUiThread {
+                                                                   Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                               }
+                                                           }
+                                                           ErrorEnum.SUCCESS -> {
+                                                            if(!heartBuyVar){
+                                                               requireActivity().runOnUiThread {
+                                                                   Toast.makeText(requireContext(),R.string.heart_limit,Toast.LENGTH_SHORT).show()
+                                                               }
+                                                            }
+                                                           }
+                                                           ErrorEnum.UNKNOWNERROR -> {
+                                                               requireActivity().runOnUiThread {
+                                                                   Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                               }
+                                                           }
+                                                           ErrorEnum.TIMEOUTERROR ->{
+                                                               requireActivity().runOnUiThread {
+                                                                   Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                               }
+                                                           }
+                                                           ErrorEnum.NULLPOINTERROR -> {
+                                                               requireActivity().runOnUiThread {
+                                                                   Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                               }
+                                                           }
+                                                           ErrorEnum.OFFLINEMODE -> {
+                                                               requireActivity().runOnUiThread {
+                                                                   Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                               }
+                                                           }
+                                                           ErrorEnum.OFFLINETHEMEBUY -> {
+                                                               requireActivity().runOnUiThread {
+                                                                   Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                               }
+                                                           }
+                                                       }
+                                                     },{heartBuy->
+                                                         heartBuyVar = heartBuy
+                                                     })
+                                                 }
+                                                 BuyForAndropointStates.NOMONEY -> {
+                                                     requireActivity().runOnUiThread {
+                                                         Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                                                     }
+                                                 }
+                                                 null ->{
+                                                     requireActivity().runOnUiThread {
+                                                         Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                                                     }
+                                                 }
+                                             }
+                                         }
+                                         ErrorEnum.UNKNOWNERROR -> {
+                                             requireActivity().runOnUiThread {
+                                                 Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                             }
+                                         }
+                                         ErrorEnum.TIMEOUTERROR ->{
+                                             requireActivity().runOnUiThread {
+                                                 Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                             }
+                                         }
+                                         ErrorEnum.NULLPOINTERROR -> {
+                                             requireActivity().runOnUiThread {
+                                                 Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                             }
+                                         }
+                                         ErrorEnum.OFFLINEMODE -> {
+                                             requireActivity().runOnUiThread {
+                                                 Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                             }
+                                         }
+                                         ErrorEnum.OFFLINETHEMEBUY -> {
+                                             requireActivity().runOnUiThread {
+                                                 Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                             }
+                                         }
+                                     }
+                                 },{
+                                     buyForAndropointStates = it
+                                 },3)
+                             }
+                            if(it=="10"){
+                                var buyForAndropointStates:BuyForAndropointStates?=null
+                                var heartBuyVar = false
+                                viewModel.minusAndropoint({state->
+                                    when(state){
+                                        ErrorEnum.NOTNETWORK -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    R.string.not_connected_internet,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
+                                        ErrorEnum.ERROR -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.SUCCESS -> {
+                                            when(buyForAndropointStates){
+                                                BuyForAndropointStates.YESMONEY -> {
+                                                    countAndropoints?.text = countAndropoints?.text?.toString()?.toInt()?.minus(25)?.toString()
+                                                    viewModel.buyHeart(10,{stateHEart->
+                                                        when(stateHEart){
+                                                            ErrorEnum.NOTNETWORK -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.ERROR -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.SUCCESS -> {
+                                                                if(!heartBuyVar){
+                                                                    requireActivity().runOnUiThread {
+                                                                        Toast.makeText(requireContext(),R.string.heart_limit,Toast.LENGTH_SHORT).show()
+                                                                    }
+                                                                }
+                                                            }
+                                                            ErrorEnum.UNKNOWNERROR -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.TIMEOUTERROR ->{
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.NULLPOINTERROR -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.OFFLINEMODE -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.OFFLINETHEMEBUY -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                        }
+                                                    },{heartBuy->
+                                                        heartBuyVar = heartBuy
+                                                    })
+                                                }
+                                                BuyForAndropointStates.NOMONEY -> {
+                                                    requireActivity().runOnUiThread {
+                                                        Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                                                    }
+                                                }
+                                                null ->{
+                                                    requireActivity().runOnUiThread {
+                                                        Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        ErrorEnum.UNKNOWNERROR -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.TIMEOUTERROR ->{
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.NULLPOINTERROR -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.OFFLINEMODE -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.OFFLINETHEMEBUY -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    }
+                                },{
+                                    buyForAndropointStates = it
+                                },25)
+                            }
+                            if(it=="50"){
+                                var buyForAndropointStates:BuyForAndropointStates?=null
+                                var heartBuyVar = false
+                                viewModel.minusAndropoint({state->
+                                    when(state){
+                                        ErrorEnum.NOTNETWORK -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    R.string.not_connected_internet,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+                                        }
+                                        ErrorEnum.ERROR -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.SUCCESS -> {
+                                            when(buyForAndropointStates){
+                                                BuyForAndropointStates.YESMONEY -> {
+                                                    countAndropoints?.text = countAndropoints?.text?.toString()?.toInt()?.minus(120)?.toString()
+                                                    viewModel.buyHeart(50,{stateHEart->
+                                                        when(stateHEart){
+                                                            ErrorEnum.NOTNETWORK -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.ERROR -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.SUCCESS -> {
+                                                                if(!heartBuyVar){
+                                                                    requireActivity().runOnUiThread {
+                                                                        Toast.makeText(requireContext(),R.string.heart_limit,Toast.LENGTH_SHORT).show()
+                                                                    }
+                                                                }
+                                                            }
+                                                            ErrorEnum.UNKNOWNERROR -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.TIMEOUTERROR ->{
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.NULLPOINTERROR -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.OFFLINEMODE -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                            ErrorEnum.OFFLINETHEMEBUY -> {
+                                                                requireActivity().runOnUiThread {
+                                                                    Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                                                }
+                                                            }
+                                                        }
+                                                    },{heartBuy->
+                                                        heartBuyVar = heartBuy
+                                                    })
+                                                }
+                                                BuyForAndropointStates.NOMONEY -> {
+                                                    requireActivity().runOnUiThread {
+                                                        Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                                                    }
+                                                }
+                                                null ->{
+                                                    requireActivity().runOnUiThread {
+                                                        Toast.makeText(requireContext(),R.string.node_money_andropoint,Toast.LENGTH_SHORT).show()
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        ErrorEnum.UNKNOWNERROR -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.TIMEOUTERROR ->{
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.NULLPOINTERROR -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.unknown_error,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.OFFLINEMODE -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        ErrorEnum.OFFLINETHEMEBUY -> {
+                                            requireActivity().runOnUiThread {
+                                                Toast.makeText(requireContext(),R.string.not_connected_internet,Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                    }
+                                },{
+                                    buyForAndropointStates = it
+                                },120)
+                            }
+                        },
+                        isAndropointsBuy = false,
+                        heartCount = heartsCounts
+                    )
+                }
 
-                    },
-                    isAndropointsBuy = false
-                )
             }
 
         }
         return true
     }
+
+
 
     private fun openUrl(link: String) {
         val uri = Uri.parse(link)
@@ -1316,13 +1676,84 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         }
     }
 
+    private fun addHeartAds(){
+
+        viewModel.buyHeart(1,{
+            when(it){
+                ErrorEnum.NOTNETWORK -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
+                            addHeartAds()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.ERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.SUCCESS -> {
+                    startTimerViewAdsFun()
+                    startTimerViewAds = true
+                   Toast.makeText(requireContext(),R.string.success_award_credited,Toast.LENGTH_SHORT).show()
+                }
+                ErrorEnum.UNKNOWNERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.TIMEOUTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogTimeOutError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.NULLPOINTERROR -> {
+                    requireActivity().runOnUiThread {
+                        binding?.dimViewTheme?.visibility = View.VISIBLE
+                        ShowDialogHelper.showDialogUnknownError(requireContext(),{
+                            adsViewTreatmentResult()
+                        }) {
+                            binding?.dimViewTheme?.visibility = View.GONE
+                        }
+                    }
+                }
+                ErrorEnum.OFFLINEMODE -> {
+
+                }
+                ErrorEnum.OFFLINETHEMEBUY -> {
+
+                }
+            }
+        },{
+
+        })
+    }
+
     private fun initializeMobileAdsSdk() {
         if (isMobileAdsInitializeCalled.getAndSet(true)) { return }
         MobileAds.initialize(requireContext()) {}
         loadRewardedAd()
     }
 
-    private fun showRewardedVideo() {
+    private fun showRewardedVideo(andropointAds: Boolean) {
         if (rewardedAd != null) {
             rewardedAd?.fullScreenContentCallback =
                 object : FullScreenContentCallback() {
@@ -1343,7 +1774,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
 
             rewardedAd?.show(requireActivity()) {
-                addAndropoints()
+                if(andropointAds) {
+                    addAndropoints()
+                }else{
+                    addHeartAds()
+                }
                 Log.d("TAG", "User earned the reward.")
             }
             adsViewTreatmentResult()
@@ -1526,7 +1961,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         }
     }
 
-    private fun initAd() {
+    private fun initAd(andropointAds: Boolean) {
 
         // Устанавливаем слушатель событий
         adTarget?.setListener(object : com.my.target.ads.RewardedAd.RewardedAdListener {
@@ -1539,7 +1974,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogNotNetworkError(requireContext(),{
-                                    initAd()
+                                    initAd(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -1549,7 +1984,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    initAd()
+                                    initAd(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -1560,7 +1995,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    initAd()
+                                    initAd(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -1570,7 +2005,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogTimeOutError(requireContext(),{
-                                    initAd()
+                                    initAd(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -1580,7 +2015,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                             requireActivity().runOnUiThread {
                                 binding?.dimViewTheme?.visibility = View.VISIBLE
                                 ShowDialogHelper.showDialogUnknownError(requireContext(),{
-                                    initAd()
+                                    initAd(andropointAds)
                                 }) {
                                     binding?.dimViewTheme?.visibility = View.GONE
                                 }
@@ -1621,7 +2056,11 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
             }
 
             override fun onReward(p0: Reward, p1: com.my.target.ads.RewardedAd) {
-                addAndropoints()
+                if(andropointAds) {
+                    addAndropoints()
+                }else{
+                    addHeartAds()
+                }
             }
 
             override fun onDisplay(p0: com.my.target.ads.RewardedAd) {

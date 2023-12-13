@@ -9,11 +9,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.exception.ErrorStateView
+import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineEntity
 import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
 import workwork.test.andropediagits.domain.useCases.transactionLogic.TransactionUseCase
+import workwork.test.andropediagits.domain.useCases.userLogic.AdsUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.AndropointUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.CourseUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.HeartsUseCase
@@ -28,7 +30,7 @@ import workwork.test.andropediagits.domain.useCases.userLogic.state.StrikeModeSt
 import javax.inject.Inject
 
 @HiltViewModel
-class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUseCase,private val coursesRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val victorineUseCase: VictorineUseCase, private val tryAgainUseCase: TryAgainUseCase, private val strikeModeUseCase: StrikeModeUseCase, private val andropointUseCase: AndropointUseCase, private  val transactionUseCase: TransactionUseCase,private val promoCodeUseCase: PromoCodeUseCase,private val userLogicRepo: UserLogicRepo,private val heartsUseCase: HeartsUseCase): ViewModel() {
+class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUseCase,private val coursesRepo: CourseRepo, private val themeUseCase: ThemeUseCase, private val victorineUseCase: VictorineUseCase, private val tryAgainUseCase: TryAgainUseCase, private val strikeModeUseCase: StrikeModeUseCase, private val andropointUseCase: AndropointUseCase, private  val transactionUseCase: TransactionUseCase,private val promoCodeUseCase: PromoCodeUseCase,private val userLogicRepo: UserLogicRepo,private val heartsUseCase: HeartsUseCase,private val adsUseCase: AdsUseCase): ViewModel() {
 //    private var _allVictorineByTheme: MutableLiveData<List<VictorineEntity>> = MutableLiveData()
 //    var allVictorineByTheme: List<VictorineEntity>?=null
 //    private var _timerValue: MutableLiveData<Long> = MutableLiveData()
@@ -36,6 +38,17 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
 //     var _allVictorineAnswerVariantByTheme: List<VictorineAnswerVariantEntity>?=null
 
     ///new func
+
+    fun buyHeart2(heartCount:Int,isSuccess: ((ErrorEnum) -> Unit),isHeartBuy:((Boolean)->Unit)){
+        viewModelScope.launch {
+            heartsUseCase.buyHearts(heartCount,isSuccess,isHeartBuy)
+        }
+    }
+    fun adsView(isSuccess: ((ErrorEnum) -> Unit)){
+        viewModelScope.launch {
+            adsUseCase.viewAds(isSuccess)
+        }
+    }
 
     fun getAndropoint(andropoints:((Int)->Unit)){
         viewModelScope.launch {
@@ -52,6 +65,24 @@ class VictorineViewModel @Inject constructor(private val courseUseCase: CourseUs
     fun minusHeart(minusHeart:Int,isSucces: ((ErrorEnum) -> Unit),isEnd:((Boolean)->Unit)){
         viewModelScope.launch {
             heartsUseCase.minusHearts(minusHeart,isSucces,isEnd)
+        }
+    }
+
+    fun checkLimitActual(isSuccess: ((ErrorEnum) -> Unit), isLimitActual:((Boolean)->Unit)){
+        viewModelScope.launch {
+            adsUseCase.checkTermLimit(isSuccess, isLimitActual)
+        }
+    }
+
+    fun getAdProvider(adsProviderEntity: ((AdsProviderEntity)->Unit)){
+        viewModelScope.launch {
+            adsProviderEntity.invoke(userLogicRepo.getMyAdsProvider())
+        }
+    }
+
+    fun getMyAdsProvider(adsProvider:((AdsProviderEntity)->Unit)){
+        viewModelScope.launch {
+            adsProvider.invoke(userLogicRepo.getMyAdsProvider())
         }
     }
 

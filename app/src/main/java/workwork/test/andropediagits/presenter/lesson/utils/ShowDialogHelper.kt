@@ -875,7 +875,8 @@ object ShowDialogHelper {
         pay: () -> Unit,
         money: (String) -> Unit,
         productCount: (String) -> Unit,
-        isAndropointsBuy:Boolean=true
+        isAndropointsBuy:Boolean=true,
+        heartCount:Int?=null
     ) {
         if (!isAndropointShow) {
             dialog = Dialog(context)
@@ -910,6 +911,7 @@ object ShowDialogHelper {
             val haveHeartBlock = dialog?.findViewById<LinearLayout>(R.id.haveHeartBlock)
             val imageResultBuy = dialog?.findViewById<ImageView>(R.id.imageResultBuy)
             val tvTitleBuyDialog = dialog?.findViewById<TextView>(R.id.tvTitleBuyDialog)
+            val tvHeartCount = dialog?.findViewById<TextView>(R.id.tvHeartCount)
 
             cardBuyOneAndropoint?.setOnClickListener {
                 tvLastCountProducts?.text = tvCountAndropointsBuyOneAndropoint?.text
@@ -951,11 +953,12 @@ object ShowDialogHelper {
                 imageResultBuy?.visibility = View.VISIBLE
                 haveHeartBlock?.visibility = View.VISIBLE
                 tvTitleBuyDialog?.text=context.getString(R.string.attempts)
-                tvCountMoneyBuyOneAndropoint?.text="5"
-                tvCountMoneyBuyTenAndropoint?.text="40"
-                tvCountMoneyBuyOneHundredAndropoint?.text="200"
+                tvCountMoneyBuyOneAndropoint?.text="3"
+                tvCountMoneyBuyTenAndropoint?.text="25"
+                tvCountMoneyBuyOneHundredAndropoint?.text="120"
                 tvLastPayCost?.text="5"
                 tvCountAndropointsOneHundredAndropoint?.text="50"
+                tvHeartCount?.text = context.getString(R.string.count_heart).replace("COUNT_HEART",heartCount.toString())
             }
 
             dialog?.show()

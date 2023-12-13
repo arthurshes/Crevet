@@ -23,6 +23,7 @@ import workwork.test.andropediagits.domain.useCases.transactionLogic.Transaction
 import workwork.test.andropediagits.domain.useCases.userLogic.AdsUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.AndropointUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.CacheUseCase
+import workwork.test.andropediagits.domain.useCases.userLogic.HeartsUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.SignInUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.ThemeUseCase
 import workwork.test.andropediagits.domain.useCases.userLogic.state.AddAndropoints
@@ -33,6 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
+    private val heartsUseCase: HeartsUseCase,
     private val coursesRepo: CourseRepo,
     savedStateHandle: SavedStateHandle,
     private val userLogicRepo: UserLogicRepo,
@@ -49,6 +51,8 @@ class ThemeViewModel @Inject constructor(
     private var courseNumberKey = "countKey"
      var courseNumber = savedStateHandle.getLiveData<Int>(courseNumberKey, -1)
 
+
+
     fun getAdProvider(adsProviderEntity: ((AdsProviderEntity)->Unit)){
         viewModelScope.launch {
             adsProviderEntity.invoke(userLogicRepo.getMyAdsProvider())
@@ -58,6 +62,24 @@ class ThemeViewModel @Inject constructor(
     fun selectAdsProvider(adsProviderEntity: AdsProviderEntity){
         viewModelScope.launch {
             userLogicRepo.updateAdsProvider(adsProviderEntity)
+        }
+    }
+
+    fun getMyHearts(isHearts:((Int)->Unit)){
+        viewModelScope.launch {
+            isHearts.invoke(userLogicRepo.getUserInfoLocal().heartsCount ?: 0)
+        }
+    }
+
+    fun minusAndropoint(isSuccess:((ErrorEnum)->Unit), isAndropointState:((BuyForAndropointStates)->Unit),andropointMinusCount: Int){
+            viewModelScope.launch {
+                andropointUseCase.spendAndropoints(SpendAndropointState.THEMEOPENING,isSuccess,isAndropointState, andropointMinusCount = andropointMinusCount)
+            }
+    }
+
+    fun buyHeart(heartCount:Int,isSuccess: ((ErrorEnum) -> Unit),isHeartBuy:((Boolean)->Unit)){
+        viewModelScope.launch {
+            heartsUseCase.buyHearts(heartCount,isSuccess,isHeartBuy)
         }
     }
 
