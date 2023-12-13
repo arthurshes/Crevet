@@ -17,8 +17,9 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -93,8 +94,9 @@ object ShowDialogHelper {
                 linearHeartOne?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
                 linearHeartTwo?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
                 linearHeartThree?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-                tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-3")
-                tvCountHeart?.text ="|  +1"
+                animateNumber(tvCountHeart,context,"+1")
+                animateNumber(tvCountAndopoint,context,context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-3"))
+
                 currentHeartCount = 1
             }
 
@@ -103,17 +105,18 @@ object ShowDialogHelper {
                 linearHeartTwo?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
                 linearHeartThree?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
                 linearHeartOne?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-                tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-5")
-                tvCountHeart?.text ="|  +2"
+                animateNumber(tvCountHeart,context,"+2")
+                animateNumber(tvCountAndopoint,context,context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-5"))
                 currentHeartCount = 2
             }
 
             btnHeartThird?.setOnClickListener {
                 linearHeartThree?.background = ContextCompat.getDrawable(context, R.drawable.gradient_heart)
                 linearHeartOne?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-                tvCountAndopoint?.text =context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-7")
-                linearHeartTwo?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
-                tvCountHeart?.text ="|  +3"
+                 linearHeartTwo?.setBackgroundColor(ContextCompat.getColor(context, themeColorRes))
+                animateNumber(tvCountHeart,context,"+3")
+                animateNumber(tvCountAndopoint,context,context.getString(R.string.continue__).replace("COUNT_ANDROPOINT", "-7"))
+
                 currentHeartCount = 3
             }
 
@@ -499,8 +502,7 @@ object ShowDialogHelper {
     fun showDialogStrikeMode(
         context: Context,
         resultStrikeModeDay: Int,
-        layoutInflater: LayoutInflater,
-        isSubscribe:Boolean,
+         isSubscribe:Boolean,
         isClose:(()->Unit),
         isPremium:(()->Unit)
     ) {
@@ -578,7 +580,6 @@ object ShowDialogHelper {
         val cardDayFour = dialog.findViewById<CardView>(R.id.cardDayFour)
         val cardDayFive = dialog.findViewById<CardView>(R.id.cardDayFive)
         val cardDaySix = dialog.findViewById<CardView>(R.id.cardDaySix)
-        val cardDaySeven = dialog.findViewById<CardView>(R.id.cardDaySeven)
 
         val cardPastDayOne = dialog.findViewById<CardView>(R.id.pastDayOne)
         val cardPastDayTwo = dialog.findViewById<CardView>(R.id.pastDayTwo)
@@ -586,8 +587,7 @@ object ShowDialogHelper {
         val cardPastDayFour = dialog.findViewById<CardView>(R.id.pastDayFour)
         val cardPastDayFive = dialog.findViewById<CardView>(R.id.pastDayFive)
         val cardPastDaySix = dialog.findViewById<CardView>(R.id.pastDaysix)
-        val cardPastDaySeven = dialog.findViewById<CardView>(R.id.pastDaySeven)
-        ////TextPast
+          ////TextPast
         val tvPastDayOne = cardPastDayOne.findViewById<TextView>(R.id.tvPastDay)
         val tvPastDayTwo = cardPastDayTwo.findViewById<TextView>(R.id.tvPastDay)
         val tvPastDayThree = cardPastDayThree.findViewById<TextView>(R.id.tvPastDay)
@@ -784,7 +784,6 @@ object ShowDialogHelper {
             isDialogSuccess = true
             val dialogButton = dialog.findViewById<CardView>(R.id.btnContinue)
             val success_text_result = dialog.findViewById<TextView>(R.id.success_text_result)
-            val addTextAndropoints = dialog.findViewById<TextView>(R.id.textViewAddAndropointsSuccess)
             success_text_result?.text = context.getString(R.string.count_mistake).replace("6", (correctTest).toString()).replace("10", size.toString())
             dialogButton?.isClickable = false
             var buttonEnable = false
@@ -838,11 +837,11 @@ object ShowDialogHelper {
                 }
                 val test=context.getString(R.string.count_mistake).replace("6", (size - mistakes).toString())
                 dialogCountMistakes?.text = test.replace("10", size.toString())
-                dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA",dateTerm.toString())
+                dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA", dateTerm)
             }else{
                 val test=context.getString(R.string.count_mistake).replace("6", (correctTest).toString())
                 dialogCountMistakes?.text = test.replace("10", size.toString())
-                dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA",dateTerm.toString())
+                dialogTerm?.text =   context.getString(R.string.term_before_fail_test).replace("DATA", dateTerm)
             }
 
 
@@ -869,7 +868,7 @@ object ShowDialogHelper {
     }
 
     @SuppressLint("SuspiciousIndentation")
-    fun showDialogBuyAndropoints(
+    fun showDialogBuyAndropointsOrHearts(
         context: Context,
         watchAd: () -> Unit,
         pay: () -> Unit,
@@ -914,20 +913,29 @@ object ShowDialogHelper {
             val tvHeartCount = dialog?.findViewById<TextView>(R.id.tvHeartCount)
 
             cardBuyOneAndropoint?.setOnClickListener {
-                tvLastCountProducts?.text = tvCountAndropointsBuyOneAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text
+/*                tvLastCountProducts?.text = tvCountAndropointsBuyOneAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text*/
+                animateNumber(tvLastCountProducts,context,tvCountAndropointsBuyOneAndropoint?.text.toString())
+                animateNumber(tvLastPayCost,context,tvCountMoneyBuyOneAndropoint?.text.toString())
             }
             cardBuyTenAndropoints?.setOnClickListener {
-                tvLastCountProducts?.text = tvCountAndropointsBuyTenAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text
+      /*          tvLastCountProducts?.text = tvCountAndropointsBuyTenAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text*/
+                animateNumber(tvLastCountProducts,context,tvCountAndropointsBuyTenAndropoint?.text.toString())
+                animateNumber(tvLastPayCost,context,tvCountMoneyBuyTenAndropoint?.text.toString())
             }
             cardBuyOneHundredAndropoints?.setOnClickListener {
-                tvLastCountProducts?.text = tvCountAndropointsOneHundredAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text
+              /*  tvLastCountProducts?.text = tvCountAndropointsOneHundredAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text*/
+                animateNumber(tvLastCountProducts,context,tvCountAndropointsOneHundredAndropoint?.text.toString())
+                animateNumber(tvLastPayCost,context,tvCountMoneyBuyOneHundredAndropoint?.text.toString())
             }
             cardBuyInfinityAndropoints?.setOnClickListener {
-                tvLastCountProducts?.text = tvCountAndropointsInfinityAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
+                animateNumber(tvLastCountProducts,context,tvCountAndropointsInfinityAndropoint?.text.toString())
+                animateNumber(tvLastPayCost,context,tvCountMoneyBuyInfinityAndropoint?.text.toString())
+
+               /* tvLastCountProducts?.text = tvCountAndropointsInfinityAndropoint?.text
+                tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text*/
             }
             btnPay?.setOnClickListener {
                 money.invoke(tvLastPayCost?.text.toString().replace("$", ""))
@@ -1028,7 +1036,7 @@ object ShowDialogHelper {
             dialog?.show()
         }
         dialog?.setOnDismissListener {
-            dialogDissMiss?.invoke()
+            dialogDissMiss.invoke()
             isCloseDialog = false
         }
 
@@ -1233,7 +1241,7 @@ object ShowDialogHelper {
         dialog?.setContentView(R.layout.select_keyword_dialog)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         val btnSelectKeyword = dialog?.findViewById<CardView>(R.id.btnSelectKeyword)
-        var edKeywordDialog = dialog?.findViewById<EditText>(R.id.edKeywordDialog)
+        val edKeywordDialog = dialog?.findViewById<EditText>(R.id.edKeywordDialog)
         val edClueDialogKeyword = dialog?.findViewById<EditText>(R.id.edClueDialogKeyword)
         val tvErrorKeyword = dialog?.findViewById<TextView>(R.id.tvErrorKeyword)
         val tvErrorClueKeywordDialog = dialog?.findViewById<TextView>(R.id.tvErrorClueKeywordDialog)
@@ -1288,7 +1296,7 @@ object ShowDialogHelper {
         billingManager: BillingManager?,
         ads: () -> Unit
     ) {
-        showDialogBuyAndropoints(context, {
+        showDialogBuyAndropointsOrHearts(context, {
             ads.invoke()
         }, {
 
@@ -1310,5 +1318,24 @@ object ShowDialogHelper {
             }
         })
     }
+    private fun animateNumber(
+        textView: TextView?,
+        context: Context,
+        newValue: String
+    ) {
+        val fadeIn: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
+        fadeIn.duration = 100
+        val fadeOut: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
+        fadeOut.duration = 100
+        fadeOut.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                textView?.text = newValue          //  textView?.setTextColor(ContextCompat.getColor(context,R.color.white))
+                textView?.startAnimation(fadeIn)
+            }
+
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+        textView?.startAnimation(fadeOut)}
 
 }

@@ -3,8 +3,6 @@ package workwork.test.andropediagits.presenter.themes
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -1215,7 +1213,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
             R.id.id_heart_buy ->{
                 viewModel.getMyHearts{heartsCounts->
-                    ShowDialogHelper.showDialogBuyAndropoints(
+                    ShowDialogHelper.showDialogBuyAndropointsOrHearts(
                         requireContext(),{
                             viewModel.getMyHearts{
                                 if(99>it){

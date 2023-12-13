@@ -60,10 +60,8 @@ class VictorineFragment : Fragment() {
     private var adTarget: com.my.target.ads.RewardedAd? = null
     private var isLoading = false
     private var startTimerViewAds = false
-    private var heartAndropointMinus = false
     private var heartCount = DEFAULT_HEART_COUNT
-private var backPressedOnce = false
-    private var IsFeedback = false
+    private var IsFeedBack = false
     private var googleMobileAdsConsentManager: GoogleAdManager? = null
     private var rewardedAd: RewardedAd? = null
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
@@ -92,7 +90,7 @@ private var backPressedOnce = false
     private var isStrikeModeAndropointFlag = false
     private var testCheckResultFlag = false
     private var isThemePassed = false
-    private var misstakeAnswers = 0
+    private var mistakeAnswers = 0
     private var victorineEnded = false
     private var victorineExit = false
     private var victorineSec: Long = 0
@@ -112,9 +110,6 @@ private var backPressedOnce = false
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentVictorineBinding.inflate(inflater, container, false)
-//        viewModel.getHeartsUser({
-//            heartCount = heartCount.plus(it)
-//        })
         googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
         adTarget = com.my.target.ads.RewardedAd(1455175, requireContext())
         setUpHearts()
@@ -140,7 +135,7 @@ private var backPressedOnce = false
             when(state){
                 ErrorEnum.SUCCESS->{
 
-                    heartCount = heartCount?.plus(heartCountUseCaesvar) ?: 2
+                    heartCount = heartCount.plus(heartCountUseCaesvar)
                     startTimerFun()
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
@@ -304,7 +299,7 @@ private var backPressedOnce = false
             binding?.tvQuestion?.text = victorinesQuestions?.get(currentIndex)?.questionText?.trimEnd()
             viewModel.getAllQuestionAnswerVariants(victorineEntities[0].questionId,victorineEntities[0].vicotineTestId) { victorineAnswerVariantEntities ->
                 Log.d("showShowShow200",victorineAnswerVariantEntities.toString())
-                if(!victorineAnswerVariantEntities.isNullOrEmpty()){
+                if(victorineAnswerVariantEntities.isNotEmpty()){
                     showFirstElement(victorineAnswerVariantEntities, binding)
                     victorineAnswerVariants = victorineAnswerVariantEntities
                     Log.d(
@@ -571,7 +566,7 @@ private var backPressedOnce = false
         binding?.tvQuestion?.text = victorinesQuestions?.get(currentIndex)?.questionText ?: ""
         victorinesQuestions?.get(currentIndex)?.let {
             viewModel.getAllQuestionAnswerVariants(it.questionId,victorinesQuestions?.get(0)?.vicotineTestId ?: 2006) { victorineAnswerVariantEntities ->
-                if(!victorineAnswerVariantEntities.isNullOrEmpty()){
+                if(victorineAnswerVariantEntities.isNotEmpty()){
                     showFirstElement(victorineAnswerVariantEntities, binding)
                     victorineAnswerVariants = victorineAnswerVariantEntities
                     Log.d("vicotinresViewModel4", victorineAnswerVariantEntities.toString())
@@ -1258,7 +1253,7 @@ private var backPressedOnce = false
                 }
 
             }
-            misstakeAnswers++
+            mistakeAnswers++
         }
         viewModel.checkAnswer(item!![numberItem], { resultAnswer ->
             Log.d("checkAnswerState", resultAnswer.toString())
@@ -1356,46 +1351,30 @@ private var backPressedOnce = false
 
                 }
             }
-        }, { isClue ->
-            Log.d("victorineClueadfrofkrof", isClue.toString())
+        }) { isClue ->
+            Log.d("victorineClueadfrofkrof", isClue)
             if (pref?.getString(Constatns.CLUE_KEY, "true") == "true") {
-                if (isClue != null) {
-//                    isClueExist = true
-//                    Toast.makeText(requireActivity(), isClue, Toast.LENGTH_LONG).show()
-//                    val rootView: View = requireView()
-//                    val snackbar = Snackbar.make(rootView, "Snackbar с кнопкой", Snackbar.LENGTH_LONG)
-//                    snackbar.setAction("Нажми меня") {
-//                       showDialogClue(requireContext(), isClue!!)
-//                    }/
-//                    snackbar.show()
-                    if (victorinesQuestions?.size != currentIndex) {
-                        requireActivity().runOnUiThread {
-                            val snackbar = view?.let {
-                                Snackbar.make(
-                                    it,
-                                    R.string.clue_snackbar,
-                                    Snackbar.LENGTH_LONG
-                                )
-                            }
-                            snackbar?.setAction(R.string.clue_snackbar_view) {
-                                binding?.dimViewVictorine?.visibility = View.VISIBLE
-                                ShowDialogHelper.showDialogClue(requireContext(), isClue,{
-                                    binding?.dimViewVictorine?.visibility = View.GONE
-                                })
-                            }
-                            snackbar?.show()
+                if (victorinesQuestions?.size != currentIndex) {
+                    requireActivity().runOnUiThread {
+                        val snackbar = view?.let {
+                            Snackbar.make(
+                                it,
+                                R.string.clue_snackbar,
+                                Snackbar.LENGTH_LONG
+                            )
                         }
-
+                        snackbar?.setAction(R.string.clue_snackbar_view) {
+                            binding?.dimViewVictorine?.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogClue(requireContext(), isClue) {
+                                binding?.dimViewVictorine?.visibility = View.GONE
+                            }
+                        }
+                        snackbar?.show()
                     }
-//                    val rootView = requireView()
-//                    val snackbar = Snackbar.make(rootView, "Snackbar с кнопкой", Snackbar.LENGTH_LONG)
-//                    snackbar.setAction("Нажми меня") {
-//                        ShowDialogHelper.showDialogClue(requireContext(), isClue!!)
-//                    }
-//                    snackbar.show()
+
                 }
             }
-        })
+        }
 
 
     }
@@ -1942,9 +1921,9 @@ private var backPressedOnce = false
                             requireActivity().runOnUiThread {
                                 ShowDialogHelper.showDialogReplayTest(requireContext(), {
                                     binding?.dimViewVictorine?.visibility =View.VISIBLE
-                                    ShowDialogHelper.loadDialog(requireContext(),{
-                                        binding?.dimViewVictorine?.visibility =View.GONE
-                                    })
+                                    ShowDialogHelper.loadDialog(requireContext()) {
+                                        binding?.dimViewVictorine?.visibility = View.GONE
+                                    }
                                     strikeModeTreatmentResult()
                                 }, correctAnswers, victorinesQuestionsCount)
                             }
@@ -1952,14 +1931,14 @@ private var backPressedOnce = false
                             requireActivity().runOnUiThread {
                                 ShowDialogHelper.showDialogSuccessTest(requireContext(), {
                                     binding?.dimViewVictorine?.visibility =View.VISIBLE
-                                    ShowDialogHelper.loadDialog(requireContext(),{
-                                        binding?.dimViewVictorine?.visibility =View.GONE
-                                    })
+                                    ShowDialogHelper.loadDialog(requireContext()) {
+                                        binding?.dimViewVictorine?.visibility = View.GONE
+                                    }
                                     strikeModeTreatmentResult()
-                                },misstakeAnswers,victorinesQuestionsCount)
+                                },mistakeAnswers,victorinesQuestionsCount)
                             }
 //                            showFeedbackDialog()
-                            IsFeedback = true
+                            IsFeedBack = true
                             addAndropointsTreatmentResult()
                         }
                     }
@@ -1976,13 +1955,13 @@ private var backPressedOnce = false
                                 )
                             binding?.root?.let { Navigation.findNavController(it).navigate(action) }
 
-                        },misstakeAnswers,victorinesQuestionsCount)
+                        },mistakeAnswers,victorinesQuestionsCount)
                     }
                 }
 
                 ErrorStateView.TERM -> {
                     dateUnlockTheme = { dateUnlockTheme ->
-                        IsFeedback = true
+                        IsFeedBack = true
                         Log.d("victorineTestResultState", "term tw")
                         requireActivity().runOnUiThread {
 
@@ -1990,14 +1969,14 @@ private var backPressedOnce = false
                             ShowDialogHelper.showDialogFailTest(
                                 requireContext(),
                                 correctAnswers,
-                                misstakeAnswers,
+                                mistakeAnswers,
                                 victorinesQuestionsCount,
                                 dateUnlockTheme,
                                 {
                                     binding?.dimViewVictorine?.visibility =View.VISIBLE
-                                    ShowDialogHelper.loadDialog(requireContext(),{
-                                        binding?.dimViewVictorine?.visibility =View.GONE
-                                    })
+                                    ShowDialogHelper.loadDialog(requireContext()) {
+                                        binding?.dimViewVictorine?.visibility = View.GONE
+                                    }
                                     strikeModeTreatmentResult()
                                 },
                                 isTimerOut
@@ -2037,7 +2016,7 @@ private var backPressedOnce = false
         }, {
             dateUnlockTheme?.invoke(it)
             Log.d("misstakeDialog", "dateTest:${it}")
-        }, correctAnswers, misstakeAnswers, isTimerOut,heartCount)
+        }, correctAnswers, mistakeAnswers, isTimerOut,heartCount)
 
     }
 
@@ -2158,7 +2137,7 @@ private var backPressedOnce = false
                 }
 
                 isNextFlag = true
-                if(IsFeedback){
+                if(IsFeedBack){
                     requireActivity().runOnUiThread {
                         val action =
                             VictorineFragmentDirections.actionVictorineFragmentToThemesFragment(
@@ -2365,7 +2344,6 @@ private var backPressedOnce = false
                                         ShowDialogHelper.showDialogStrikeMode(
                                             requireContext(),
                                             resultStrikeModeDay,
-                                            layoutInflater,
                                             subscribeActual,
                                             {
                                                 binding?.dimViewVictorine?.visibility = View.GONE
@@ -2442,7 +2420,6 @@ private var backPressedOnce = false
                                                         ShowDialogHelper.showDialogStrikeMode(
                                                             requireContext(),
                                                             resultStrikeModeDay,
-                                                            layoutInflater,
                                                             isPromoActual,
                                                             {
                                                                 binding?.dimViewVictorine?.visibility =
@@ -2973,9 +2950,6 @@ private var backPressedOnce = false
 
     private fun startTimerFun() {
         var timerStart = false
-
-        var timerCours:((Boolean)->Unit)?=null
-
         viewModel.getTimeVictorine({ sec ->
             Log.d("kfkrofkorkfo5t59t9564g54", sec.toString())
             victorineSec = sec
@@ -3108,7 +3082,7 @@ private var backPressedOnce = false
                 ErrorEnum.SUCCESS -> {
 
 
-                    Log.d("startTimerVic","testBool:${it.toString()}")
+                    Log.d("startTimerVic","testBool:$it")
                     if(!timerCours){
                         if (victorineSec?.equals(0) == false) {
                             CustomTimerUtil.startTimer(victorineSec) {
