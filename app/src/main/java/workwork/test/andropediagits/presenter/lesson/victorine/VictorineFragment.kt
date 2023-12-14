@@ -144,7 +144,19 @@ private var backPressedOnce = false
                     startTimerFun()
                     requireActivity().runOnUiThread {
                         ShowDialogHelper.closeDialogLoadData()
-                        animateNumber(binding?.tvCountHeart,requireContext(),"x ${heartCount}")
+                        if(isInfinityHearts){
+                            animateNumber(
+                                binding?.tvCountHeart,
+                                requireContext(),
+                                "∞"
+                            )
+                        }else {
+                            animateNumber(
+                                binding?.tvCountHeart,
+                                requireContext(),
+                                "x ${heartCount}"
+                            )
+                        }
                     }
                 }
 
@@ -1045,9 +1057,11 @@ private var backPressedOnce = false
             correctAnswers++
         } else {
             if(!isInfinityHearts&&heartCount>0) {
-                heartCount--
-                minusHeart()
-                decrementAndAnimate()
+                if(!isInfinityHearts) {
+                    heartCount--
+                    minusHeart()
+                    decrementAndAnimate()
+                }
             }
        Log.d("ATG@)(*!)@#","heartCount:${heartCount}")
             Log.d("ATG@)(*!)@#","isUseNextTest:${isUseNextTest}")
@@ -1751,6 +1765,7 @@ private var backPressedOnce = false
 
             override fun onNoAd(p0: IAdLoadingError, p1: com.my.target.ads.RewardedAd) {
                 Toast.makeText(requireContext(),R.string.no_ads_view,Toast.LENGTH_SHORT).show()
+                checkTestTreatmentResult(victorinesQuestions ?: emptyList(),false)
             }
 
             override fun onClick(p0: com.my.target.ads.RewardedAd) {
@@ -1956,7 +1971,7 @@ private var backPressedOnce = false
                                         binding?.dimViewVictorine?.visibility =View.GONE
                                     })
                                     strikeModeTreatmentResult()
-                                },misstakeAnswers,victorinesQuestionsCount)
+                                },correctAnswers,victorinesQuestionsCount)
                             }
 //                            showFeedbackDialog()
                             IsFeedback = true
@@ -1976,7 +1991,7 @@ private var backPressedOnce = false
                                 )
                             binding?.root?.let { Navigation.findNavController(it).navigate(action) }
 
-                        },misstakeAnswers,victorinesQuestionsCount)
+                        },correctAnswers,victorinesQuestionsCount)
                     }
                 }
 

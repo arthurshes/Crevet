@@ -1,6 +1,7 @@
 package workwork.test.andropediagits.data.local.entities
 
 import android.graphics.Bitmap
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
@@ -19,5 +20,6 @@ data class UserInfoEntity(
     val lastOpenCourse:Int?=0,
     val lastOpenTheme:Int?=0,
     val isInfinity:Boolean?=false,
+    @ColumnInfo("heartsCount", defaultValue = "0")
     val heartsCount:Int?=0
 )

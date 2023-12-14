@@ -1,5 +1,6 @@
 package workwork.test.andropediagits.data.local
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -58,7 +59,7 @@ import workwork.test.andropediagits.data.local.typeConverters.StringListTypeConv
 import workwork.test.andropediagits.data.local.typeConverters.ThemeLevelContentEntityConverter
 
 
-@Database(entities = [CourseEntity::class, VictorineClueEntity::class, ThemeEntity::class, UserInfoEntity::class, LevelEntity::class, ThemeLevelContentEntity::class, SubscribeEntity::class, CourseBuyEntity::class, ThemeBuyEntity::class, VictorineEntity::class, VictorineAnswerVariantEntity::class, InteractiveCodeVariantEntity::class, InteractiveCorrectCodeEntity::class, InteractiveEntity::class, UpdatesKeyEntity::class, PromoCodeEntity::class, ReminderEntity::class, AdsEntity::class,ResetNextEntity::class,IndiCourseEntity::class, IndiLessonContentEntity::class,IndiThemeEntity::class,IndiLessonEntity::class,IndiVictorineAnswerVarEntity::class,IndiVIctorineClueEntity::class,IndiVictorineQuestionEntity::class, IndiCreatorSubscribeEntity::class, BillingProviderEntity::class, AdsProviderEntity::class, IndiCourseBuyEntity::class], version = 1)
+@Database(entities = [CourseEntity::class, VictorineClueEntity::class, ThemeEntity::class, UserInfoEntity::class, LevelEntity::class, ThemeLevelContentEntity::class, SubscribeEntity::class, CourseBuyEntity::class, ThemeBuyEntity::class, VictorineEntity::class, VictorineAnswerVariantEntity::class, InteractiveCodeVariantEntity::class, InteractiveCorrectCodeEntity::class, InteractiveEntity::class, UpdatesKeyEntity::class, PromoCodeEntity::class, ReminderEntity::class, AdsEntity::class,ResetNextEntity::class,IndiCourseEntity::class, IndiLessonContentEntity::class,IndiThemeEntity::class,IndiLessonEntity::class,IndiVictorineAnswerVarEntity::class,IndiVIctorineClueEntity::class,IndiVictorineQuestionEntity::class, IndiCreatorSubscribeEntity::class, BillingProviderEntity::class, AdsProviderEntity::class, IndiCourseBuyEntity::class],exportSchema = true, version = 2, autoMigrations = [AutoMigration(from = 1, to = 2)])
 @TypeConverters(
     DateTypeConverter::class, BitMapTypeConverter::class, StringListTypeConverter::class,
     ThemeLevelContentEntityConverter::class, LocalDateTypeConverter::class)

@@ -63,7 +63,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="22dp"
                     android:max="100"
-                    android:progressDrawable="@drawable/progress_bar_custom"
+                    android:progressDrawable="@drawable/progress_custom_attempts"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"

@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginStart="30dp"
-    android:layout_marginEnd="30dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
     app:cardCornerRadius="20dp">
 
 
@@ -38,7 +38,7 @@
                     android:gravity="center"
                     android:text="@string/attention"
                     android:textColor="@color/error"
-                    android:textSize="40dp"
+                    android:textSize="30dp"
                     android:textStyle="bold"
                     android:theme="@style/Text_black_white" />
 

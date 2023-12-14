@@ -19,6 +19,8 @@ import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -868,6 +870,22 @@ object ShowDialogHelper {
 
     }
 
+    private fun animateNumber(textView: TextView?, context: Context, newValue:String) {
+        // Анимация: уменьшаем alpha при нажатии на кнопку
+        val fadeIn: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
+        fadeIn.duration = 200
+        val fadeOut: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
+        fadeOut.duration = 200
+        fadeOut.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
+            override fun onAnimationEnd(animation: Animation) {
+                textView?.text = newValue          //  textView?.setTextColor(ContextCompat.getColor(context,R.color.white))
+                textView?.startAnimation(fadeIn)        }
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+        textView?.startAnimation(fadeOut)
+    }
+
     @SuppressLint("SuspiciousIndentation")
     fun showDialogBuyAndropoints(
         context: Context,
@@ -914,20 +932,20 @@ object ShowDialogHelper {
             val tvHeartCount = dialog?.findViewById<TextView>(R.id.tvHeartCount)
 
             cardBuyOneAndropoint?.setOnClickListener {
-                tvLastCountProducts?.text = tvCountAndropointsBuyOneAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyOneAndropoint?.text
+                animateNumber(tvLastCountProducts,context,tvCountAndropointsBuyOneAndropoint?.text.toString())
+                animateNumber(tvLastPayCost,context,tvCountMoneyBuyOneAndropoint?.text.toString())
             }
             cardBuyTenAndropoints?.setOnClickListener {
-                tvLastCountProducts?.text = tvCountAndropointsBuyTenAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyTenAndropoint?.text
+                animateNumber(tvLastCountProducts,context,tvCountAndropointsBuyTenAndropoint?.text.toString())
+                animateNumber(tvLastPayCost,context,tvCountMoneyBuyTenAndropoint?.text.toString())
             }
             cardBuyOneHundredAndropoints?.setOnClickListener {
-                tvLastCountProducts?.text = tvCountAndropointsOneHundredAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyOneHundredAndropoint?.text
+                animateNumber(tvLastCountProducts,context,tvCountAndropointsOneHundredAndropoint?.text.toString())
+                animateNumber(tvLastPayCost,context,tvCountMoneyBuyOneHundredAndropoint?.text.toString())
             }
             cardBuyInfinityAndropoints?.setOnClickListener {
-                tvLastCountProducts?.text = tvCountAndropointsInfinityAndropoint?.text
-                tvLastPayCost?.text = tvCountMoneyBuyInfinityAndropoint?.text
+                animateNumber(tvLastCountProducts,context,tvCountAndropointsInfinityAndropoint?.text.toString())
+                animateNumber(tvLastPayCost,context,tvCountMoneyBuyInfinityAndropoint?.text.toString())
             }
             btnPay?.setOnClickListener {
                 money.invoke(tvLastPayCost?.text.toString().replace("$", ""))

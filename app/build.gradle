@@ -18,13 +18,19 @@ android {
         applicationId "workwork.test.andropediagits"
         minSdk 27
         targetSdk 33
-        versionCode 42
-        versionName "5.1"
+        versionCode 46
+        versionName "5.4"
 
         testInstrumentationRunner "workwork.test.andropediagits.HiltTestRunner"
-
+        kapt {
+            arguments{
+                arg("room.schemaLocation","$projectDir/schemas")
+            }
+        }
 
     }
+
+
 
     buildTypes {
         release {
@@ -102,7 +108,11 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3"
     implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.3"
 
+
+
+
     // Room
+    annotationProcessor "androidx.room:room-compiler:2.5.1"
     implementation "androidx.room:room-ktx:2.5.1"
     implementation "androidx.room:room-runtime:2.5.1"
     kapt "androidx.room:room-compiler:2.5.1"
