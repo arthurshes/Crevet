@@ -14,5 +14,4 @@ data class UserSignInModel(
     val lastThemeNumber:Int?=null,
     val isInfinity:Int?=null,
     val heartsCount:Int
-
 )

@@ -289,20 +289,20 @@ class SignInFragment : Fragment() {
     }
 
     private fun checkResultSignInUseCase() {
-
+        var token = ""
         var isRegisters = false
         binding?.apply {
 
             viewModel.signInEmail(edEmail.text.toString(), edPassword.text.toString().trimEnd(),lang = chooseLang,{ isRegister->
                 isRegisters = isRegister
-            }) {
+            },{
 
                     emailResult->
                 when (emailResult) {
                     EmailErrorEnum.SUCCESS -> {
                         if(!nextCourse) {
                             nextCourse  =true
-                            downloadlCourses(chooseLang)
+                            downloadlCourses(chooseLang,token)
                         }
                     }
 
@@ -447,7 +447,9 @@ class SignInFragment : Fragment() {
 
                     }
                 }
-            }
+            },{
+                token = it
+            })
         }
     }
 

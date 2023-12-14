@@ -22,11 +22,7 @@ android {
         versionName "5.4"
 
         testInstrumentationRunner "workwork.test.andropediagits.HiltTestRunner"
-        kapt {
-            arguments{
-                arg("room.schemaLocation","$projectDir/schemas")
-            }
-        }
+
 
     }
 

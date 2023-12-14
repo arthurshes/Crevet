@@ -25,7 +25,7 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
             currentTime.invoke(userLogicRepo.getCurrentTime().datetime)
         }
     }
-     fun signInEmail(email: String, password: String,lang: String, isRegister:((Boolean)->Unit),result: ((EmailErrorEnum) -> Unit)) {
+     fun signInEmail(email: String, password: String,lang: String, isRegister:((Boolean)->Unit),result: ((EmailErrorEnum) -> Unit),token:((String)->Unit)) {
          viewModelScope.launch {
              signInUseCase.emailSignIn(
                  {
@@ -34,7 +34,8 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
                  email,
                  password,
                  isRegister,
-                 lang
+                 lang,
+                 token
              )
          }
     }

@@ -19,13 +19,13 @@ import javax.inject.Inject
 class EmailValidator @Inject constructor(private val userLogicRepo: UserLogicRepo){
 
 
-    suspend fun emailCheckAndSend(email: String, password: String, emailValidStates: EmailValidStates,lang:String,isRegister:((Boolean) -> Unit)?=null){
+    suspend fun emailCheckAndSend(email: String, password: String, emailValidStates: EmailValidStates,lang:String,isRegister:((Boolean) -> Unit)?=null,token:((String)->Unit)?=null){
             when(emailValidStates){
                 EmailValidStates.CHECKEMAILANDPASSWORD -> {
                     checkEmailAndPasswordLocal(email, password)
                 }
                 EmailValidStates.SENDEMAIL -> {
-                    sendEmailData(email, password,isRegister,lang)
+                    sendEmailData(email, password,isRegister,lang,token)
                 }
             }
     }
@@ -47,7 +47,7 @@ class EmailValidator @Inject constructor(private val userLogicRepo: UserLogicRep
 
 
     @SuppressLint("SuspiciousIndentation")
-    private suspend fun sendEmailData(email: String, password: String, isRegister:((Boolean)->Unit)?=null, lang: String){
+    private suspend fun sendEmailData(email: String, password: String, isRegister:((Boolean)->Unit)?=null, lang: String,token:((String)->Unit)?=null){
         val currentDate = userLogicRepo.getCurrentTime()
         val emailSignInModel = EmailSignInModel(
             email = email,
@@ -76,6 +76,7 @@ class EmailValidator @Inject constructor(private val userLogicRepo: UserLogicRep
             email = email
         )
             userLogicRepo.insertReset(resetNextEntity)
+        token?.invoke(response.token)
             val userInfoEntity = UserInfoEntity(
                 token = response.token,
                 lastOnlineDate = currentDate.datetime,

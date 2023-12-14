@@ -232,10 +232,10 @@ class SignInUseCase @Inject constructor(private val userLogicRepo: UserLogicRepo
         }
     }
 
-    suspend fun emailSignIn(isSuccess:((EmailErrorEnum)->Unit), email:String, password:String, isRegister:((Boolean)->Unit), lang: String){
+    suspend fun emailSignIn(isSuccess:((EmailErrorEnum)->Unit), email:String, password:String, isRegister:((Boolean)->Unit), lang: String,token:((String)->Unit)){
         try {
             emailValidator.emailCheckAndSend(email = email, password = password,EmailValidStates.CHECKEMAILANDPASSWORD,lang)
-            emailValidator.emailCheckAndSend(email = email, password = password, EmailValidStates.SENDEMAIL,lang,isRegister)
+            emailValidator.emailCheckAndSend(email = email, password = password, EmailValidStates.SENDEMAIL,lang,isRegister,token)
             Log.d("emailStatesdd","success")
             isSuccess.invoke(EmailErrorEnum.SUCCESS)
         }catch (e:IOException){
