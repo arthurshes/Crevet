@@ -25,8 +25,12 @@
         />
         <item
             android:title="@string/way_ad"
-            android:icon="@drawable/baseline_attach_money_24"
+            android:icon="@drawable/ads_icons"
             android:id="@+id/id_way_ad"/>
+        <item
+            android:title="@string/sposob_oplata"
+            android:icon="@drawable/baseline_attach_money_24"
+            android:id="@+id/id_way_pay"/>
         <item
             android:title="@string/heart_setting"
             android:icon="@drawable/heart"
@@ -39,6 +43,8 @@
             android:title="@string/delete_my_account_data"
             android:icon="@drawable/baseline_delete_24"
             android:id="@+id/id_delete_my_account"/>
+
+
 
     </group>
 

@@ -16,6 +16,7 @@ import workwork.test.andropediagits.data.local.dao.level.IndiLevelDao
 import workwork.test.andropediagits.data.local.dao.level.LevelContentDao
 import workwork.test.andropediagits.data.local.dao.level.LevelDao
 import workwork.test.andropediagits.data.local.dao.promo.PromoCodeDao
+import workwork.test.andropediagits.data.local.dao.sqlInteractive.SqlInteractiveDao
 import workwork.test.andropediagits.data.local.dao.theme.IndiThemeDao
 import workwork.test.andropediagits.data.local.dao.theme.ThemeDao
 import workwork.test.andropediagits.data.local.dao.updateKey.UpdateKeysDao
@@ -46,6 +47,8 @@ import workwork.test.andropediagits.data.local.entities.levels.LevelEntity
 import workwork.test.andropediagits.data.local.entities.levels.ThemeLevelContentEntity
 import workwork.test.andropediagits.data.local.entities.promo.PromoCodeEntity
 import workwork.test.andropediagits.data.local.entities.reset.ResetDao
+import workwork.test.andropediagits.data.local.entities.sqlInteractive.SqlTableInteractiveCorrectAnswerEntity
+import workwork.test.andropediagits.data.local.entities.sqlInteractive.SqlTableInteractiveEntity
 import workwork.test.andropediagits.data.local.entities.theme.ThemeBuyEntity
 import workwork.test.andropediagits.data.local.entities.theme.ThemeEntity
 import workwork.test.andropediagits.data.local.entities.updatesEntity.UpdatesKeyEntity
@@ -59,7 +62,7 @@ import workwork.test.andropediagits.data.local.typeConverters.StringListTypeConv
 import workwork.test.andropediagits.data.local.typeConverters.ThemeLevelContentEntityConverter
 
 
-@Database(entities = [CourseEntity::class, VictorineClueEntity::class, ThemeEntity::class, UserInfoEntity::class, LevelEntity::class, ThemeLevelContentEntity::class, SubscribeEntity::class, CourseBuyEntity::class, ThemeBuyEntity::class, VictorineEntity::class, VictorineAnswerVariantEntity::class, InteractiveCodeVariantEntity::class, InteractiveCorrectCodeEntity::class, InteractiveEntity::class, UpdatesKeyEntity::class, PromoCodeEntity::class, ReminderEntity::class, AdsEntity::class,ResetNextEntity::class,IndiCourseEntity::class, IndiLessonContentEntity::class,IndiThemeEntity::class,IndiLessonEntity::class,IndiVictorineAnswerVarEntity::class,IndiVIctorineClueEntity::class,IndiVictorineQuestionEntity::class, IndiCreatorSubscribeEntity::class, BillingProviderEntity::class, AdsProviderEntity::class, IndiCourseBuyEntity::class],exportSchema = true, version = 1)
+@Database(entities = [CourseEntity::class, VictorineClueEntity::class, ThemeEntity::class, UserInfoEntity::class, LevelEntity::class, ThemeLevelContentEntity::class, SubscribeEntity::class, CourseBuyEntity::class, ThemeBuyEntity::class, VictorineEntity::class, VictorineAnswerVariantEntity::class, InteractiveCodeVariantEntity::class, InteractiveCorrectCodeEntity::class, InteractiveEntity::class, UpdatesKeyEntity::class, PromoCodeEntity::class, ReminderEntity::class, AdsEntity::class,ResetNextEntity::class,IndiCourseEntity::class, IndiLessonContentEntity::class,IndiThemeEntity::class,IndiLessonEntity::class,IndiVictorineAnswerVarEntity::class,IndiVIctorineClueEntity::class,IndiVictorineQuestionEntity::class, IndiCreatorSubscribeEntity::class, BillingProviderEntity::class, AdsProviderEntity::class, IndiCourseBuyEntity::class, SqlTableInteractiveEntity::class, SqlTableInteractiveCorrectAnswerEntity::class],exportSchema = true, version = 1)
 @TypeConverters(
     DateTypeConverter::class, BitMapTypeConverter::class, StringListTypeConverter::class,
     ThemeLevelContentEntityConverter::class, LocalDateTypeConverter::class)
@@ -95,5 +98,8 @@ abstract class MainDb:RoomDatabase(){
     abstract fun getVictorineDao(): VictorineDao
 
     abstract fun getInteractiveDao(): InteractiveDao
+
+
+    abstract fun getSqlInteractiveDao(): SqlInteractiveDao
 
 }

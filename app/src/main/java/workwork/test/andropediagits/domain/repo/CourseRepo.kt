@@ -18,6 +18,8 @@ import workwork.test.andropediagits.data.local.entities.interactive.InteractiveC
 import workwork.test.andropediagits.data.local.entities.interactive.InteractiveEntity
 import workwork.test.andropediagits.data.local.entities.levels.LevelEntity
 import workwork.test.andropediagits.data.local.entities.levels.ThemeLevelContentEntity
+import workwork.test.andropediagits.data.local.entities.sqlInteractive.SqlTableInteractiveCorrectAnswerEntity
+import workwork.test.andropediagits.data.local.entities.sqlInteractive.SqlTableInteractiveEntity
 import workwork.test.andropediagits.data.local.entities.theme.ThemeEntity
 import workwork.test.andropediagits.data.local.entities.updatesEntity.UpdatesKeyEntity
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
@@ -46,6 +48,22 @@ import workwork.test.andropediagits.data.remote.model.victorine.sendModels.Victo
 interface CourseRepo {
 
 
+    suspend fun insertSqlInteractive(sqlTableInteractiveEntity: SqlTableInteractiveEntity)
+
+
+    suspend fun insertSqlInteractiveCorrect(sqlTableInteractiveCorrectAnswerEntity: SqlTableInteractiveCorrectAnswerEntity)
+
+
+    suspend fun getCurrentThemeSqlInteractiveTasks(uniqueThemeId:Int):List<SqlTableInteractiveEntity>
+
+
+    suspend fun getCorrectAnswerSqlInteractive(testId:Int,uniqueThemeId:Int): SqlTableInteractiveCorrectAnswerEntity
+
+
+    suspend fun deleteAllSqlInteractive()
+
+
+    suspend fun deleteALLSQlCorrectAnswer()
 
     suspend fun getAllNotPassedThemesCourse(courseNumber:Int):List<ThemeEntity>
 

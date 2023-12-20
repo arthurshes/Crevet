@@ -53,6 +53,19 @@ class ThemeViewModel @Inject constructor(
 
 
 
+
+    fun getBillingProvider(billingProvider: (BillingProviderEntity) -> Unit){
+        viewModelScope.launch {
+            billingProvider.invoke(userLogicRepo.getMyBillingProvider())
+        }
+    }
+
+    fun selectBillingProvider(billingProviderEntity: BillingProviderEntity){
+        viewModelScope.launch {
+            userLogicRepo.updateBillingProvider(billingProviderEntity)
+        }
+    }
+
     fun getAdProvider(adsProviderEntity: ((AdsProviderEntity)->Unit)){
         viewModelScope.launch {
             adsProviderEntity.invoke(userLogicRepo.getMyAdsProvider())
@@ -61,6 +74,7 @@ class ThemeViewModel @Inject constructor(
 
     fun selectAdsProvider(adsProviderEntity: AdsProviderEntity){
         viewModelScope.launch {
+
             userLogicRepo.updateAdsProvider(adsProviderEntity)
         }
     }

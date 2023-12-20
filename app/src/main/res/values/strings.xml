@@ -1,4 +1,10 @@
 <resources>
+    <string name="course_nuy_advanced_subtitle">Узнай android разработку лучше!</string>
+    <string name="course_nuy_advanced">Продвинутый курс</string>
+    <string name="course_nuy_indepth">Углубленный курс</string>
+    <string name="course_nuy_indepth_subtitle">Подними свои знания на профессианальный уровень</string>
+    <string name="tokenization_canceled">Вы отменили покупку</string>
+    <string name="sposob_oplata">Способ оплаты</string>
     <string name="heart_limit">Лимит попыток 99</string>
     <string name="heart_setting">Попытки</string>
     <string name="count_heart">У вас сейчас: COUNT_HEART</string>

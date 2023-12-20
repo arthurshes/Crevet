@@ -267,6 +267,7 @@ object ShowDialogHelper {
             val btnGoogleChoice = dialog?.findViewById<LinearLayout>(R.id.btnGoogleChoice)
             val btnContinueChooseWay = dialog?.findViewById<CardView>(R.id.btnContinueChooseWay)
             val tvWay = dialog?.findViewById<TextView>(R.id.tvWay)
+             val imgRu = dialog?.findViewById<ImageView>(R.id.imRU)
 
             val tvGoogle = dialog?.findViewById<TextView>(R.id.tvGoogle)
             val tvRu = dialog?.findViewById<TextView>(R.id.tvRu)
@@ -290,6 +291,11 @@ object ShowDialogHelper {
                 btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_yellow)
             }
             if (choiceAd) {
+                tvWay?.text = context.getString(R.string.select_ad_type)
+                tvGoogle?.text = "Google pay"
+                tvRu?.text = context.getString(R.string.mytarget_ads)
+                val yokassaLogo = R.drawable.my_target_icon
+                imgRu?.setImageResource(yokassaLogo)
                 btnGoogleChoice?.setOnClickListener {
                     if (currentTheme == Configuration.UI_MODE_NIGHT_YES) {
                         btnRuChoice?.background = ContextCompat.getDrawable(context, R.drawable.button_edges_background_night)
@@ -332,6 +338,8 @@ object ShowDialogHelper {
                     }
                 }
             } else {
+                val yokassaLogo = R.drawable.yokassa_logo
+                imgRu?.setImageResource(yokassaLogo)
                 tvWay?.text = context.getString(R.string.select_pay_type)
                 tvGoogle?.text = "Google pay"
                 tvRu?.text = context.getString(R.string.yukassa)

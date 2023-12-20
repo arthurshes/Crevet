@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
+import workwork.test.andropediagits.data.local.entities.BillingProviderEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseEntity
 import workwork.test.andropediagits.databinding.FragmentCoursesBinding
 import workwork.test.andropediagits.domain.googbilling.BillingManager
@@ -103,30 +104,13 @@ class CoursesFragment (): Fragment(){
                     selectedGoogle = true
                 )
                 viewModel.selectAdsProvider(adsProviderEntity)
-                binding?.dimViewCourse?.visibility = View.GONE
-                val dialog = Dialog(requireContext())
-                dialog.setContentView(R.layout.promo_code_dialog)
-                dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-                dialog.setCancelable(false)
-                val dialogReady = dialog.findViewById<CardView>(R.id.btnReadyPromo)
-                val dialogPromoCode = dialog.findViewById<EditText>(R.id.edEnterPromoCode)
-                val dialogError = dialog.findViewById<TextView>(R.id.tvPromoCodeError)
-                val btnClose = dialog.findViewById<LinearLayoutCompat>(R.id.btnClose)
-                dialogReady.setOnClickListener {
-                    promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
-                }
-                btnClose.setOnClickListener {
-                    dialog.dismiss()
-                }
-                dialog.show()
-
-            }, {
-                val adsProviderEntity = AdsProviderEntity(
-                    selectedLMyTarger = true,
-                    selectedGoogle = false
-                )
-                viewModel.selectAdsProvider(adsProviderEntity)
-                binding?.dimViewCourse?.visibility = View.GONE
+                ShowDialogHelper.showDialogChooseWay(requireContext(),{},{},{
+                    val billingProviderEntity = BillingProviderEntity(
+                        selectedRuService = false,
+                        selectedGoogleBilling = true
+                    )
+                    viewModel.selectPayProvider(billingProviderEntity)
+                    binding?.dimViewCourse?.visibility = View.GONE
                     val dialog = Dialog(requireContext())
                     dialog.setContentView(R.layout.promo_code_dialog)
                     dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -142,6 +126,82 @@ class CoursesFragment (): Fragment(){
                         dialog.dismiss()
                     }
                     dialog.show()
+                },{
+                    val billingProviderEntity = BillingProviderEntity(
+                        selectedRuService = true,
+                        selectedGoogleBilling = false
+                    )
+                    viewModel.selectPayProvider(billingProviderEntity)
+                    binding?.dimViewCourse?.visibility = View.GONE
+                    val dialog = Dialog(requireContext())
+                    dialog.setContentView(R.layout.promo_code_dialog)
+                    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                    dialog.setCancelable(false)
+                    val dialogReady = dialog.findViewById<CardView>(R.id.btnReadyPromo)
+                    val dialogPromoCode = dialog.findViewById<EditText>(R.id.edEnterPromoCode)
+                    val dialogError = dialog.findViewById<TextView>(R.id.tvPromoCodeError)
+                    val btnClose = dialog.findViewById<LinearLayoutCompat>(R.id.btnClose)
+                    dialogReady.setOnClickListener {
+                        promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                    }
+                    btnClose.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                }, choiceAd = false)
+
+            }, {
+                val adsProviderEntity = AdsProviderEntity(
+                    selectedLMyTarger = true,
+                    selectedGoogle = false
+                )
+                viewModel.selectAdsProvider(adsProviderEntity)
+
+                ShowDialogHelper.showDialogChooseWay(requireContext(),{},{},{
+                    val billingProviderEntity = BillingProviderEntity(
+                        selectedRuService = false,
+                        selectedGoogleBilling = true
+                    )
+                    viewModel.selectPayProvider(billingProviderEntity)
+                    binding?.dimViewCourse?.visibility = View.GONE
+                    val dialog = Dialog(requireContext())
+                    dialog.setContentView(R.layout.promo_code_dialog)
+                    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                    dialog.setCancelable(false)
+                    val dialogReady = dialog.findViewById<CardView>(R.id.btnReadyPromo)
+                    val dialogPromoCode = dialog.findViewById<EditText>(R.id.edEnterPromoCode)
+                    val dialogError = dialog.findViewById<TextView>(R.id.tvPromoCodeError)
+                    val btnClose = dialog.findViewById<LinearLayoutCompat>(R.id.btnClose)
+                    dialogReady.setOnClickListener {
+                        promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                    }
+                    btnClose.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                },{
+                    val billingProviderEntity = BillingProviderEntity(
+                        selectedRuService = true,
+                        selectedGoogleBilling = false
+                    )
+                    viewModel.selectPayProvider(billingProviderEntity)
+                    binding?.dimViewCourse?.visibility = View.GONE
+                    val dialog = Dialog(requireContext())
+                    dialog.setContentView(R.layout.promo_code_dialog)
+                    dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+                    dialog.setCancelable(false)
+                    val dialogReady = dialog.findViewById<CardView>(R.id.btnReadyPromo)
+                    val dialogPromoCode = dialog.findViewById<EditText>(R.id.edEnterPromoCode)
+                    val dialogError = dialog.findViewById<TextView>(R.id.tvPromoCodeError)
+                    val btnClose = dialog.findViewById<LinearLayoutCompat>(R.id.btnClose)
+                    dialogReady.setOnClickListener {
+                        promoCodeTreatmentResult(dialogPromoCode, dialogError, dialog)
+                    }
+                    btnClose.setOnClickListener {
+                        dialog.dismiss()
+                    }
+                    dialog.show()
+                }, choiceAd = false)
 
             }, choiceAd = true)
         }

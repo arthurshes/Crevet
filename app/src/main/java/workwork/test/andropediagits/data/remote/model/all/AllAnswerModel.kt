@@ -2,6 +2,8 @@ package workwork.test.andropediagits.data.remote.model.all
 
 import workwork.test.andropediagits.data.remote.model.UserProgressModel
 import workwork.test.andropediagits.data.remote.model.course.CourseAnswerModel
+import workwork.test.andropediagits.data.remote.model.sqlInteractive.SqlTableInteractiveCorrectModel
+import workwork.test.andropediagits.data.remote.model.sqlInteractive.SqlTableInteractiveModel
 import workwork.test.andropediagits.data.remote.model.theme.LevelThemeAnswerModel
 import workwork.test.andropediagits.data.remote.model.theme.ThemeAnswerModel
 import workwork.test.andropediagits.data.remote.model.theme.ThemeLevelContentModel
@@ -17,6 +19,8 @@ data class AllAnswerModel(
     val victorineClues:List<VictorineClueModel>?=null,
     val themeLessons:List<LevelThemeAnswerModel>,
     val themeLessonContents:List<ThemeLevelContentModel>,
+    val sqlInteractives:List<SqlTableInteractiveModel>,
+    val sqlInteractivesCorrectAnswer:List<SqlTableInteractiveCorrectModel>,
 //    val interactives:List<InteractiveAnswerModel>?=null,
 //    val interactiveCodeVariants:List<InterActiveCodeVariantModel>?=null,
 //    val interactiveCorrectAnswers:List<InteractiveCorrectCodeModel>?=null,

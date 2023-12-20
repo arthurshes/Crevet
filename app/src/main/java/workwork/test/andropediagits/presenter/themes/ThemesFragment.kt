@@ -1,6 +1,7 @@
 package workwork.test.andropediagits.presenter.themes
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
@@ -13,6 +14,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -20,6 +22,8 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -28,6 +32,21 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.app.Activity
+
+import android.widget.Button
+
+
+import ru.yoomoney.sdk.kassa.payments.Checkout.createTokenizationResult
+import ru.yoomoney.sdk.kassa.payments.Checkout.createTokenizeIntent
+import ru.yoomoney.sdk.kassa.payments.checkoutParameters.Amount
+import ru.yoomoney.sdk.kassa.payments.checkoutParameters.GooglePayParameters
+import ru.yoomoney.sdk.kassa.payments.checkoutParameters.PaymentMethodType
+import ru.yoomoney.sdk.kassa.payments.checkoutParameters.PaymentParameters
+import ru.yoomoney.sdk.kassa.payments.checkoutParameters.SavePaymentMethod
+import ru.yoomoney.sdk.kassa.payments.checkoutParameters.TestParameters
+
+import java.util.Locale
 
 
 import com.google.android.gms.ads.AdError
@@ -47,11 +66,16 @@ import com.my.target.ads.Reward
 import com.my.target.common.models.IAdLoadingError
 
 import dagger.hilt.android.AndroidEntryPoint
+import ru.tinkoff.decoro.BuildConfig
+
+
 import workwork.test.andropediagits.R
 import workwork.test.andropediagits.core.exception.ErrorEnum
 import workwork.test.andropediagits.core.utils.Constatns.AD_UNIT_ID
+import workwork.test.andropediagits.core.utils.Constatns.REQUEST_CODE_TOKENIZE
 import workwork.test.andropediagits.core.utils.GoogleAdManager
 import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
+import workwork.test.andropediagits.data.local.entities.BillingProviderEntity
 import workwork.test.andropediagits.data.local.entities.UserInfoEntity
 import workwork.test.andropediagits.databinding.FragmentThemesBinding
 import workwork.test.andropediagits.domain.googbilling.BillingManager
@@ -63,6 +87,8 @@ import workwork.test.andropediagits.presenter.bottomSheet.BottomSheet
 import workwork.test.andropediagits.presenter.lesson.utils.ShowDialogHelper
 import workwork.test.andropediagits.presenter.setting.SettingActivity
 import workwork.test.andropediagits.presenter.themes.viewModel.ThemeViewModel
+import java.math.BigDecimal
+import java.util.Currency
 import java.util.concurrent.atomic.AtomicBoolean
 
 
@@ -1213,7 +1239,7 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
             R.id.id_heart_buy ->{
                 viewModel.getMyHearts{heartsCounts->
-                    ShowDialogHelper.showDialogBuyAndropointsOrHearts(
+                    ShowDialogHelper.showDialogBuyAndropoints(
                         requireContext(),{
                             viewModel.getMyHearts{
                                 if(99>it){
@@ -1579,7 +1605,53 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
                 }
 
             }
+            R.id.id_way_pay->{
+                binding?.dimViewTheme?.visibility = View.VISIBLE
+                viewModel.getBillingProvider {
+                    if(it.selectedGoogleBilling){
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogChooseWay(requireContext(),{},{},{
+                                val billingProviderEntity = BillingProviderEntity(
+                                    id = it.id,
+                                    selectedRuService = false,
+                                    selectedGoogleBilling = true
+                                )
+                                viewModel.selectBillingProvider(billingProviderEntity)
+                                binding?.dimViewTheme?.visibility = View.GONE
+                            },{
+                                val billingProviderEntity = BillingProviderEntity(
+                                    id = it.id,
+                                    selectedRuService = true,
+                                    selectedGoogleBilling = false
+                                )
+                                viewModel.selectBillingProvider(billingProviderEntity)
+                                binding?.dimViewTheme?.visibility = View.GONE
+                            }, choiceAd = false,currentGoogleSelect = true)
+                        }
+                    }else{
+                        requireActivity().runOnUiThread {
+                            ShowDialogHelper.showDialogChooseWay(requireContext(),{},{},{
+                                val billingProviderEntity = BillingProviderEntity(
+                                    id = it.id,
+                                    selectedRuService = false,
+                                    selectedGoogleBilling = true
+                                )
+                                viewModel.selectBillingProvider(billingProviderEntity)
+                                binding?.dimViewTheme?.visibility = View.GONE
+                            },{
+                                val billingProviderEntity = BillingProviderEntity(
+                                    id = it.id,
+                                    selectedRuService = true,
+                                    selectedGoogleBilling = false
+                                )
+                                viewModel.selectBillingProvider(billingProviderEntity)
+                                binding?.dimViewTheme?.visibility = View.GONE
+                            }, choiceAd = false)
+                        }
+                    }
+                }
 
+            }
         }
         return true
     }
@@ -1592,6 +1664,80 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
         requireActivity().startActivity(intent)
     }
 
+
+    private fun statrTokenize(amount:Double,productName:String,productSubtitle:String,phoneNumber:String){
+        val paymentMethodTypes = setOf(
+            PaymentMethodType.BANK_CARD,
+            PaymentMethodType.SBERBANK,
+            PaymentMethodType.YOO_MONEY,
+            PaymentMethodType.SBP,
+        )
+        val paymentParameters = PaymentParameters(
+            amount = Amount(BigDecimal.valueOf(amount), Currency.getInstance("RUB")),
+            title = productName,
+            subtitle = productSubtitle,
+            clientApplicationKey = "live_MjY5MTkyOoec5X4t8WgTcO3B673-WBny5wuo_DfZR0k",
+            shopId ="269192",
+            savePaymentMethod = SavePaymentMethod.OFF,
+            paymentMethodTypes = paymentMethodTypes,
+            userPhoneNumber = phoneNumber,
+            authCenterClientId = "143526464560"
+        )
+
+        val intent = createTokenizeIntent(requireContext(), paymentParameters, TestParameters(showLogs = true))
+        startActivityForResult(intent, REQUEST_CODE_TOKENIZE)
+    }
+
+    private fun onBuyStart(payState: PayState,phoneNumber: String) {
+        when(payState){
+            PayState.COURSEBUYADVANCED -> statrTokenize(180.0,getString(R.string.course_nuy_advanced),getString(R.string.course_nuy_advanced_subtitle),phoneNumber)
+            PayState.COURSEBUYINDEPTH -> statrTokenize(540.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+
+            PayState.THEMEBUYCALCUL -> TODO()
+            PayState.THEMEBUYNEWSLIST -> TODO()
+            PayState.THEMEBUYNOTES -> TODO()
+            PayState.ONEANDROPOINTBUY -> statrTokenize(10.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+            PayState.TENANDROPOINTBUY ->  statrTokenize(80.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+            PayState.FIFTYANDROPOINTBUY -> statrTokenize(100.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+            PayState.HUNDREDANDROPOINTBUY -> statrTokenize(810.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+            PayState.FIVEHUNDREDANDROPOINTBUY -> statrTokenize(810.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+            PayState.THOUSANDANDROPOINTBUY -> statrTokenize(5000.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+            PayState.PREMIUMONEMOUNTHBUY ->statrTokenize(180.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+            PayState.PREMIUMSIXMOUNTHBUY -> statrTokenize(990.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+            PayState.PREMIUMYEARBUY -> statrTokenize(1712.0,getString(R.string.course_nuy_indepth),getString(R.string.course_nuy_indepth_subtitle),phoneNumber)
+        }
+
+    }
+
+    private fun showError() {
+        Toast.makeText(requireContext(), R.string.tokenization_canceled, Toast.LENGTH_SHORT).show()
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_TOKENIZE) {
+            when (resultCode) {
+                Activity.RESULT_OK -> showToken(data)
+                Activity.RESULT_CANCELED -> showError()
+            }
+        }
+    }
+
+
+    private fun showToken(data: Intent?) {
+        if (data != null) {
+            val token = createTokenizationResult(data).paymentToken
+//            Toast.makeText(
+//                this,
+//                String.format(Locale.getDefault(), getString(R.string.tokenization_success), token),
+//                Toast.LENGTH_LONG
+//            ).show()
+        } else {
+            showError()
+        }
+    }
 
     private fun checkTermThemeListLessonsFragmentTreatmentResult(uniqueThemeId: Int, ) {
         var resultCheckTermTheme: ErrorEnum? = null
@@ -1747,7 +1893,9 @@ class ThemesFragment : Fragment(), NavigationView.OnNavigationItemSelectedListen
 
     private fun initializeMobileAdsSdk() {
         if (isMobileAdsInitializeCalled.getAndSet(true)) { return }
-        MobileAds.initialize(requireContext()) {}
+        MobileAds.initialize(requireContext()) {
+
+        }
         loadRewardedAd()
     }
 

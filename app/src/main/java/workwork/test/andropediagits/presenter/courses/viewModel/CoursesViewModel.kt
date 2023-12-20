@@ -7,10 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import okhttp3.internal.userAgent
 import workwork.test.andropediagits.core.exception.ErrorEnum
+import workwork.test.andropediagits.core.utils.Resourse
 import workwork.test.andropediagits.data.local.entities.AdsProviderEntity
+import workwork.test.andropediagits.data.local.entities.BillingProviderEntity
 import workwork.test.andropediagits.data.local.entities.course.CourseEntity
 import workwork.test.andropediagits.domain.repo.CourseRepo
 import workwork.test.andropediagits.domain.repo.UserLogicRepo
@@ -30,11 +34,17 @@ class CoursesViewModel @Inject constructor(private val userLogicRepo: UserLogicR
     private var _allCourses:MutableLiveData<List<CourseEntity>> = MutableLiveData()
     var allCourses: LiveData<List<CourseEntity>> = _allCourses
 
+
     init {
 //        _allCourses.postValue( savedStateHandle.get("courses")?: emptyList<CourseEntity>())
         initialCourse()
     }
 
+    fun selectPayProvider(billingProviderEntity: BillingProviderEntity){
+        viewModelScope.launch {
+            userLogicRepo.insertBillingProvider(billingProviderEntity)
+        }
+    }
     fun selectAdsProvider(adsProviderEntity: AdsProviderEntity){
         viewModelScope.launch(Dispatchers.IO) {
             userLogicRepo.insertAdsProvider(adsProviderEntity)

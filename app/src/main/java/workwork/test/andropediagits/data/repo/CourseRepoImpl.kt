@@ -11,6 +11,8 @@ import workwork.test.andropediagits.data.local.entities.interactive.InteractiveC
 import workwork.test.andropediagits.data.local.entities.interactive.InteractiveEntity
 import workwork.test.andropediagits.data.local.entities.levels.LevelEntity
 import workwork.test.andropediagits.data.local.entities.levels.ThemeLevelContentEntity
+import workwork.test.andropediagits.data.local.entities.sqlInteractive.SqlTableInteractiveCorrectAnswerEntity
+import workwork.test.andropediagits.data.local.entities.sqlInteractive.SqlTableInteractiveEntity
 import workwork.test.andropediagits.data.local.entities.theme.ThemeEntity
 import workwork.test.andropediagits.data.local.entities.updatesEntity.UpdatesKeyEntity
 import workwork.test.andropediagits.data.local.entities.victorine.VictorineAnswerVariantEntity
@@ -43,6 +45,7 @@ import javax.inject.Inject
 class CourseRepoImpl @Inject constructor(val mainDb: MainDb, val logicUserApiService: LogicUserApiService, val timeApiService: TimeApiService):
     CourseRepo {
 
+    private val sqlInteractiveDao = mainDb.getSqlInteractiveDao()
     private val courseDao = mainDb.getCourseDao()
     private val themeDao = mainDb.getLevelDao()
     private val levelDao = mainDb.getRealLevelDao()
@@ -51,6 +54,33 @@ class CourseRepoImpl @Inject constructor(val mainDb: MainDb, val logicUserApiSer
     private val userDao = mainDb.getUserInfoDao()
     private val interactiveDao = mainDb.getInteractiveDao()
     private val updateKeysDao = mainDb.getUpdateKeysDao()
+    override suspend fun insertSqlInteractive(sqlTableInteractiveEntity: SqlTableInteractiveEntity) {
+        sqlInteractiveDao.insertSqlInteractive(sqlTableInteractiveEntity)
+    }
+
+    override suspend fun insertSqlInteractiveCorrect(sqlTableInteractiveCorrectAnswerEntity: SqlTableInteractiveCorrectAnswerEntity) {
+        sqlInteractiveDao.insertSqlInteractiveCorrect(sqlTableInteractiveCorrectAnswerEntity)
+    }
+
+    override suspend fun getCurrentThemeSqlInteractiveTasks(uniqueThemeId: Int): List<SqlTableInteractiveEntity> {
+        return sqlInteractiveDao.getCurrentThemeSqlInteractiveTasks(uniqueThemeId)
+    }
+
+    override suspend fun getCorrectAnswerSqlInteractive(
+        testId: Int,
+        uniqueThemeId: Int
+    ): SqlTableInteractiveCorrectAnswerEntity {
+        return sqlInteractiveDao.getCorrectAnswerSqlInteractive(testId, uniqueThemeId)
+    }
+
+    override suspend fun deleteAllSqlInteractive() {
+        sqlInteractiveDao.deleteAllSqlInteractive()
+    }
+
+    override suspend fun deleteALLSQlCorrectAnswer() {
+       sqlInteractiveDao.deleteALLSQlCorrectAnswer()
+    }
+
     override suspend fun getAllNotPassedThemesCourse(courseNumber: Int): List<ThemeEntity> {
         return themeDao.getAllNotPassedThemesCourse(courseNumber)
     }

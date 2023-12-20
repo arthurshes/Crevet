@@ -52,6 +52,7 @@ object CoreModule {
     @Singleton
     fun provideMainDb(@ApplicationContext context:Context): MainDb =
         Room.databaseBuilder(context,MainDb::class.java,"andropedia.db")
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides

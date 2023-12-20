@@ -6,6 +6,7 @@
 
 
     <application
+        android:networkSecurityConfig="@xml/ym_network_security_config"
         android:name=".MyApp"
         android:allowBackup="false"
         android:appComponentFactory="android.support.v4.app.CoreComponentFactory"
